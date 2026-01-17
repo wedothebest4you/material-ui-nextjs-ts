@@ -1,0 +1,11 @@
+.slider {
+  color: #20b2aa;
+}
+
+.slider:hover {
+  color: #2e8b57;
+}
+
+.slider .thumb {
+  border-radius: 1px;
+}
