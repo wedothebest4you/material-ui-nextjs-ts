@@ -1,57 +1,19 @@
 'use client';
-import { createTheme, useTheme } from '@mui/material/styles';
-import { Roboto } from 'next/font/google';
-import { purple, pink } from '@mui/material/colors';
-
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-});
+import { createTheme } from '@mui/material/styles';
+import { blue } from '@mui/material/colors';
 
 const theme = createTheme({
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: { main: blue.A700 },
+      },
+    },
+    dark: true,
+    // no customised colors applied here
+  },
   cssVariables: {
     colorSchemeSelector: 'class',
-  },
-  palette: {
-    primary: {
-      main: purple[500],
-    },
-    secondary: {
-      main: pink.A200,
-    },
-  },
-  typography: {
-    fontFamily: roboto.style.fontFamily,
-    h1: {
-      '@media (min-width:0px)': {
-        fontSize: '2.4rem',
-      },
-    },
-  },
-  components: {
-    // MuiSlider: {
-    //   styleOverrides: {
-    //     root: {
-    //       color: '#fff',
-    //     },
-    //   },
-    // },
-    MuiAlert: {
-      styleOverrides: {
-        root: {
-          variants: [
-            {
-              props: { severity: 'info' },
-              style: {
-                backgroundColor: '#60a5fa',
-              },
-            },
-          ],
-        },
-      },
-    },
   },
 });
 

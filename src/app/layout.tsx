@@ -5,26 +5,26 @@ import CssBaseline from '@mui/material/CssBaseline';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import theme from '@/theme';
 import ModeSwitch from '@/components/ModeSwitch';
-import './PlainCssSlider.css';
-import { StyledEngineProvider } from '@mui/material/styles';
-import { LogTheme } from './LogTheme';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <LogTheme />
         <InitColorSchemeScript attribute="class" />
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-          <StyledEngineProvider>
-            <ThemeProvider theme={theme}>
-              <LogTheme />
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <ModeSwitch />
-              {props.children}
-            </ThemeProvider>
-          </StyledEngineProvider>
+          <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            <AppBar>
+              <Toolbar>
+                <ModeSwitch />
+              </Toolbar>
+            </AppBar>
+            <Toolbar></Toolbar>
+            {props.children}
+          </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

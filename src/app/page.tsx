@@ -13,29 +13,5 @@ import Alert from '@mui/material/Alert';
 import { Button } from '@mui/material';
 
 export default function Home() {
-  const [enabled, setEnabled] = React.useState(false);
-
-  return (
-    <Container maxWidth="lg">
-      <MenuItem>Test MenuItem</MenuItem>
-      {/* <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h1" sx={{ mb: 2 }}>
-          Material UI - Next.js App Router example in TypeScript
-        </Typography>
-        <Link href="/about" color="secondary" component={NextLink}>
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
-      </Box> */}
-    </Container>
-  );
+  return 'main page';
 }
