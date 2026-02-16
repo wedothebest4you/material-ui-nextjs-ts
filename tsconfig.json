@@ -22,7 +22,9 @@
     "baseUrl": "src/",
     "paths": {
       "@/*": ["./src/*"],
-      "@/platform/*": ["platform/*"]
+      "@/platform/*": ["platform/*"],
+      "@modules/finance/*": ["modules/finance/*"],
+      "@shared/*": ["shared/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
