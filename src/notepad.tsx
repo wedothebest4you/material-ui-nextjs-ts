@@ -1,35 +1,14 @@
+7. LockBanner.tsx
 'use client';
 
-import { Grid } from '@shared/ui/Grid';
-import StatCard from '@/platform/ui/StatCard';
+import { Alert } from '@mui/material';
 
-export default function Dashboard({
-  stats,
-}: {
-  stats: {
-    cash: string;
-    ar: string;
-    ap: string;
-    profit: string;
-  };
-}) {
-  return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={3}>
-        <StatCard label="Cash" value={stats.cash} />
-      </Grid>
+export default function LockBanner({ locked }: { locked: boolean }) {
+if (!locked) return null;
 
-      <Grid item xs={12} md={3}>
-        <StatCard label="AR Outstanding" value={stats.ar} />
-      </Grid>
-
-      <Grid item xs={12} md={3}>
-        <StatCard label="AP Outstanding" value={stats.ap} />
-      </Grid>
-
-      <Grid item xs={12} md={3}>
-        <StatCard label="Profit" value={stats.profit} />
-      </Grid>
-    </Grid>
-  );
+return (
+<Alert severity="warning" sx={{ mb: 2 }}>
+This accounting period is locked. Posting is disabled.
+</Alert>
+);
 }

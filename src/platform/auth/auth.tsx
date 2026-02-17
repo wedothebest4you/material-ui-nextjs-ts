@@ -21,6 +21,7 @@ export type AuthContext = {
 
 export const getAuthContext = cache(async (): Promise<AuthContext> => {
   return {
+    // 🔐 Replace with real auth (Clerk / NextAuth / custom)
     userId: 'demo-user',
     orgId: 'demo-org',
     orgName: 'Demo Corporation',

@@ -14,12 +14,12 @@ import {
 import { getAuthContext } from '../auth/auth';
 
 export default async function Nav() {
-  const ctx = getAuthContext();
+  const ctx = await getAuthContext();
 
   return (
     <Box sx={{ width: 260, p: 2 }}>
       <Typography variant="h6" sx={{ mb: 1 }}>
-        {(await ctx).orgName}
+        {ctx.orgName}
       </Typography>
 
       <Divider sx={{ mb: 2 }} />
