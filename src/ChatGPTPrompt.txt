@@ -1,0 +1,66 @@
+Please help to build a production-grade ERP on Next.js + composable modules.
+The futher specifications listed below.
+
+
+1. Core architectural : Composable Module Architecture,
+Platform orchestrates, modules define, Strong isolation boundary
+
+2. Layer structure : standard. Exception - reusable primitives
+should be separated from platform to shared folder.
+
+3. Module definition contract : standard
+4. Permission system : Module-owned PermissionMap, Global uniqueness enforced by namespace,
+Platform builds global permission registry
+5. Navigation system : Module publishes navigation, 
+Platform builds global navigation automatically, Navigation is permission-aware
+6. Shell architecture: Platform Shell
+and Module Shell
+7. Routing architecture : App layer is pure routing only
+8. Server-driven resolution :
+Platform resolves navigation and permissions by server services
+
+9. Period system : Period is owned by a module (finance module).
+10. UI component ownership : standard
+
+11. Module registration system : standard
+
+12. Dependency rule : standard
+13. Type safety guarantees : standard
+
+14. Context injection model :standard
+
+15. Global navigation model : standard
+
+16. Server / Client boundary : standard
+17. Naming conventions : standard
+18. Scalability target : standard
+19. Technology stack
+Core stack:
+• Next.js App Router
+ • React
+ • TypeScript
+ • Material UI
+ • MongoDB + Mongoose
+ • Server components
+ • composable modules
+
+20. Explicit non-goals
+Avoid:
+• monolithic services
+ • shared permission file
+ • shared module state
+ • platform-defined module behavior
+ • cross-module imports
+
+21. Final summary
+Composable module architecture
++
+Platform orchestration layer
++
+Pure routing app layer
++
+Server-driven navigation
++
+Module-owned permissions
++
+Enterprise-grade isolation

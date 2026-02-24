@@ -1,2 +1,1 @@
-export { default as FinanceLayout } from './routes/Layout';
-export { default as FinanceDashboard } from './routes/Dashboard';
+export { FinanceModule as FinanceModule } from './manifest';
