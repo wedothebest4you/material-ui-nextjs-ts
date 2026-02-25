@@ -1,3 +1,21 @@
+/**
+ * PLATFORM UI SHELL
+ *
+ * Responsibility:
+ * Renders ERP layout frame:
+ * - AppBar
+ * - Navigation drawer
+ * - Content area
+ *
+ * Architectural role:
+ * Platform Presentation Layer (Client Component)
+ *
+ * Rules:
+ * - Must NOT perform orchestration
+ * - Must NOT access database
+ * - Must NOT register modules
+ */
+
 'use client';
 
 import Box from '@mui/material/Box';

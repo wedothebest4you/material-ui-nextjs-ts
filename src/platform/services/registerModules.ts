@@ -1,4 +1,4 @@
-import { ModuleRegistry } from './ModuleRegistry';
+import { ModuleRegistry } from '../services/ModuleRegistry';
 import { FinanceModule } from '@/modules/finance/manifest';
 
 let registered = false;

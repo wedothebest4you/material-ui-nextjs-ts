@@ -1,4 +1,4 @@
-import { ModuleRegistry } from '../modules/ModuleRegistry';
+import { ModuleRegistry } from './ModuleRegistry';
 import { getUserPermissions } from './PermissionService';
 
 export async function resolveNavigation() {

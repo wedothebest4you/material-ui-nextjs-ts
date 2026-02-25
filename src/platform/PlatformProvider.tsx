@@ -1,6 +1,6 @@
-import { bootstrapPlatform } from '../bootstrap/bootstrapPlatform';
-import { resolveNavigation } from '../services/NavigationService';
-import PlatformShell from '../shell/PlatformShell';
+import { bootstrapPlatform } from './bootstrapPlatform';
+import { resolveNavigation } from './services/NavigationService';
+import PlatformShell from './shell/PlatformShell';
 
 export default async function PlatformProvider({
   children,

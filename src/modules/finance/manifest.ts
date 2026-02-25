@@ -1,3 +1,19 @@
+/**
+ * FINANCE MODULE MANIFEST
+ *
+ * Responsibility:
+ * It defines the manifest object for this module.
+ * It will be used by platform Registery service.
+ *
+ * Architectural role:
+ * Module Manifest definition Layer
+ *
+ * Defines:
+ * - navigation
+ * - permissions
+ * - module identity
+ */
+
 import type { PermissionMapBase } from '@/shared/types/PermissionMapBase';
 
 import { PermissionOf, NavigationItemBase } from '@/shared/index';
