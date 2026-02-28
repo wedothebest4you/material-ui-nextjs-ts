@@ -10,7 +10,7 @@
 
 import { listLedgersAction } from '../server/ledger.actions';
 import { LedgerTable } from './components/LedgerTable';
-import { LedgerCreateForm } from './LedgerCreateForm';
+import LedgerCreateForm from './LedgerCreateForm';
 import { Box, Typography } from '@mui/material';
 
 export default async function LedgerListPage() {

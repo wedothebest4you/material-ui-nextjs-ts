@@ -17,7 +17,7 @@
 import { createLedgerAction } from '../server/ledger.actions';
 import { Box, Button, TextField, Paper, Stack } from '@mui/material';
 
-export function LedgerCreateForm() {
+export default function LedgerCreateForm() {
   return (
     <Paper sx={{ p: 2, mb: 3 }}>
       <form action={createLedgerAction}>

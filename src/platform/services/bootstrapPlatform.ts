@@ -13,14 +13,12 @@
  * - Must NOT depend on React
  */
 
-import { registerModules } from './services/registerModules';
+import ModuleRegistry from './ModuleRegistry';
+import { financeModule } from '@/modules/finance/module';
 
 let bootstrapped = false;
 
-export function bootstrapPlatform() {
-  if (bootstrapped) return;
-
-  registerModules();
-
+export default function bootstrapPlatform() {
+  if (!bootstrapped) ModuleRegistry.register(financeModule);
   bootstrapped = true;
 }

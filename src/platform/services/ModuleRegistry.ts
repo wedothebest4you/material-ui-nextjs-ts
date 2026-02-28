@@ -13,20 +13,16 @@
  * - Modules must NOT read registry directly
  */
 
-import { ModuleManifestBase } from '@/shared/index';
+import { ModuleDefinition } from '@/shared/types';
 
-type AnyModuleManifest = ModuleManifestBase<string>;
+export default class ModuleRegistry {
+  static modules: ModuleDefinition[] = [];
 
-class Registry {
-  private modules: AnyModuleManifest[] = [];
-
-  resgister(module: AnyModuleManifest) {
+  static register(module: ModuleDefinition) {
     this.modules.push(module);
   }
 
-  getModules() {
+  static getModuleRegistry() {
     return this.modules;
   }
 }
-
-export const ModuleRegistry = new Registry();

@@ -16,11 +16,14 @@
  */
 
 import { ReactNode } from 'react';
+import { PlatformShell } from '@/platform/index';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <PlatformShell>{children}</PlatformShell>
+      </body>
     </html>
   );
 }

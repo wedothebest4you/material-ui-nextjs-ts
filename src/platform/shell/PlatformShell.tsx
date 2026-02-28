@@ -3,8 +3,9 @@
  *
  * Responsibility:
  * - Bootstraps platform
+ * - Resolves server-driven routes
  * - Resolves server-driven navigation
- * - Injects navigation into UI shell
+ * - Injects routes and navigation into UI shell
  *
  * Architectural role:
  * Platform Orchestration Layer (Server Component)
@@ -15,9 +16,12 @@
  * - Must orchestrate platform services only
  */
 
-import { bootstrapPlatform } from '../bootstrapPlatform';
-import { resolveNavigation } from '../services/NavigationService';
 import ShellLayout from './ShellLayout';
+import bootstrapPlatform from '../services/bootstrapPlatform';
+import resolveRoute from '../services/routeResolver';
+import canAccess from '../services/routeAccess';
+import navigationResolver from '../services/navigationResolver';
+import ModuleRegistry from '../services/ModuleRegistry';
 
 export default async function PlatformShell({
   children,
@@ -26,7 +30,9 @@ export default async function PlatformShell({
 }) {
   bootstrapPlatform();
 
-  const navigation = await resolveNavigation();
+  const module = ModuleRegistry.getModuleRegistry();
+
+  const navigation = navigationResolver(['']);
 
   return <ShellLayout navigation={navigation}>{children}</ShellLayout>;
 }

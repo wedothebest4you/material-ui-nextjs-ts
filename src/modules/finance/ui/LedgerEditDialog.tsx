@@ -17,7 +17,7 @@ import {
 import { useState } from 'react';
 import { updateLedgerAction } from '../server/ledger.actions';
 
-export function LedgerEditDialog({ ledger }: any) {
+export default function LedgerEditDialog({ ledger }: any) {
   const [open, setOpen] = useState(false);
 
   return (

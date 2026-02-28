@@ -27,7 +27,6 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
-import { NavigationItemBase } from '@/shared/index';
 
 const drawerWidth = 240;
 
@@ -35,7 +34,7 @@ export default function ShellLayout({
   navigation,
   children,
 }: {
-  navigation: NavigationItemBase<string>[];
+  navigation: { title: string; path: string }[];
   children: React.ReactNode;
 }) {
   return (
