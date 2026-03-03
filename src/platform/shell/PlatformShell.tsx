@@ -3,8 +3,8 @@
  *
  * Responsibility:
  * - Bootstraps platform
- * - Resolves server-driven routes
- * - Resolves server-driven navigation
+ * - Resolves user granted routes by server-driven code
+ * - Resolves respective navigation by server-driven code
  * - Injects routes and navigation into UI shell
  *
  * Architectural role:
@@ -18,8 +18,7 @@
 
 import ShellLayout from './ShellLayout';
 import bootstrapPlatform from '../services/bootstrapPlatform';
-import resolveRoute from '../services/routeResolver';
-import canAccess from '../services/routeAccess';
+import { IUser } from '@/shared/types';
 import navigationResolver from '../services/navigationResolver';
 import ModuleRegistry from '../services/ModuleRegistry';
 
@@ -28,11 +27,15 @@ export default async function PlatformShell({
 }: {
   children: React.ReactNode;
 }) {
-  bootstrapPlatform();
+  const user: IUser = {
+    email: 'test@gmail.com',
+    isAdmin: false,
+    grantedRoutes: ['1', '2'],
+  };
+
+  bootstrapPlatform(user);
 
   const module = ModuleRegistry.getModuleRegistry();
 
-  const navigation = navigationResolver(['']);
-
-  return <ShellLayout navigation={navigation}>{children}</ShellLayout>;
+  return <ShellLayout>{children}</ShellLayout>;
 }

@@ -14,11 +14,13 @@
  */
 
 import ModuleRegistry from './ModuleRegistry';
-import { financeModule } from '@/modules/finance/module';
+import { financeModuleDefinition } from '@/modules/finance/index';
+import { IUser } from '@/shared/types';
 
 let bootstrapped = false;
 
-export default function bootstrapPlatform() {
-  if (!bootstrapped) ModuleRegistry.register(financeModule);
+export default function bootstrapPlatform(user: IUser) {
+  if (!bootstrapped)
+    ModuleRegistry.register('finance', financeModuleDefinition, user);
   bootstrapped = true;
 }

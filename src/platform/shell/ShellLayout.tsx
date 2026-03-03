@@ -27,16 +27,16 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
+import ModuleRegistry from '../services/ModuleRegistry';
 
 const drawerWidth = 240;
 
 export default function ShellLayout({
-  navigation,
   children,
 }: {
-  navigation: { title: string; path: string }[];
   children: React.ReactNode;
 }) {
+  const modules = ModuleRegistry.getModuleRegistry();
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" sx={{ zIndex: 1201 }}>
@@ -59,19 +59,15 @@ export default function ShellLayout({
         }}
       >
         <List>
-          {navigation.map((item) =>
-            item.children?.map((child) => (
-              <Link
-                key={child.id}
-                href={child.path}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <ListItemButton>
-                  <ListItemText primary={child.label} />
-                </ListItemButton>
-              </Link>
-            )),
-          )}
+          <Link
+            key={'finance'}
+            href={'finance'}
+            style={{ textDecoration: 'none', color: 'inherit' }}
+          >
+            <ListItemButton>
+              <ListItemText primary={'fiknance'} />
+            </ListItemButton>
+          </Link>
         </List>
       </Drawer>
 
