@@ -31,7 +31,7 @@ export type ModuleDefinition = {
   [namespace: string]: {
     routesbyId: RouteDictionarybyRouteId;
     routesbyPath: RouteDictionarybyFullPath;
-    navigation: RouteDictionarybyRouteId;
+    navigation: RouteNode[];
   };
 };
 

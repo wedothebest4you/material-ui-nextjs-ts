@@ -20,7 +20,8 @@ import { IUser } from '@/shared/types';
 let bootstrapped = false;
 
 export default function bootstrapPlatform(user: IUser) {
-  if (!bootstrapped)
+  if (!bootstrapped) {
     ModuleRegistry.register('finance', financeModuleDefinition, user);
+  }
   bootstrapped = true;
 }

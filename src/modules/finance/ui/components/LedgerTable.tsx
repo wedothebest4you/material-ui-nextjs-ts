@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 
 import { deleteLedgerAction } from '../../server/ledger.actions';
-import { LedgerEditDialog } from '../LedgerEditDialog';
+import LedgerEditDialog from '../LedgerEditDialog';
 
 interface Props {
   ledgers: any[];
@@ -30,7 +30,7 @@ export function LedgerTable({ ledgers }: Props) {
         </TableHead>
 
         <TableBody>
-          {ledgers.map((ledger: any) => {
+          {/* {ledgers.map((ledger: any) => {
             debugger;
             return (
               <TableRow key={ledger._id}>
@@ -53,7 +53,7 @@ export function LedgerTable({ ledgers }: Props) {
                 </TableCell>
               </TableRow>
             );
-          })}
+          })} */}
         </TableBody>
       </Table>
     </TableContainer>

@@ -19,7 +19,6 @@
 import ShellLayout from './ShellLayout';
 import bootstrapPlatform from '../services/bootstrapPlatform';
 import { IUser } from '@/shared/types';
-import navigationResolver from '../services/navigationResolver';
 import ModuleRegistry from '../services/ModuleRegistry';
 
 export default async function PlatformShell({
@@ -30,12 +29,17 @@ export default async function PlatformShell({
   const user: IUser = {
     email: 'test@gmail.com',
     isAdmin: false,
-    grantedRoutes: ['1', '2'],
+    grantedRoutes: ['1', '2', '4'],
   };
 
   bootstrapPlatform(user);
 
-  const module = ModuleRegistry.getModuleRegistry();
+  const moduleList = ModuleRegistry.getModuleList();
+  const navigatioin = ModuleRegistry.getNavigation();
 
-  return <ShellLayout>{children}</ShellLayout>;
+  return (
+    <ShellLayout moduleList={moduleList} navigation={navigatioin}>
+      {children}
+    </ShellLayout>
+  );
 }

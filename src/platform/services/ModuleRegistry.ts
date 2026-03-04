@@ -13,7 +13,7 @@
  * - Modules must NOT read registry directly
  */
 
-import { ModuleDefinition } from '@/shared/types';
+import { ModuleDefinition, RouteNode } from '@/shared/types';
 import { IUser } from '@/shared/types';
 import {
   RouteDictionarybyRouteId,
@@ -28,7 +28,8 @@ export default class ModuleRegistry {
     let routesbyId: RouteDictionarybyRouteId = module[namespace].routesbyId;
 
     if (!user.isAdmin) {
-      for (const routeId in grantedRoutes) {
+      routesbyId = {};
+      for (const routeId of grantedRoutes) {
         routesbyId[routeId] = module[namespace].routesbyId[routeId];
       }
     }
@@ -43,20 +44,38 @@ export default class ModuleRegistry {
   static getModuleRegistry() {
     return this.modules;
   }
+
+  static getModuleList() {
+    return Object.keys(this.modules);
+  }
+  static getNavigation() {
+    let navigation: { [module: string]: { navigation: RouteNode[] } } = {};
+    Object.entries(this.modules).map(([key, value]) => {
+      navigation[key] = { navigation: value.navigation };
+    });
+    return navigation;
+  }
 }
 
 function addRoutesbyFullPath(routes: RouteDictionarybyRouteId) {
-  let routesbyFullPath!: RouteDictionarybyFullPath;
+  let routesbyFullPath: RouteDictionarybyFullPath = {};
 
-  Object.entries(routes).forEach(([key, value]) => {
+  Object.entries(routes).forEach(([, value]) => {
     routesbyFullPath[value.fullPath] = value;
   });
   return routesbyFullPath;
 }
 
 export function resolveNavigation(routes: RouteDictionarybyRouteId) {
-  const navigation = Object.entries(routes).filter(
-    ([routeId, metaData]) => metaData.showInNavigation,
+  // For navigation array, an instance of routes dictionary will be coverted
+  // to an array of route objects. And then it will filter on showInNavigation.
+  // e.g.
+  // > const d = {1:'A',2:'B'}
+  // Object.values(d)
+  // [ 'A', 'B' ]
+  // then the array will filter
+  const navigation = Object.values(routes).filter(
+    (route) => route.showInNavigation,
   );
-  return Object.fromEntries(navigation);
+  return navigation;
 }

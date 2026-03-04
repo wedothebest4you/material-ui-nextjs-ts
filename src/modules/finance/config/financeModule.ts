@@ -66,7 +66,7 @@ export const financeModule: ModuleDefinition = {
       },
     },
     routesbyPath: {},
-    navigation: {},
+    navigation: [],
   },
 };
 
