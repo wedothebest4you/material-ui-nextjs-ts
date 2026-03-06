@@ -2,5 +2,6 @@
 Since routesById is only used in typing the module information at the module level, it may be not required in the global module registry.
 routesByFullPath may be the only object to be retain here. This shall be kept tracked and take the decion at due time.
 
+2. Naming convention : https://www.piyushgambhir.com/blogs/next-js-naming-conventions
 
 

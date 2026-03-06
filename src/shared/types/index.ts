@@ -23,15 +23,15 @@ export type RouteDictionarybyFullPath = {
   [fullPath: string]: RouteNode;
 };
 
-type ModuleNamespace = {
-  [namespace: string]: string;
-};
-
 export type ModuleDefinition = {
   [namespace: string]: {
     routesbyId: RouteDictionarybyRouteId;
     routesbyPath: RouteDictionarybyFullPath;
-    navigation: RouteNode[];
+    navigation: {
+      [routeId: string]: {
+        longDescription: string;
+      };
+    };
   };
 };
 
@@ -40,5 +40,7 @@ export interface IUser {
 
   isAdmin: boolean;
 
-  grantedRoutes: string[];
+  grantedRoutes: {
+    [namespace: string]: string[];
+  };
 }

@@ -29,13 +29,21 @@ export default async function PlatformShell({
   const user: IUser = {
     email: 'test@gmail.com',
     isAdmin: false,
-    grantedRoutes: ['1', '2', '4'],
+    grantedRoutes: {
+      finance: ['fn1', 'fn2', 'fnl'],
+      // dashboard: ['db1'],
+    },
   };
 
   bootstrapPlatform(user);
 
   const moduleList = ModuleRegistry.getModuleList();
   const navigatioin = ModuleRegistry.getNavigation();
+  console.log('PlatformShell');
+  console.log('Module List');
+  console.log(moduleList);
+  console.log('Navigation');
+  console.log(JSON.stringify(navigatioin));
 
   return (
     <ShellLayout moduleList={moduleList} navigation={navigatioin}>

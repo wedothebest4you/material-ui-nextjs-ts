@@ -15,15 +15,10 @@
  * This is owned by Next.js App Router, not by platform or modules.
  */
 
-import { ReactNode } from 'react';
-import { PlatformShell } from '@/platform/index';
-
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: any) {
   return (
-    <html lang="en">
-      <body>
-        <PlatformShell>{children}</PlatformShell>
-      </body>
+    <html>
+      <body>{children}</body>
     </html>
   );
 }

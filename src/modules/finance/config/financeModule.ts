@@ -19,20 +19,31 @@ import { ModuleDefinition } from '@/shared/types/index';
 export const financeModule: ModuleDefinition = {
   finance: {
     routesbyId: {
-      '1': {
-        routeId: '1',
+      fn1: {
+        routeId: 'fn1',
         parentId: null,
         lineItemId: 1,
+        segment: 'finance',
+        fullPath: '/finance',
+        component: () => import('../ui/dashboard'),
+        shortDescription: 'Finance dashboard',
+        longDescription: 'Finance operational dashboard',
+        showInNavigation: true,
+      },
+      fnl: {
+        routeId: 'fnl',
+        parentId: null,
+        lineItemId: 2,
         segment: 'ledger',
         fullPath: '/finance/ledger',
         shortDescription: 'Ledger',
-        longDescription: 'Ledger management module.',
+        longDescription: 'Ledger options',
         showInNavigation: true,
       },
-      '2': {
-        routeId: '2',
-        parentId: '1',
-        lineItemId: 2,
+      fn2: {
+        routeId: 'fn2',
+        parentId: 'fnl',
+        lineItemId: 3,
         segment: 'list',
         fullPath: '/finance/ledger/list',
         component: () => import('../ui/LedgerListPage'),
@@ -41,10 +52,10 @@ export const financeModule: ModuleDefinition = {
         showInNavigation: false,
       },
 
-      '3': {
-        routeId: '3',
-        parentId: '1',
-        lineItemId: 3,
+      fn3: {
+        routeId: 'fn3',
+        parentId: 'fnl',
+        lineItemId: 4,
         segment: 'new',
         fullPath: '/finance/ledger/new',
         component: () => import('../ui/LedgerCreateForm'),
@@ -53,10 +64,10 @@ export const financeModule: ModuleDefinition = {
         showInNavigation: false,
       },
 
-      '4': {
-        routeId: '4',
-        parentId: '1',
-        lineItemId: 4,
+      fn4: {
+        routeId: 'fn4',
+        parentId: 'fnl',
+        lineItemId: 5,
         segment: ':id',
         fullPath: '/finance/ledger/:id',
         component: () => import('../ui/LedgerEditDialog'),

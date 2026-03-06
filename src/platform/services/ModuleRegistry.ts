@@ -19,12 +19,14 @@ import {
   RouteDictionarybyRouteId,
   RouteDictionarybyFullPath,
 } from '@/shared/types';
+import React from 'react';
 
 export default class ModuleRegistry {
   static modules: ModuleDefinition = {};
 
   static register(namespace: string, module: ModuleDefinition, user: IUser) {
-    const grantedRoutes = user.grantedRoutes;
+    const grantedRoutes = user.grantedRoutes[namespace];
+    //console.log(`grantedRoutes : ${grantedRoutes}`);
     let routesbyId: RouteDictionarybyRouteId = module[namespace].routesbyId;
 
     if (!user.isAdmin) {
@@ -33,6 +35,8 @@ export default class ModuleRegistry {
         routesbyId[routeId] = module[namespace].routesbyId[routeId];
       }
     }
+    //console.log('routesbyId:');
+    // console.log(routesbyId);
 
     this.modules[namespace] = {
       routesbyId,
@@ -49,17 +53,21 @@ export default class ModuleRegistry {
     return Object.keys(this.modules);
   }
   static getNavigation() {
-    let navigation: { [module: string]: { navigation: RouteNode[] } } = {};
+    let navigation: {
+      [module: string]: {
+        [routeId: string]: {
+          longDescription: string;
+        };
+      };
+    } = {};
     Object.entries(this.modules).map(([key, value]) => {
-      navigation[key] = { navigation: value.navigation };
+      navigation[key] = value.navigation;
     });
-    return navigation;
   }
 }
 
 function addRoutesbyFullPath(routes: RouteDictionarybyRouteId) {
   let routesbyFullPath: RouteDictionarybyFullPath = {};
-
   Object.entries(routes).forEach(([, value]) => {
     routesbyFullPath[value.fullPath] = value;
   });
@@ -74,8 +82,11 @@ export function resolveNavigation(routes: RouteDictionarybyRouteId) {
   // Object.values(d)
   // [ 'A', 'B' ]
   // then the array will filter
-  const navigation = Object.values(routes).filter(
-    (route) => route.showInNavigation,
-  );
+  let navigation: { [routeId: string]: { longDescription: string } } = {};
+  Object.values(routes)
+    .filter((route) => route.showInNavigation)
+    .map((route) => {
+      navigation[route.routeId] = { longDescription: route.longDescription };
+    });
   return navigation;
 }

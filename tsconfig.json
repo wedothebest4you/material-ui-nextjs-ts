@@ -15,6 +15,7 @@
     "jsx": "preserve",
     "incremental": true,
     "strictPropertyInitialization": true,
+    "sourceMap": true,
     "plugins": [
       {
         "name": "next"
