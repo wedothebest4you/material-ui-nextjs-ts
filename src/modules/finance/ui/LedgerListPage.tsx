@@ -15,6 +15,10 @@ import { Box, Typography } from '@mui/material';
 
 export default async function LedgerListPage() {
   const ledgers = await listLedgersAction();
+  console.log('< ************** >');
+  console.log(LedgerListPage.name);
+  console.log('Ledger List');
+  console.log(ledgers);
 
   return (
     <Box>

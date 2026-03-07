@@ -30,23 +30,23 @@ export default async function PlatformShell({
     email: 'test@gmail.com',
     isAdmin: false,
     grantedRoutes: {
-      finance: ['fn1', 'fn2', 'fnl'],
-      // dashboard: ['db1'],
+      finance: ['fn1', 'fnl'],
+      dashboard: ['db1'],
     },
   };
 
   bootstrapPlatform(user);
 
   const moduleList = ModuleRegistry.getModuleList();
-  const navigatioin = ModuleRegistry.getNavigation();
-  console.log('PlatformShell');
-  console.log('Module List');
+  const navigation = ModuleRegistry.getNavigation();
+  console.log('Component : PlatformShell');
+  console.log('Item : Module List');
   console.log(moduleList);
-  console.log('Navigation');
-  console.log(JSON.stringify(navigatioin));
+  console.log('Item : Navigation');
+  console.log(navigation);
 
   return (
-    <ShellLayout moduleList={moduleList} navigation={navigatioin}>
+    <ShellLayout moduleList={moduleList} navigation={navigation}>
       {children}
     </ShellLayout>
   );

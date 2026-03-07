@@ -36,21 +36,22 @@ export const financeModule: ModuleDefinition = {
         lineItemId: 2,
         segment: 'ledger',
         fullPath: '/finance/ledger',
+        component: () => import('../ui/LedgerListPage'),
         shortDescription: 'Ledger',
         longDescription: 'Ledger options',
         showInNavigation: true,
       },
-      fn2: {
-        routeId: 'fn2',
-        parentId: 'fnl',
-        lineItemId: 3,
-        segment: 'list',
-        fullPath: '/finance/ledger/list',
-        component: () => import('../ui/LedgerListPage'),
-        shortDescription: 'View Ledger',
-        longDescription: 'Allows user to browse ledger records.',
-        showInNavigation: false,
-      },
+      // fn2: {
+      //   routeId: 'fn2',
+      //   parentId: 'fnl',
+      //   lineItemId: 3,
+      //   segment: 'list',
+      //   fullPath: '/finance/ledger/list',
+      //   component: () => import('../ui/LedgerListPage'),
+      //   shortDescription: 'View Ledger',
+      //   longDescription: 'Allows user to browse ledger records.',
+      //   showInNavigation: false,
+      // },
 
       fn3: {
         routeId: 'fn3',
@@ -77,7 +78,7 @@ export const financeModule: ModuleDefinition = {
       },
     },
     routesbyPath: {},
-    navigation: [],
+    navigation: {},
   },
 };
 

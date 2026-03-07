@@ -1,5 +1,9 @@
 import { PlatformRouteRenderer } from '@/platform/index';
 
-export default function Page({ params }: { params: { slug?: string[] } }) {
-  return <PlatformRouteRenderer slug={params.slug} />;
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  return <PlatformRouteRenderer slug={(await params).slug} />;
 }

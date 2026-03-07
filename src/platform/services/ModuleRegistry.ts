@@ -18,6 +18,7 @@ import { IUser } from '@/shared/types';
 import {
   RouteDictionarybyRouteId,
   RouteDictionarybyFullPath,
+  Navigation,
 } from '@/shared/types';
 import React from 'react';
 
@@ -46,23 +47,24 @@ export default class ModuleRegistry {
   }
 
   static getModuleRegistry() {
+    console.log('getModuleRegistry');
+    console.log('module registrty');
+    console.log(this.modules);
     return this.modules;
   }
 
   static getModuleList() {
     return Object.keys(this.modules);
   }
+
   static getNavigation() {
     let navigation: {
-      [module: string]: {
-        [routeId: string]: {
-          longDescription: string;
-        };
-      };
+      [module: string]: Navigation;
     } = {};
     Object.entries(this.modules).map(([key, value]) => {
       navigation[key] = value.navigation;
     });
+    return navigation;
   }
 }
 
@@ -82,11 +84,14 @@ export function resolveNavigation(routes: RouteDictionarybyRouteId) {
   // Object.values(d)
   // [ 'A', 'B' ]
   // then the array will filter
-  let navigation: { [routeId: string]: { longDescription: string } } = {};
+  let navigation: Navigation = {};
   Object.values(routes)
     .filter((route) => route.showInNavigation)
     .map((route) => {
-      navigation[route.routeId] = { longDescription: route.longDescription };
+      navigation[route.routeId] = {
+        fullPath: route.fullPath,
+        longDescription: route.longDescription,
+      };
     });
   return navigation;
 }

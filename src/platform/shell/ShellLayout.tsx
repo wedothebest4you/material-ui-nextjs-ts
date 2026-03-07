@@ -17,6 +17,7 @@
  */
 
 'use client';
+
 import React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -29,6 +30,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
 import { RouteNode } from '@/shared/types';
+import { Navigation } from '@/shared/types';
 
 const drawerWidth = 240;
 
@@ -39,9 +41,13 @@ export default function ShellLayout({
 }: {
   children: React.ReactNode;
   moduleList: string[];
-  navigation: { [module: string]: { navigation: RouteNode[] } };
+  navigation: { [module: string]: Navigation };
 }) {
-  // const moduleList = ModuleRegistry.getModuleList();
+  console.log('Component : ShellLayout');
+  console.log('Item : Module List');
+  console.log(moduleList);
+  console.log('Item : Navigation');
+  console.log(navigation);
   const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
   return (
     <Box sx={{ display: 'flex' }}>
@@ -91,11 +97,17 @@ export default function ShellLayout({
           {/* SECOND LIST (MODULE MENUS) */}
           <Box sx={{ flexGrow: 1 }}>
             <List>
-              {navigation[selectedModule].navigation.map((item) => (
-                <ListItemButton key={item.routeId}>
-                  <ListItemText primary={item.longDescription} />
-                </ListItemButton>
-              ))}
+              {Object.entries(navigation[selectedModule]).map(
+                ([key, value]) => (
+                  <ListItemButton
+                    key={key}
+                    component={Link}
+                    href={value.fullPath}
+                  >
+                    <ListItemText primary={value.longDescription} />
+                  </ListItemButton>
+                ),
+              )}
             </List>
           </Box>
         </Box>

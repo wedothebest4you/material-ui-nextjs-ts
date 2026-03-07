@@ -23,15 +23,18 @@ export type RouteDictionarybyFullPath = {
   [fullPath: string]: RouteNode;
 };
 
+export type Navigation = {
+  [routeId: string]: {
+    longDescription: string;
+    fullPath: string;
+  };
+};
+
 export type ModuleDefinition = {
   [namespace: string]: {
     routesbyId: RouteDictionarybyRouteId;
     routesbyPath: RouteDictionarybyFullPath;
-    navigation: {
-      [routeId: string]: {
-        longDescription: string;
-      };
-    };
+    navigation: Navigation;
   };
 };
 

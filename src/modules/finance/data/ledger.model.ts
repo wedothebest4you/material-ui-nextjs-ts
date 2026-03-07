@@ -3,6 +3,20 @@
  * Owned fully by finance module.
  */
 
+/*
+
+ToDo:
+The _id field in not serializable when it is passed from a
+server component to client components. Therefore the virtual getter id
+provided by mongoose would be the required equivalent. However, this getter
+will be skipped when lean method is performed in find. Therefore it is also not available. 
+
+At present, the the _id has been
+converted into a string while it is passsed across the rendering boundary.
+This may need to revisit to make more efficient.
+
+*/
+
 import mongoose, { Schema, InferSchemaType, models, model } from 'mongoose';
 
 const LedgerSchema = new Schema(

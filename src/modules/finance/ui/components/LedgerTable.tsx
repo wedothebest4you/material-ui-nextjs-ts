@@ -18,6 +18,7 @@ interface Props {
 }
 
 export function LedgerTable({ ledgers }: Props) {
+  debugger;
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -30,20 +31,20 @@ export function LedgerTable({ ledgers }: Props) {
         </TableHead>
 
         <TableBody>
-          {/* {ledgers.map((ledger: any) => {
-            debugger;
+          {ledgers.map((ledger) => {
+            const ledgerStrId = { ...ledger, _id: ledger._id.toString() };
             return (
-              <TableRow key={ledger._id}>
-                <TableCell>{ledger.name}</TableCell>
+              <TableRow key={ledgerStrId._id}>
+                <TableCell>{ledgerStrId.name}</TableCell>
 
-                <TableCell>{ledger.code}</TableCell>
+                <TableCell>{ledgerStrId.code}</TableCell>
 
                 <TableCell>
                   <Stack direction="row" spacing={1}>
-                    <LedgerEditDialog ledger={ledger} />
+                    {<LedgerEditDialog ledger={{ ...ledgerStrId }} />}
 
                     <form action={deleteLedgerAction}>
-                      <input type="hidden" name="id" value={ledger._id} />
+                      <input type="hidden" name="id" value={ledgerStrId._id} />
 
                       <Button type="submit" color="error">
                         Delete
@@ -53,7 +54,7 @@ export function LedgerTable({ ledgers }: Props) {
                 </TableCell>
               </TableRow>
             );
-          })} */}
+          })}
         </TableBody>
       </Table>
     </TableContainer>

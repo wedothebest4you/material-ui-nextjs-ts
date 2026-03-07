@@ -38,12 +38,11 @@ export default function bootstrapPlatform(user: IUser) {
         },
       },
       routesbyPath: {},
-      navigation: [],
+      navigation: {},
     },
   };
   if (!bootstrapped) {
-    debugger;
-    // ModuleRegistry.register('dashboard', dashboard, user);
+    ModuleRegistry.register('dashboard', dashboard, user);
     ModuleRegistry.register('finance', financeModuleDefinition, user);
   }
   bootstrapped = true;

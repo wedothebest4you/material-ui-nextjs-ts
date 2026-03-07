@@ -11,7 +11,8 @@ import { revalidatePath } from 'next/cache';
 const ORG_ID = 'org_demo'; // Replace with real org context
 
 export async function listLedgersAction() {
-  return listLedgers(ORG_ID);
+  const ledgerList = listLedgers(ORG_ID);
+  return ledgerList;
 }
 
 export async function createLedgerAction(formData: FormData) {

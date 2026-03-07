@@ -1,0 +1,2 @@
+TO delete a line : Cmd + Shift + K
+switch between the split terminal and the editors : Cmd + Alt + Arrows

@@ -8,7 +8,10 @@ type Props = {
 export default async function PlatformRouteRenderer({ slug = [] }: Props) {
   const path = '/' + (slug?.join('/') ?? '');
 
-  const route = resolveRouteByPath(slug[0] || '/dashboard', path);
+  console.log(PlatformRouteRenderer.name);
+  console.log(`slug[0] ${slug[0]}`);
+
+  const route = resolveRouteByPath(slug[0] || 'dashboard', path);
 
   if (!route?.component) {
     return notFound();
