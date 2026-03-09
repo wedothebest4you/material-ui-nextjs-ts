@@ -4,3 +4,4 @@ export { default as LedgerEditDialog } from './ui/LedgerEditDialog';
 export { default as LedgerCreateForm } from './ui/LedgerCreateForm';
 export { default as Dashboard } from './ui/dashboard';
 export { default as StrtegicDashboard } from './ui/components/strategic-dashboard';
+export { default as AccountingTemplateGrid } from './chart-of-accounts/account-template/ui/account-template-grid';

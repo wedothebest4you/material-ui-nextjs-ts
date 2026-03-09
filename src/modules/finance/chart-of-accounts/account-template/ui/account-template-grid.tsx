@@ -1,0 +1,112 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import { Box, Button, IconButton } from '@mui/material';
+
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import TemplateForm from './account-template-form';
+
+import {
+  getAccountTemplates,
+  createAccountTemplate,
+  updateAccountTemplate,
+  softDeleteAccountTemplate,
+} from '../service/account-template-action';
+
+export default function TemplateGrid() {
+  const [rows, setRows] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<any>(null);
+
+  const load = async () => {
+    const data = await getAccountTemplates();
+    console.log(data);
+    setRows(data);
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const columns: GridColDef[] = [
+    { field: 'code', headerName: 'Code', width: 120 },
+    { field: 'name', headerName: 'Name', flex: 1 },
+
+    {
+      field: 'isGroup',
+      headerName: 'Group',
+      width: 100,
+      valueGetter: (p: any) => (p.row.isGroup ? 'Yes' : 'No'),
+    },
+
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 120,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            onClick={() => {
+              setSelected(params.row);
+              setOpen(true);
+            }}
+          >
+            <EditIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={async () => {
+              await softDeleteAccountTemplate(params.row._id);
+              load();
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
+  return (
+    <Box>
+      <Box sx={{ mb: 2 }}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            setSelected(null);
+            setOpen(true);
+          }}
+        >
+          New Account
+        </Button>
+      </Box>
+
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        getRowId={(r) => r._id}
+        autoHeight
+      />
+
+      <TemplateForm
+        open={open}
+        initialData={selected}
+        onClose={() => setOpen(false)}
+        onSubmit={async (data) => {
+          if (selected) {
+            await updateAccountTemplate(selected._id, data);
+          } else {
+            await createAccountTemplate(data);
+          }
+
+          setOpen(false);
+          load();
+        }}
+      />
+    </Box>
+  );
+}

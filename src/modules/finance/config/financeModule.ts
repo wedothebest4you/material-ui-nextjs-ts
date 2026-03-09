@@ -34,11 +34,12 @@ export const financeModule: ModuleDefinition = {
         routeId: 'fnl',
         parentId: null,
         lineItemId: 2,
-        segment: 'ledger',
-        fullPath: '/finance/ledger',
-        component: () => import('../ui/LedgerListPage'),
-        shortDescription: 'Ledger',
-        longDescription: 'Ledger options',
+        segment: 'coa',
+        fullPath: '/finance/coa',
+        component: () =>
+          import('../chart-of-accounts/account-template/ui/account-template-grid'),
+        shortDescription: 'Account Template',
+        longDescription: 'Account Template',
         showInNavigation: true,
       },
       // fn2: {
