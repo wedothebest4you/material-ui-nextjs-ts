@@ -33,15 +33,21 @@ export default function TemplateGrid() {
   }, []);
 
   const columns: GridColDef[] = [
-    { field: 'code', headerName: 'Code', width: 120 },
+    { field: 'code', headerName: 'Code', width: 1 },
     { field: 'name', headerName: 'Name', flex: 1 },
-
+    { field: 'path', headerName: 'Path', flex: 1 },
     {
       field: 'isGroup',
       headerName: 'Group',
       width: 100,
-      valueGetter: (p: any) => (p.row.isGroup ? 'Yes' : 'No'),
+      valueGetter: (p: any) => {
+        // console.log('Data grid valueGetter');
+        // console.log(p);
+        return p.isGroup ? 'Yes' : 'No';
+      },
     },
+    { field: 'createdAt', headerName: 'Created at', flex: 1 },
+    { field: 'updatedAt', headerName: 'UpdatedAt', flex: 1 },
 
     {
       field: 'actions',
@@ -51,6 +57,7 @@ export default function TemplateGrid() {
         <>
           <IconButton
             onClick={() => {
+              console.log('params.row', params.row);
               setSelected(params.row);
               setOpen(true);
             }}
@@ -88,7 +95,7 @@ export default function TemplateGrid() {
       <DataGrid
         rows={rows}
         columns={columns}
-        getRowId={(r) => r._id}
+        getRowId={(r) => r.id}
         autoHeight
       />
 
@@ -98,7 +105,7 @@ export default function TemplateGrid() {
         onClose={() => setOpen(false)}
         onSubmit={async (data) => {
           if (selected) {
-            await updateAccountTemplate(selected._id, data);
+            await updateAccountTemplate(selected.id, data);
           } else {
             await createAccountTemplate(data);
           }

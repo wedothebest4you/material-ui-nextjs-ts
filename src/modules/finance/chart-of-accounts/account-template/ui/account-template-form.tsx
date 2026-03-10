@@ -19,7 +19,7 @@ interface TemplateFormProps {
   open: boolean;
   initialData?: any;
   onClose: () => void;
-  onSubmit: (data: any) => void;
+  onSubmit: (data: any) => Promise<void>;
 }
 
 export default function TemplateForm({
@@ -35,6 +35,7 @@ export default function TemplateForm({
     parentId: '',
     isGroup: false,
   });
+  const [errors, setErrors] = useState<any>({});
 
   useEffect(() => {
     if (initialData) {
@@ -54,7 +55,30 @@ export default function TemplateForm({
         isGroup: false,
       });
     }
+
+    setErrors({});
   }, [initialData]);
+
+  function validate() {
+    const newErrors: any = {};
+
+    if (!form.code.trim()) newErrors.code = 'Code is required';
+
+    if (!form.name.trim()) newErrors.name = 'Name is required';
+    // console.log('form.type.trim()', form);
+    // //    if (!form.type.trim()) newErrors.type = 'Type is required';
+    if (!form.type.trim()) newErrors.type = 'Type is required';
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
+
+  async function handleSubmit() {
+    if (!validate()) return;
+
+    await onSubmit(form);
+  }
 
   const handleChange = (e: any) => {
     setForm({
@@ -78,6 +102,9 @@ export default function TemplateForm({
               value={form.code}
               onChange={handleChange}
               fullWidth
+              required
+              error={!!errors.code}
+              helperText={errors.code}
             />
           </Grid>
 
@@ -88,13 +115,16 @@ export default function TemplateForm({
               value={form.name}
               onChange={handleChange}
               fullWidth
+              required
+              error={!!errors.name}
+              helperText={errors.name}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               select
               label="Type"
-              fullWidth
+              name="type"
               value={form.type}
               onChange={(e) =>
                 setForm({
@@ -102,13 +132,17 @@ export default function TemplateForm({
                   type: e.target.value,
                 })
               }
+              fullWidth
+              required
+              error={!!errors.type}
+              helperText={errors.type}
             >
               <MenuItem value="asset">Asset</MenuItem>
               <MenuItem value="liability">Liability</MenuItem>
               <MenuItem value="equity">Equity</MenuItem>
               <MenuItem value="revenue">Revenue</MenuItem>
               <MenuItem value="expense">Expense</MenuItem>
-            </TextField>{' '}
+            </TextField>
           </Grid>
 
           <Grid item xs={12}>
@@ -142,7 +176,7 @@ export default function TemplateForm({
 
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button variant="contained" onClick={() => onSubmit(form)}>
+        <Button variant="contained" onClick={handleSubmit}>
           Save
         </Button>
       </DialogActions>

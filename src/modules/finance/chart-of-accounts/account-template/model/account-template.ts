@@ -1,9 +1,4 @@
-// To bring in the field id field in all lean find,
-// the following plug-in has been used
-//https://plugins.mongoosejs.io/plugins/lean-getters
-
 import mongoose from 'mongoose';
-import mongooseLeanGetters from 'mongoose-lean-getters';
 
 const AccountTemplateSchema = new mongoose.Schema(
   {
@@ -51,8 +46,6 @@ const AccountTemplateSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
-
-AccountTemplateSchema.plugin(mongooseLeanGetters);
 
 AccountTemplateSchema.index({ code: 1 });
 

@@ -13,7 +13,9 @@ export async function getAccountTemplates() {
     { $match: { isDeleted: false } },
     {
       $project: {
-        _id: { $toString: '$_id' },
+        id: { $toString: '$_id' },
+        _id: 0,
+        code: 1,
         name: 1,
         type: 1,
         parentId: 1,
@@ -23,7 +25,6 @@ export async function getAccountTemplates() {
         isDeleted: 1,
         createdAt: 1,
         updatedAt: 1,
-        __v: 1,
       },
     },
     { $sort: { code: 1 } },
@@ -43,10 +44,16 @@ export async function createAccountTemplate(data: any) {
   const path = parent ? `${parent.path}.${data.code}` : data.code;
   const rec = {
     ...data,
-    parentId: data.isGroup ? null : data.parentId,
     level,
     path,
   };
+
+  // logical OR assignent used only after the
+  // object has created.
+  // this makes parentId null if it is a falsy
+  // value - an empty string.
+  rec.parentId ||= null;
+
   console.log(createAccountTemplate.name);
   console.log('New template');
   console.log(rec);
@@ -55,6 +62,8 @@ export async function createAccountTemplate(data: any) {
 
 export async function updateAccountTemplate(id: string, data: any) {
   await connectDB();
+
+  data.parentId ||= null;
 
   return AccountTemplate.findByIdAndUpdate(id, data, { new: true });
 }
