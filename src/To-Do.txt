@@ -4,4 +4,52 @@ routesByFullPath may be the only object to be retain here. This shall be kept tr
 
 2. Naming convention : https://www.piyushgambhir.com/blogs/next-js-naming-conventions
 
+11.Mar.26
+---------
+Account template module
+
+ToDo:
+
+1. Check and fix the module title.
+
+2. Please add an Add button to the toolbar of the data grid and then replace the current interface a separate command button for the same.
+The label may be "Create"
+Citations: 
+
+AAI: While using MUI data grid community version, what sort of interface will normally be provided by the development community to create a new record. The edit and delete options have nomally be given through the respective Icon button, this has been understood so.
+AI : https://share.google/aimode/3mLCGVppuAQhaCRvH
+
+One of the citations available in the AI output:
+https://mui.com/x/react-data-grid/components/toolbar/
+
+
+3. How to size the columns in  the data grid.
+
+4. What is the aligment convention followed.
+
+5. How date values are displayed ?
+
+6. How to serialize the grid settings ?
+
+7. Give indications on how to use the fields
+by giving helper text.
+
+8. It found it takes time to provide a helper text for the switch control.
+Please see to it, and the objective is to give a text - "The default selection is Not a Group Account".
+
+9. Must work on the setting the property aria-labelledby on all fields.
+
+10. Style helper text centrally. One reference is the same for Group Accounts.
+At present without styling, it shows close to the type of account field,
+which is little crowded.
+
+11. Limit the width of each field by some size. For e.g the code should be of only 4 characters.
+12. Write the code to propse the next available code.
+
+13. Type the reset from the service getAccountTemplates.
+
+14. Give a spinner on loading data into the Grid.
+
+15. How to code the enumerated items centrally typed.
+e.g. Category and Account types.
 

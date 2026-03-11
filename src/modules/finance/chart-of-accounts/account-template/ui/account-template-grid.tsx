@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import TemplateForm from './account-template-form';
+import { AccountTemplateDocument } from '../model/account-template';
 
 import {
   getAccountTemplates,
@@ -17,10 +18,14 @@ import {
   softDeleteAccountTemplate,
 } from '../service/account-template-action';
 
+type SelectedAccount =
+  | AccountTemplateDocument
+  | (Omit<AccountTemplateDocument, 'id'> & { id: 'new' });
+
 export default function TemplateGrid() {
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<AccountTemplateDocument[]>([]);
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<SelectedAccount>();
 
   const load = async () => {
     const data = await getAccountTemplates();
@@ -37,8 +42,8 @@ export default function TemplateGrid() {
     { field: 'name', headerName: 'Name', flex: 1 },
     { field: 'path', headerName: 'Path', flex: 1 },
     {
-      field: 'isGroup',
-      headerName: 'Group',
+      field: 'accType',
+      headerName: 'Account Type',
       width: 100,
       valueGetter: (p: any) => {
         // console.log('Data grid valueGetter');
@@ -84,7 +89,7 @@ export default function TemplateGrid() {
         <Button
           variant="contained"
           onClick={() => {
-            setSelected(null);
+            setSelected({ id: 'new' });
             setOpen(true);
           }}
         >

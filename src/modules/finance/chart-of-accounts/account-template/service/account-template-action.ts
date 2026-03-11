@@ -1,6 +1,9 @@
 'use server';
 
-import { AccountTemplate } from '../model/account-template';
+import {
+  AccountTemplate,
+  AccountTemplateDocumnent,
+} from '../model/account-template';
 import { connectDB } from '@/shared/db/connections';
 
 export async function getAccountTemplates() {
@@ -9,7 +12,7 @@ export async function getAccountTemplates() {
   // const data = AccountTemplate.find({ isDeleted: false })
   //   .sort({ code: 1 })
   //   .lean({ getters: true });
-  const data = AccountTemplate.aggregate([
+  const data = await AccountTemplate.aggregate([
     { $match: { isDeleted: false } },
     {
       $project: {
@@ -17,11 +20,11 @@ export async function getAccountTemplates() {
         _id: 0,
         code: 1,
         name: 1,
-        type: 1,
+        category: 1,
         parentId: 1,
         path: 1,
         level: 1,
-        isGroup: 1,
+        accType: 1,
         isDeleted: 1,
         createdAt: 1,
         updatedAt: 1,
@@ -32,7 +35,7 @@ export async function getAccountTemplates() {
   return data;
 }
 
-export async function createAccountTemplate(data: any) {
+export async function createAccountTemplate(data: AccountTemplateDocumnent) {
   await connectDB();
 
   let parent = null;
@@ -42,22 +45,16 @@ export async function createAccountTemplate(data: any) {
   const level = parent ? parent.level + 1 : 0;
 
   const path = parent ? `${parent.path}.${data.code}` : data.code;
-  const rec = {
+
+  // console.log(createAccountTemplate.name);
+  // console.log('New template');
+  // console.log(rec);
+  return AccountTemplate.create({
     ...data,
     level,
     path,
-  };
-
-  // logical OR assignent used only after the
-  // object has created.
-  // this makes parentId null if it is a falsy
-  // value - an empty string.
-  rec.parentId ||= null;
-
-  console.log(createAccountTemplate.name);
-  console.log('New template');
-  console.log(rec);
-  return AccountTemplate.create(rec);
+    parentId: data.parentId || null,
+  });
 }
 
 export async function updateAccountTemplate(id: string, data: any) {
