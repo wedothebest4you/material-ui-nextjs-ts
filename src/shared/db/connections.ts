@@ -29,6 +29,6 @@ export async function connectDB() {
   }
 
   cached.conn = await cached.promise;
-
+  cached.conn.set('debug', true);
   return cached.conn;
 }

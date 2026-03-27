@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import TemplateForm from './account-template-form';
-import { AccountTemplateDocument } from '../model/account-template';
+import { IAccountTemplate } from '../model/account-template';
 
 import {
   getAccountTemplates,
@@ -18,14 +18,10 @@ import {
   softDeleteAccountTemplate,
 } from '../service/account-template-action';
 
-type SelectedAccount =
-  | AccountTemplateDocument
-  | (Omit<AccountTemplateDocument, 'id'> & { id: 'new' });
-
 export default function TemplateGrid() {
-  const [rows, setRows] = useState<AccountTemplateDocument[]>([]);
+  const [rows, setRows] = useState<IAccountTemplate[]>([]);
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<SelectedAccount>();
+  const [selected, setSelected] = useState<IAccountTemplate>();
 
   const load = async () => {
     const data = await getAccountTemplates();
@@ -89,7 +85,7 @@ export default function TemplateGrid() {
         <Button
           variant="contained"
           onClick={() => {
-            setSelected({ id: 'new' });
+            setSelected(undefined);
             setOpen(true);
           }}
         >
@@ -106,17 +102,18 @@ export default function TemplateGrid() {
 
       <TemplateForm
         open={open}
-        initialData={selected}
+        selectedItem={selected}
         onClose={() => setOpen(false)}
-        onSubmit={async (data) => {
+        onSubmit={async (data: IAccountTemplate): Promise<boolean> => {
           if (selected) {
             await updateAccountTemplate(selected.id, data);
           } else {
-            await createAccountTemplate(data);
+            if (await createAccountTemplate(data)) {
+              setOpen(false);
+              load();
+            }
           }
-
-          setOpen(false);
-          load();
+          return true;
         }}
       />
     </Box>

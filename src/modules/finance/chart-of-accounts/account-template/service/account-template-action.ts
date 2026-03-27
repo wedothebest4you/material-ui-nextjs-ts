@@ -1,9 +1,6 @@
 'use server';
 
-import {
-  AccountTemplate,
-  AccountTemplateDocumnent,
-} from '../model/account-template';
+import { IAccountTemplate, AccountTemplate } from '../model/account-template';
 import { connectDB } from '@/shared/db/connections';
 
 export async function getAccountTemplates() {
@@ -12,7 +9,7 @@ export async function getAccountTemplates() {
   // const data = AccountTemplate.find({ isDeleted: false })
   //   .sort({ code: 1 })
   //   .lean({ getters: true });
-  const data = await AccountTemplate.aggregate([
+  const data = await AccountTemplate.aggregate<IAccountTemplate>([
     { $match: { isDeleted: false } },
     {
       $project: {
@@ -35,26 +32,37 @@ export async function getAccountTemplates() {
   return data;
 }
 
-export async function createAccountTemplate(data: AccountTemplateDocumnent) {
+export async function createAccountTemplate(data: IAccountTemplate) {
   await connectDB();
 
-  let parent = null;
-
-  if (data.parentId) parent = await AccountTemplate.findById(data.parentId);
-
-  const level = parent ? parent.level + 1 : 0;
-
-  const path = parent ? `${parent.path}.${data.code}` : data.code;
+  let parentId = undefined;
+  let parent = undefined;
+  let level = 0;
+  let path = data.code;
+  // if parent group has selected, the add the new entry as its child
+  // by setting the relation as below.
+  if (data.parentId) {
+    parentId = data.parentId;
+    parent = data.parentId && (await AccountTemplate.findById(data.parentId));
+    level = parent!.level + 1;
+    path = `${parent!.path}.${data.code}`;
+  }
 
   // console.log(createAccountTemplate.name);
   // console.log('New template');
   // console.log(rec);
-  return AccountTemplate.create({
+
+  const rec = new AccountTemplate<IAccountTemplate>({
     ...data,
-    level,
+    parentId,
     path,
-    parentId: data.parentId || null,
+    level,
   });
+
+  await rec.save();
+  //Implement this
+  //share.google/aimode/M5AEkhGKPZnKK7ggw
+  https: return data;
 }
 
 export async function updateAccountTemplate(id: string, data: any) {

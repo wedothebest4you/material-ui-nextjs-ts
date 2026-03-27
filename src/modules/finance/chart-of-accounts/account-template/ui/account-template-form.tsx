@@ -21,34 +21,52 @@ import {
   FormControl,
   Divider,
 } from '@mui/material';
-import {
-  AccountTemplate,
-  AccountTemplateDocument,
-} from '../model/account-template';
-
-type SelectedAccount =
-  | AccountTemplateDocument
-  | (Omit<AccountTemplateDocument, 'id'> & { id: 'new' });
+import { IAccountTemplate, AccountTemplate } from '../model/account-template';
 
 interface TemplateFormProps {
   open: boolean;
-  initialData: SelectedAccount;
+  selectedItem: IAccountTemplate | undefined;
   onClose: () => void;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: IAccountTemplate) => Promise<IAccountTemplate>;
 }
 
 export default function TemplateForm({
   open,
-  initialData,
+  selectedItem,
   onClose,
   onSubmit,
 }: TemplateFormProps) {
+  let initialData = selectedItem;
+  let dialogTitle = '';
+  if (!selectedItem) {
+    dialogTitle = 'Create Account Template';
+    initialData = {
+      id: '',
+      name: '',
+      code: '',
+      category: '',
+      parentId: undefined,
+      path: '',
+      level: 0,
+      accType: '',
+    };
+  } else {
+    dialogTitle = 'Edit Account Template';
+    initialData = { ...selectedItem };
+  }
+
   const [form, setForm] = useState(initialData);
-  const [errors, setErrors] = useState<{
-    code: string;
-    name: string;
-    type: string;
-  } | null>();
+  const [errors, setErrors] = useState({
+    code: '',
+    name: '',
+    type: '',
+  });
+  //Debug
+  console.log(TemplateForm.name);
+  console.log('selectedItem');
+  console.log(selectedItem);
+  console.log('form');
+  console.log(JSON.stringify(form));
 
   // useEffect(() => {
   //   if (initialData) {
@@ -73,24 +91,26 @@ export default function TemplateForm({
   // }, [initialData]);
 
   function validate() {
-    const newErrors: any = {};
+    let code = '',
+      name = '',
+      type = '';
 
-    if (!form.code.trim()) newErrors.code = 'Code is required';
+    if (!form.code.trim()) code = 'Code is required';
 
-    if (!form.name.trim()) newErrors.name = 'Name is required';
+    if (!form.name.trim()) name = 'Name is required';
     // console.log('form.type.trim()', form);
     // //    if (!form.type.trim()) newErrors.type = 'Type is required';
-    if (!form.accType.trim()) newErrors.type = 'Type is required';
+    if (!form.accType.trim()) type = 'Type is required';
 
-    setErrors(newErrors);
+    setErrors({ code, name, type });
 
-    return Object.keys(newErrors).length === 0;
+    return !(code || name || type);
   }
 
   async function handleSubmit() {
     if (!validate()) return;
 
-    await onSubmit(form);
+    if (await onSubmit(form)) setForm({});
   }
 
   const handleChange = (e: any) => {
@@ -102,9 +122,7 @@ export default function TemplateForm({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>
-        {initialData ? 'Edit Account Template' : 'Create Account Template'}
-      </DialogTitle>
+      <DialogTitle>{dialogTitle}</DialogTitle>
 
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -135,6 +153,7 @@ export default function TemplateForm({
             <TextField
               label="Group Account it belongs to"
               name="parentId"
+              defaultValue=""
               value={form.parentId}
               onChange={handleChange}
               fullWidth
@@ -143,7 +162,7 @@ export default function TemplateForm({
           </Grid>
           <FormControl required error={!!errors.type} fullWidth>
             <FormLabel>Category of Ledger or Group</FormLabel>
-            <FormHelperText>{errors.type}</FormHelperText>
+            <FormHelperText>{errors?.type}</FormHelperText>
             <RadioGroup
               row
               value={form.category}
@@ -175,9 +194,9 @@ export default function TemplateForm({
                 label="Equity"
               />
               <FormControlLabel
-                value="revevue"
+                value="revenue"
                 control={<Radio />}
-                label="Revevue"
+                label="Revenue"
               />
               <FormControlLabel
                 value="expense"

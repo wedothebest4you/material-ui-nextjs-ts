@@ -53,3 +53,22 @@ which is little crowded.
 15. How to code the enumerated items centrally typed.
 e.g. Category and Account types.
 
+16. useState replace with useActionForm,
+useReducer, useDebugvalue, useDefferedValue, useOptimistic hooks,
+useTransition
+
+17. What is a dialog component, what is does in fact compared to an normal HTML form.
+
+18. What are FormControl and FormControlLabel ?
+
+19. How to build a drop down list dynamic one.
+
+20. How to save mongoose with error checks.
+
+21. Change the TemplateForm to accept,
+the action to carry out and the related data only.
+
+22. Read mongoose Basic Schema, Model and SchemaType.
+
+21. Read mongoDB basic shema definition.
+

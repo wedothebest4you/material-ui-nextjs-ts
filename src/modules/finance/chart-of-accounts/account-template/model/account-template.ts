@@ -1,6 +1,19 @@
-import mongoose, { InferSchemaType, model } from 'mongoose';
+import mongoose, { InferSchemaType, model, Types } from 'mongoose';
 
-const AccountTemplateSchema = new mongoose.Schema(
+export interface IAccountTemplate {
+  id: string;
+  name: string;
+  code: string;
+  category: String;
+  parentId?: Types.ObjectId;
+  path: string;
+  level: number;
+  accType: string;
+  isDeleted?: boolean;
+  deletedAt?: Date;
+}
+
+const AccountTemplateSchema = new mongoose.Schema<IAccountTemplate>(
   {
     code: {
       type: String,
@@ -44,7 +57,7 @@ const AccountTemplateSchema = new mongoose.Schema(
       index: true,
     },
 
-    deletedAt: { type: Date, required: true },
+    deletedAt: { type: Date },
   },
   {
     timestamps: true,
@@ -53,14 +66,6 @@ const AccountTemplateSchema = new mongoose.Schema(
 
 AccountTemplateSchema.index({ code: 1 });
 
-export type AccountTemplateDocumnent = InferSchemaType<
-  typeof AccountTemplateSchema
-> & { id: string };
-
 export const AccountTemplate =
-  (mongoose.models
-    .AccountTemplate as mongoose.Model<AccountTemplateDocumnent>) ||
-  mongoose.model<AccountTemplateDocumnent>(
-    'AccountTemplate',
-    AccountTemplateSchema,
-  );
+  (mongoose.models.AccountTemplate as mongoose.Model<IAccountTemplate>) ||
+  mongoose.model<IAccountTemplate>('AccountTemplate', AccountTemplateSchema);
