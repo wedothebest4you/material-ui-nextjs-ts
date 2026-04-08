@@ -1,7 +1,9 @@
-const ensureCollection = require('../utils/ensureCollection');
+import ensureCollection from '../../utils/ensureCollection';
+import { Db } from '../../types';
+
 const ensureIndex = require('../utils/ensureIndex');
 
-module.exports = async function (db) {
+export default async function (db: Db) {
   await ensureCollection(db, 'schema_versions', {
     validator: {
       $jsonSchema: {
@@ -41,4 +43,4 @@ module.exports = async function (db) {
     { unique: true },
     { name: 'ux_collection_schema_version' },
   );
-};
+}

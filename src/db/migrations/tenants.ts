@@ -1,7 +1,10 @@
-const ensureCollection = require('../utils/ensureCollection');
-const ensureIndex = require('../utils/ensureIndex');
+// const ensureCollection = require('../utils/ensureCollection');
+// const ensureIndex = require('../utils/ensureIndex');
+import ensureCollection from '../utils/ensureCollection';
+import { MigrationFunction } from '../types';
 
-module.exports = async function (db) {
+//
+const DBscript: MigrationFunction = async function (db) {
   await ensureCollection(db, 'tenants', {
     validator: {
       $jsonSchema: {
@@ -98,9 +101,11 @@ module.exports = async function (db) {
     validationAction: 'error',
   });
 
-  const col = db.collection('business_entities');
+  const col = db.getCollection('business_entities');
 
-  await ensureIndex(col, { code: 1 }, { unique: true });
+  // await ensureIndex(col, { code: 1 }, { unique: true });
 
-  await ensureIndex(col, { name: 'text' });
+  // await ensureIndex(col, { name: 'text' });
 };
+
+module.exports = DBscript;

@@ -1,0 +1,147 @@
+import type { Db, SchemaValidation, SchemaVersionDocument } from '../types';
+import { acquireLock, releaseLock } from './migrationLocks';
+
+export default async function ensureCollection(
+  db: Db,
+  name: string,
+  schemaValidation: SchemaValidation,
+): Promise<void> {
+  try {
+    const newVersion = extractSchemaVersion(schemaValidation);
+
+    await validateSchemaVersion(db, name, newVersion);
+
+    /*
+    Check collection existence
+    */
+
+    const exists = (await db.listCollections({ name }).toArray()).length > 0;
+
+    const schemaVersions =
+      db.collection<SchemaVersionDocument>('schema_versions');
+
+    const versionDoc = await schemaVersions.findOne({ collection: name });
+
+    /*
+    Create collection if not present
+    */
+
+    if (!exists) {
+      console.log(`Creating collection ${name}`);
+
+      await db.createCollection(name, schemaValidation);
+
+      await recordSchemaVersion(db, name, newVersion);
+
+      return;
+    }
+
+    /*
+    Validate schema version record
+    */
+
+    if (!versionDoc) {
+      throw new Error(`Missing schema version entry for ${name}`);
+    }
+
+    const currentVersion = versionDoc.latest_version;
+
+    /*
+    Skip if already at latest version
+    */
+
+    if (currentVersion === newVersion) {
+      console.log(`Collection ${name} already at version ${newVersion}`);
+
+      return;
+    }
+
+    /*
+    Update validator
+    */
+
+    const result = await db.command({
+      collMod: name,
+
+      validator: schemaValidation.validator,
+
+      validationLevel: schemaValidation.validationLevel ?? 'strict',
+
+      validationAction: schemaValidation.validationAction ?? 'error',
+    });
+
+    if (!result.ok) {
+      throw new Error(`collMod failed for ${name}`);
+    }
+
+    /*
+    Record schema version
+    */
+
+    await recordSchemaVersion(db, name, newVersion);
+
+    console.log(`Updated ${name} → schema version ${newVersion}`);
+  } catch (err: unknown) {
+    console.error('\x1b[31mMIGRATION FAILED:\x1b[0m', name);
+
+    if (err instanceof Error) console.error(err.message);
+    else console.error(err);
+
+    process.exit(1);
+  }
+}
+
+function extractSchemaVersion(schemaValidation: SchemaValidation): string {
+  const { version } = schemaValidation.validator.$jsonSchema.properties;
+
+  if (version.enum.length !== 1)
+    throw new Error('Version enum must contain exactly one value');
+
+  return version.enum[0];
+}
+
+async function validateSchemaVersion(
+  db: Db,
+  collectionName: string,
+  newVersion: string,
+): Promise<void> {
+  const schemaVersions =
+    db.collection<SchemaVersionDocument>('schema_versions');
+
+  const versionDoc = await schemaVersions.findOne({
+    collection: collectionName,
+  });
+
+  if (!versionDoc) {
+    return;
+  }
+
+  const currentVersion = versionDoc.latest_version;
+
+  if (currentVersion > newVersion) {
+    throw new Error(
+      `Migration version conflict for ${collectionName}. ` +
+        `Database version (${currentVersion}) is newer than migration (${newVersion}).`,
+    );
+  }
+}
+
+async function recordSchemaVersion(
+  db: Db,
+  collectionName: string,
+  version: string,
+): Promise<void> {
+  const schemaVersions =
+    db.collection<SchemaVersionDocument>('schema_versions');
+
+  await schemaVersions.updateOne(
+    { collection: collectionName },
+    {
+      $set: {
+        latest_version: version,
+        applied_at: new Date(),
+      },
+    },
+    { upsert: true },
+  );
+}
