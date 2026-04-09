@@ -1,4 +1,4 @@
-import type { Db } from 'mongodb';
+import type { Db, CreateIndexesOptions } from 'mongodb';
 export type { Db };
 
 export interface VersionProperty {
@@ -28,16 +28,32 @@ export interface SchemaValidation {
   validationAction?: 'error';
 }
 
-export interface SchemaRevision {
-  schema_revision: string;
-  migrated_at: Date;
-}
-
 export interface SchemaVersionDocument {
   _id: string;
   collection: string;
-  latest_version: string;
-  revisions: SchemaRevision[];
+  versionCurrent: string;
+  revisions: string[];
+}
+
+export interface IndexVersionDocument {
+  _id: string;
+  collection: string;
+  index: string;
+  versionCurrent: string;
+  revisions: string[];
 }
 
 export type MigrationFunction = (db: Db) => Promise<void>;
+
+type SafeIndexOptions = Pick<
+  CreateIndexesOptions,
+  'unique' | 'sparse' | 'expireAfterSeconds' | 'partialFilterExpression'
+>;
+
+export interface EnsureIndexParams {
+  collection: string;
+  indexName: string;
+  version: string;
+  keys: Record<string, 1 | -1>;
+  options?: SafeIndexOptions;
+}

@@ -14,6 +14,7 @@ interface MigartionLock {
 
 export async function acquireLock(db: Db, nodeId: string) {
   try {
+    console.log('Acquiring migration lock');
     const filter = { _id: 'migration_lock', locked: { $ne: true } };
     const update = {
       $set: {
@@ -41,7 +42,7 @@ export async function acquireLock(db: Db, nodeId: string) {
     // } else console.error(error);
 
     // process.exit(1);
-    errorHanlder('\x1b[31mAcquire failed:\x1b[0m', nodeId, error);
+    errorHanlder(db, '\x1b[31mAcquire failed:\x1b[0m', nodeId, error);
   }
 }
 
@@ -53,6 +54,6 @@ export async function releaseLock(db: Db) {
       { $set: { locked: false } },
     );
   } catch (err) {
-    errorHanlder('\x1b[31mreleaseLock failed:\x1b[0m', undefined, err);
+    errorHanlder(db, '\x1b[31mreleaseLock failed:\x1b[0m', undefined, err);
   }
 }

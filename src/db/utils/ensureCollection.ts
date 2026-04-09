@@ -1,5 +1,4 @@
 import type { Db, SchemaValidation, SchemaVersionDocument } from '../types';
-import { acquireLock, releaseLock } from './migrationLocks';
 
 export default async function ensureCollection(
   db: Db,
@@ -44,7 +43,7 @@ export default async function ensureCollection(
       throw new Error(`Missing schema version entry for ${name}`);
     }
 
-    const currentVersion = versionDoc.latest_version;
+    const currentVersion = versionDoc.versionCurrent;
 
     /*
     Skip if already at latest version
@@ -82,12 +81,10 @@ export default async function ensureCollection(
 
     console.log(`Updated ${name} → schema version ${newVersion}`);
   } catch (err: unknown) {
-    console.error('\x1b[31mMIGRATION FAILED:\x1b[0m', name);
-
-    if (err instanceof Error) console.error(err.message);
-    else console.error(err);
-
-    process.exit(1);
+    // console.error('\x1b[31mMIGRATION FAILED:\x1b[0m', name);
+    // if (err instanceof Error) console.error(err.message);
+    // else console.error(err);
+    // process.exit(1);
   }
 }
 
@@ -100,7 +97,7 @@ function extractSchemaVersion(schemaValidation: SchemaValidation): string {
   return version.enum[0];
 }
 
-async function validateSchemaVersion(
+export async function validateSchemaVersion(
   db: Db,
   collectionName: string,
   newVersion: string,
@@ -108,25 +105,39 @@ async function validateSchemaVersion(
   const schemaVersions =
     db.collection<SchemaVersionDocument>('schema_versions');
 
-  const versionDoc = await schemaVersions.findOne({
-    collection: collectionName,
-  });
+  const exists = await db
+    .listCollections({ name: 'schema_versions' }, { nameOnly: true })
+    .hasNext();
 
-  if (!versionDoc) {
-    return;
+  if (!exists) {
+    throw new Error(
+      'schema_versions collection not found. ' +
+        'Run the dictionary migration before schema migrations.',
+    );
   }
 
-  const currentVersion = versionDoc.latest_version;
+  const doc = await schemaVersions.findOne({ _id: collectionName });
 
-  if (currentVersion > newVersion) {
+  /*
+  First migration for this collection
+  */
+
+  if (!doc) return;
+
+  /*
+  Prevent duplicate schema version
+  */
+
+  const alreadyExists = doc.revisions.some((r) => r === newVersion);
+
+  if (alreadyExists) {
     throw new Error(
-      `Migration version conflict for ${collectionName}. ` +
-        `Database version (${currentVersion}) is newer than migration (${newVersion}).`,
+      `Schema version ${newVersion} already recorded for ${collectionName}`,
     );
   }
 }
 
-async function recordSchemaVersion(
+export async function recordSchemaVersion(
   db: Db,
   collectionName: string,
   version: string,
@@ -135,13 +146,18 @@ async function recordSchemaVersion(
     db.collection<SchemaVersionDocument>('schema_versions');
 
   await schemaVersions.updateOne(
-    { collection: collectionName },
+    { _id: collectionName },
+
     {
       $set: {
-        latest_version: version,
-        applied_at: new Date(),
+        versionCurrent: version,
+      },
+
+      $push: {
+        revisions: version,
       },
     },
+
     { upsert: true },
   );
 }

@@ -1,9 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
-import type { Db, MigrationFunction } from './types';
+import { Db, MigrationFunction } from './types';
 import errorHandler from './utils/errorHanlder';
+import { acquireLock, releaseLock } from './utils/migrationLocks';
 
 export async function runMigrations(db: Db): Promise<void> {
+  const nodeId = process.env.NODE_ID || 'node-' + Date.now();
+  await acquireLock(db, nodeId);
+
   const migrationsRoot = path.join(__dirname, './migrations');
   const archiveRoot = path.join(__dirname, './archivals');
 
@@ -42,11 +46,11 @@ export async function runMigrations(db: Db): Promise<void> {
 async function ensureFolders(paths: string[]) {
   for (const p of paths) {
     try {
-      await fs.mkdir(p, { recursive: true });
+      await fs.mkdir(p, { recursive: false });
     } catch {
       // console.error('\x1b[31mCannot create folder\x1b[0m', p);
       // process.exit(1);
-      errorHandler('\x1b[31mCannot create folder\x1b[0m', p, null);
+      errorHandler(db, '\x1b[31mCannot create folder\x1b[0m', p, null);
     }
   }
 }
@@ -61,16 +65,14 @@ async function runParallelMigrations(
     f.endsWith('.js'),
   );
   // .sort()
-  // sort is not requirede.
+  // sort is not required.
   // All scripts in the same folder can process in any order
 
   if (files.length === 0) {
-    console.log(`No migrations in ${migrationsDir}`);
-    return;
+    errorHandler(`No migrations in ${migrationsDir}`, undefined, null);
   }
 
   const queue = [...files];
-  // doubt : how does this worker work
   async function worker(): Promise<void> {
     while (queue.length > 0) {
       const file = queue.shift();
@@ -86,14 +88,13 @@ async function runParallelMigrations(
 
         const migration: unknown = module.default ?? module;
 
-        //doubt - why double work: a type guard and a type cast
-        if (typeof migration !== 'function') {
+        if (!isMigrationFunction(migration)) {
           throw new Error(
             `Migration ${file} must export (db: Db) => Promise<void>`,
           );
         }
 
-        await (migration as MigrationFunction)(db);
+        await migration(db);
 
         await fs.rename(fullPath, path.join(archiveDir, file));
 
@@ -109,11 +110,15 @@ async function runParallelMigrations(
       }
     }
   }
-
+  //this code restricts the number of concurrent tasks
   const workers = Array.from(
     { length: Math.min(concurrency, files.length) },
     () => worker(),
   );
 
   await Promise.all(workers);
+}
+
+function isMigrationFunction(value: unknown): value is MigrationFunction {
+  return typeof value === 'function' && value.length === 1;
 }
