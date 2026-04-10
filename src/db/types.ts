@@ -28,17 +28,10 @@ export interface SchemaValidation {
   validationAction?: 'error';
 }
 
-export interface SchemaVersionDocument {
+export interface ObjectVersionDocument {
   _id: string;
-  collection: string;
-  versionCurrent: string;
-  revisions: string[];
-}
-
-export interface IndexVersionDocument {
-  _id: string;
-  collection: string;
-  index: string;
+  objectType: 'col' | 'ind';
+  objectName: string;
   versionCurrent: string;
   revisions: string[];
 }

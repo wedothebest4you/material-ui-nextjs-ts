@@ -5,7 +5,7 @@ import ensureIndex from '../../utils/ensureIndex';
 const KeyInfo = {
   collection: 'schema_versions',
   index: 'ux_collection_schema_version',
-  version: 'v1',
+  indexVersion: 'v1',
 };
 
 export default async function (db: Db) {
@@ -43,7 +43,7 @@ export default async function (db: Db) {
   await ensureIndex(db, {
     collection: KeyInfo.collection,
     indexName: KeyInfo.index,
-    version: KeyInfo.version,
+    version: KeyInfo.indexVersion,
     keys: { collection: 1 },
     options: {
       unique: true,
