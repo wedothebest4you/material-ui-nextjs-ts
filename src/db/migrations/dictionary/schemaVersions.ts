@@ -3,8 +3,8 @@ import { Db } from '../../types';
 import ensureIndex from '../../utils/ensureIndex';
 
 const KeyInfo = {
-  collection: 'schema_versions',
-  index: 'ux_collection_schema_version',
+  collection: 'object_versions',
+  index: 'ux_object_schema_version',
   indexVersion: 'v1',
 };
 
@@ -13,27 +13,49 @@ export default async function (db: Db) {
     validator: {
       $jsonSchema: {
         bsonType: 'object',
-        title: 'Schema versions',
-        required: ['collection', 'version', 'updatedAt'],
+        title: 'Object versions',
+        required: ['objectName', 'objectType', 'version', 'createdAt'],
         additionalProperties: false,
         properties: {
+          _id: { bsonType: 'objectId' },
+          objectName: {
+            bsonType: 'string',
+            description: 'Object name',
+            maxLength: 20,
+          },
+          objectType: {
+            bsonType: 'string',
+            description: 'Object type',
+            maxLength: 3,
+            enum: ['col', 'idx'],
+          },
           version: {
             bsonType: 'string',
             description: 'Latest schema version',
             enum: ['v1'],
           },
-          _id: { bsonType: 'objectId' },
 
-          collection: {
+          baseObjectName: {
             bsonType: 'string',
-            description: 'Collection name',
+            description: 'Base Object name',
             maxLength: 20,
           },
-
+          createdAt: {
+            bsonType: 'date',
+          },
           updatedAt: {
             bsonType: 'date',
           },
         },
+        oneOf: [
+          {
+            properties: { objectType: { enum: ['idx'] } },
+            required: ['baseObjectName'],
+          },
+          {
+            properties: { objectType: { enum: ['col'] } },
+          },
+        ],
       },
     },
     validationLevel: 'strict',
@@ -44,7 +66,7 @@ export default async function (db: Db) {
     collection: KeyInfo.collection,
     indexName: KeyInfo.index,
     version: KeyInfo.indexVersion,
-    keys: { collection: 1 },
+    keys: { objectName: 1, baseObjectName: 1 },
     options: {
       unique: true,
     },

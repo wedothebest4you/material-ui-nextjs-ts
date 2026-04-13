@@ -1,5 +1,6 @@
 import type { Db, CreateIndexesOptions } from 'mongodb';
 export type { Db };
+export type { IndexDescription } from 'mongodb';
 
 export interface VersionProperty {
   bsonType: 'string';
@@ -14,6 +15,15 @@ export interface JsonSchema {
     version: VersionProperty;
     [key: string]: unknown;
   };
+  oneOf: [
+    {
+      properties: { [key: string]: { [key: string]: [string] } };
+      required: [string];
+    },
+    {
+      properties: { [key: string]: { [key: string]: [string] } };
+    },
+  ];
   required: string[];
   additionalProperties: false;
 }
@@ -28,9 +38,11 @@ export interface SchemaValidation {
   validationAction?: 'error';
 }
 
+export type ObjectType = 'col' | 'idx';
+
 export interface ObjectVersionDocument {
   _id: string;
-  objectType: 'col' | 'ind';
+  objectType: ObjectType;
   objectName: string;
   versionCurrent: string;
   revisions: string[];
