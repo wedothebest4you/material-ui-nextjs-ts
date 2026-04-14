@@ -1,15 +1,11 @@
-import ensureCollection from '../../utils/ensureCollection';
+import createOrModifyCollections from '../../utils/createOrModifyCollections';
 import { Db } from '../../types';
-import ensureIndex from '../../utils/ensureIndex';
-
-const KeyInfo = {
-  collection: 'object_versions',
-  index: 'ux_object_schema_version',
-  indexVersion: 'v1',
-};
+import createIndexes from '../../utils/createIndexes';
 
 export default async function (db: Db) {
-  await ensureCollection(db, KeyInfo.collection, {
+  const collectionName = 'object_versions';
+
+  await createOrModifyCollections(db, collectionName, {
     validator: {
       $jsonSchema: {
         bsonType: 'object',
@@ -34,7 +30,6 @@ export default async function (db: Db) {
             description: 'Latest schema version',
             enum: ['v1'],
           },
-
           baseObjectName: {
             bsonType: 'string',
             description: 'Base Object name',
@@ -62,10 +57,10 @@ export default async function (db: Db) {
     validationAction: 'error',
   });
 
-  await ensureIndex(db, {
-    collection: KeyInfo.collection,
-    indexName: KeyInfo.index,
-    version: KeyInfo.indexVersion,
+  await createIndexes(db, {
+    collection: collectionName,
+    indexName: 'ux_object_schema_version',
+    version: 'v1',
     keys: { objectName: 1, baseObjectName: 1 },
     options: {
       unique: true,

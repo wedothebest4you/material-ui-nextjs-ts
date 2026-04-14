@@ -8,41 +8,62 @@ export interface VersionProperty {
   enum: [string];
 }
 
-export interface JsonSchema {
+interface JsonSchema {
   bsonType: 'object';
   title: string;
   properties: {
     version: VersionProperty;
     [key: string]: unknown;
   };
-  oneOf: [
+  oneOf?: [
     {
-      properties: { [key: string]: { [key: string]: [string] } };
+      properties: { [key: string]: { enum: [string] } };
       required: [string];
     },
     {
-      properties: { [key: string]: { [key: string]: [string] } };
+      properties: { [key: string]: { enum: [string] } };
     },
   ];
   required: string[];
   additionalProperties: false;
 }
 
-export interface ValidatorSchema {
+interface SchemaValidator {
   $jsonSchema: JsonSchema;
 }
 
-export interface SchemaValidation {
-  validator: ValidatorSchema;
+export interface BaseSchemaValidator {
+  validator: SchemaValidator;
   validationLevel?: 'strict';
   validationAction?: 'error';
 }
 
-export type ObjectType = 'col' | 'idx';
+const ObjectType = {
+  COLLECTION: 'coll',
+  INDEX: 'indx',
+} as const;
+
+export const { COLLECTION, INDEX } = ObjectType;
+
+type ObjectTypeType = (typeof ObjectType)[keyof typeof ObjectType];
+
+export type VersionParams =
+  | {
+      objectName: string;
+      objectType: typeof COLLECTION;
+      version: string;
+      baseObjectName?: undefined;
+    }
+  | {
+      objectName: string;
+      objectType: typeof INDEX;
+      baseObjectName: string;
+      version: string;
+    };
 
 export interface ObjectVersionDocument {
   _id: string;
-  objectType: ObjectType;
+  objectType: ObjectTypeType;
   objectName: string;
   versionCurrent: string;
   revisions: string[];

@@ -1,15 +1,14 @@
-import { Db, ObjectVersionDocument, ObjectType } from '../types';
+import { Db, ObjectVersionDocument, VersionParams, INDEX } from '../types';
 
 export default async function recordObjectVersion(
   db: Db,
-  objectName: string,
-  objectType: ObjectType,
-  version: string,
-  baseObjectName = '',
+  params: VersionParams,
 ): Promise<void> {
+  const { objectName, objectType, version, baseObjectName } = params;
+
   console.log(`Updating object version ${version}`);
 
-  if (objectType === 'col' && !baseObjectName) {
+  if (objectType === INDEX && !baseObjectName) {
     throw new Error(`BaseObject name is missing for the index ${objectName}`);
   }
   const objectVersions =

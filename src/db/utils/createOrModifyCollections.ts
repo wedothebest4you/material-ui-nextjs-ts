@@ -1,14 +1,12 @@
-import type { Db, SchemaValidation } from '../types';
-import ensureNewCollVersion from './ensureNewCollVersion';
+import { Db, SchemaValidation, COLLECTION } from '../types';
+import checkDuplicateVersion from './checkDuplicateVersion';
 import recordObjectVersion from './recordNewVersion';
 
-export default async function ensureCollection(
+export default async function createOrModifyCollections(
   db: Db,
-  name: string,
+  objectName: string,
   schemaValidation: SchemaValidation,
 ): Promise<void> {
-  const OBJECT_TYPE = 'col';
-
   console.log(`🔍 Ensuring collection - ${name}`);
 
   const versionDef = schemaValidation.validator.$jsonSchema.properties.version;
@@ -20,16 +18,21 @@ export default async function ensureCollection(
   if (versionDef.enum.length !== 1) {
     throw new Error('Version enum must contain only latest version');
   }
-  const newVersion = versionDef.enum[0];
+  const version = versionDef.enum[0];
 
-  ensureNewCollVersion(db, name, newVersion);
+  checkDuplicateVersion(db, {
+    objectName,
+    objectType: COLLECTION,
+    version,
+  });
 
-  const collExists = (await db.listCollections({ name }).toArray()).length > 0;
+  const collExists =
+    (await db.listCollections({ objectName }).toArray()).length > 0;
 
   if (!collExists) {
     console.log(`Creating collection ${name}`);
 
-    await db.createCollection(name, schemaValidation);
+    await db.createCollection(objectName, schemaValidation);
   } else {
     const result = await db.command({
       collMod: name,
@@ -42,9 +45,13 @@ export default async function ensureCollection(
     });
 
     if (!result.ok) {
-      throw new Error(`collMod failed for ${name}`);
+      throw new Error(`collMod failed for ${objectName}`);
     }
   }
 
-  await recordObjectVersion(db, name, OBJECT_TYPE, newVersion);
+  await recordObjectVersion(db, {
+    objectName: objectName,
+    objectType: COLLECTION,
+    version: version,
+  });
 }

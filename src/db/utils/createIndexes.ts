@@ -1,14 +1,13 @@
 import { ListIndexesCursor } from 'mongodb';
-import { Db, EnsureIndexParams, ObjectType, IndexDescription } from '../types';
-import ensureNewIndexVersion from './ensureNewIndexVersion';
+import { Db, EnsureIndexParams, INDEX, IndexDescription } from '../types';
+import checkDuplicateVersion from './checkDuplicateVersion';
 import recordObjectVersion from './recordNewVersion';
 
-export default async function ensureIndex(
+export default async function createIndexes(
   db: Db,
   params: EnsureIndexParams,
 ): Promise<void> {
   const { collection, indexName, version, keys, options = {} } = params;
-  const INDEX_TYPE: ObjectType = 'idx';
 
   console.log(`🔍 Ensuring Index - ${indexName}`);
 
@@ -16,7 +15,12 @@ export default async function ensureIndex(
     throw new Error(`The script has no version set for the new index object`);
   }
 
-  ensureNewIndexVersion(db, indexName, INDEX_TYPE, collection, version);
+  checkDuplicateVersion(db, {
+    objectName: indexName,
+    objectType: INDEX,
+    baseObjectName: collection,
+    version,
+  });
 
   const coll = db.collection(collection);
 
@@ -35,5 +39,10 @@ export default async function ensureIndex(
     name: newIndexName,
   });
 
-  await recordObjectVersion(db, newIndexName, INDEX_TYPE, version);
+  await recordObjectVersion(db, {
+    objectName: newIndexName,
+    objectType: INDEX,
+    baseObjectName: collection,
+    version,
+  });
 }

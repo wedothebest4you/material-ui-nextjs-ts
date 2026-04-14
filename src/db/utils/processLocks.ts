@@ -2,7 +2,7 @@
 import type { Db } from '../types';
 import errorHanlder from './errorHanlder';
 
-interface MigartionLock {
+interface ProcessLock {
   _id: string;
   locked: boolean;
   locked_by: string;
@@ -23,7 +23,7 @@ export async function acquireLock(db: Db, nodeId: string) {
         locked_at: new Date(),
       },
     };
-    const collection = db.collection<MigartionLock>('migration_lock');
+    const collection = db.collection<ProcessLock>('migration_lock');
     const res = await collection.findOneAndUpdate(
       filter,
 
@@ -48,7 +48,7 @@ export async function acquireLock(db: Db, nodeId: string) {
 
 export async function releaseLock(db: Db) {
   try {
-    await db.collection<MigartionLock>('migration_lock').updateOne(
+    await db.collection<ProcessLock>('migration_lock').updateOne(
       { _id: 'migration_lock' },
 
       { $set: { locked: false } },

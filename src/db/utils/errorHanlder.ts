@@ -1,5 +1,5 @@
 import { Db } from '../types';
-import { releaseLock } from './migrationLocks';
+import { releaseLock } from './processLocks';
 
 export default function fastfailHandler(
   errorContext: string,

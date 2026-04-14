@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Db, MigrationFunction } from './types';
 import fastfailHandler from './utils/errorHanlder';
-import { acquireLock } from './utils/migrationLocks';
+import { acquireLock } from './utils/processLocks';
 
-export async function runMigrations(db: Db): Promise<void> {
+export async function createOrModifyDBObjects(db: Db): Promise<void> {
   try {
     console.log('🚀 Object migration started...');
     const nodeId = process.env.NODE_ID || 'node-' + Date.now();
