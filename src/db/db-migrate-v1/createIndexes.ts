@@ -1,5 +1,5 @@
 import { ListIndexesCursor } from 'mongodb';
-import { Db, EnsureIndexParams, INDEX, IndexDescription } from '../types';
+import { Db, EnsureIndexParams, INDEX } from './types';
 import checkDuplicateVersion from './checkDuplicateVersion';
 import recordObjectVersion from './recordNewVersion';
 

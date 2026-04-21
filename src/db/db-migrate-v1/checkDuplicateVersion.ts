@@ -1,9 +1,9 @@
-import { Db, VersionParams } from '../types';
+import { Db, DBObjectVersionInfo } from './types';
 import getObjectVersionColl from './getObjectVersionColl';
 
 export default async function checkDuplicateVersion(
   db: Db,
-  params: VersionParams,
+  params: DBObjectVersionInfo,
 ) {
   const { objectName, version, baseObjectName } = params;
   const objectVersions = await getObjectVersionColl(db);
