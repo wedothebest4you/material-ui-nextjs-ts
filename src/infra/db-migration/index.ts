@@ -2,31 +2,31 @@ import fs from 'fs/promises';
 import path from 'path';
 import { Db, isMigrationItem } from './types';
 import fastfailHandler from './errorHanlder';
-import { acquireLock } from './processLocks';
+import { acquireLock, releaseLock } from './processLocks';
 import dbMigrate from './db-migrate';
 
-export async function createOrModifyDBObjects(db: Db): Promise<void> {
+export async function createOrModifyDBObjects(db: Readonly<Db>): Promise<void> {
   try {
-    console.log('🚀 Object migration started...');
+    console.log('🚀 Objects migration started...');
     const nodeId = process.env.NODE_ID || 'node-' + Date.now();
     await acquireLock(db, nodeId);
 
-    const migrationsRoot = path.join(__dirname, './migrations');
+    const migrationsRoot = path.join(__dirname, './db-migration');
     const archiveRoot = path.join(__dirname, './archivals');
 
     const dictionaryDir = path.join(migrationsRoot, 'dictionary');
-    const schemaDir = path.join(migrationsRoot, 'schema');
+    const AppSchemaDir = path.join(migrationsRoot, 'application');
 
     const dictionaryArchive = path.join(archiveRoot, 'dictionary');
-    const schemaArchive = path.join(archiveRoot, 'schema');
+    const AppSchemaArchive = path.join(archiveRoot, 'application');
 
     await ensureFolders([
       migrationsRoot,
       dictionaryDir,
-      schemaDir,
+      AppSchemaDir,
       archiveRoot,
       dictionaryArchive,
-      schemaArchive,
+      AppSchemaArchive,
     ]);
 
     /*
@@ -41,23 +41,24 @@ export async function createOrModifyDBObjects(db: Db): Promise<void> {
   Application collections (parallel)
   */
 
-    await runParallelMigrations(db, schemaDir, schemaArchive);
+    await runParallelMigrations(db, AppSchemaDir, AppSchemaArchive);
 
-    console.log(' All migrations completed');
+    console.log('🏆 Congratulations!!! All migrations completed.');
+    await releaseLock(db);
   } catch (err) {
-    fastfailHandler('error', err);
+    fastfailHandler('❌ error', err, db);
   }
 }
 
-async function ensureFolders(paths: string[]) {
+async function ensureFolders(paths: readonly string[]) {
   console.log('🔍 Ensuring paths...');
   for (const p of paths) {
-    await fs.mkdir(p, { recursive: false });
+    await fs.access(p);
   }
 }
 
 async function runParallelMigrations(
-  db: Db,
+  db: Readonly<Db>,
   migrationsDir: string,
   archiveDir: string,
   concurrency: number = 4,
@@ -68,7 +69,7 @@ async function runParallelMigrations(
   );
 
   if (files.length === 0) {
-    throw new Error(`❌ No migrations scripts in ${migrationsDir}`);
+    throw new Error(`❌ No migration scripts in ${migrationsDir}`);
   }
 
   const queue = [...files];

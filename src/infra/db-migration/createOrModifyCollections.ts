@@ -44,7 +44,7 @@ export default async function createOrModifyCollections(
   });
 
   const collExists =
-    (await db.listCollections({ objectName }).toArray()).length > 0;
+    (await db.listCollections({ name: objectName }).toArray()).length > 0;
 
   if (!collExists) {
     console.log(`Creating collection ${objectName}`);

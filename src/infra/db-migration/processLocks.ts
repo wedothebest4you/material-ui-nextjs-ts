@@ -1,5 +1,5 @@
 // Prevents multiple servers running migrations simultaneously.
-import type { Db } from '../types';
+import type { Db } from './types';
 import errorHanlder from './errorHanlder';
 
 interface ProcessLock {

@@ -3,16 +3,16 @@ import type { Db, CreateIndexesOptions } from 'mongodb';
 export type { Db };
 export type { IndexDescription } from 'mongodb';
 
-// The folloewing interface named as DbObjectVersion
-// since the key version is applicable to Indexe objects as well.
-// If it was used exclisively for collections,
-// then it would have been ideal to name as SchemaVersion or
-// CollectionVersion. That is not the case in this utility.
-interface DbObjectVersion {
-  bsonType: 'string';
-  description: string;
-  enum: [string];
-}
+// // The folloewing interface named as DbObjectVersion
+// // since the key version is applicable to Indexe objects as well.
+// // If it was used exclisively for collections,
+// // then it would have been ideal to name as SchemaVersion or
+// // CollectionVersion. That is not the case in this utility.
+// interface DbObjectVersion {
+//   bsonType: 'string';
+//   description: string;
+//   enum: [string];
+// }
 
 // The following interface has named as JsonSchemaObject according to documentaion over here:
 // https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#mongodb-query-op.-jsonSchema
@@ -24,7 +24,27 @@ interface DbObjectVersion {
 // 5. It should not allow any additional keys other than the listed keys in the Validator document.
 
 type BaseJSONSchemaProperties = {
-  version: DbObjectVersion;
+  version: {
+    bsonType: 'string';
+    description: string;
+    enum: [string];
+  };
+  createdAt: {
+    bsonType: 'date';
+    description: string;
+  };
+  updatedAt: {
+    bsonType: ['date', 'null'];
+    description: string;
+  };
+  deletedAt: {
+    bsonType: ['date', 'null'];
+    description: string;
+  };
+  delFlag: {
+    bsonType: ['null', 'x'];
+    description: string;
+  };
 };
 
 export interface BaseJSONSchema {
@@ -43,7 +63,7 @@ type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
 type AppSchemaProperties = Record<string, AppJSONSchemaNode>;
 
 type AppJSONSchemaNode = {
-  bsonType?: BsonType | readonly BsonType[];
+  bsonType?: BsonType | BsonType[];
   properties?: AppSchemaProperties;
   description?: string;
   minimum?: number;
@@ -51,15 +71,15 @@ type AppJSONSchemaNode = {
   maxLength?: number;
   items?: AppJSONSchemaNode;
 
-  required?: [keyof AppSchemaProperties, ...(keyof AppSchemaProperties)[]];
+  required?: string[];
 
-  enum?: readonly unknown[];
+  enum?: unknown[];
 
-  oneOf?: readonly AppJSONSchemaNode[];
+  oneOf?: AppJSONSchemaNode[];
 
-  anyOf?: readonly AppJSONSchemaNode[];
+  anyOf?: AppJSONSchemaNode[];
 
-  allOf?: readonly AppJSONSchemaNode[];
+  allOf?: AppJSONSchemaNode[];
 };
 
 export interface AppJSONSchema extends AppJSONSchemaNode {
