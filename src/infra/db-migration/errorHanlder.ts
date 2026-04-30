@@ -1,15 +1,15 @@
-import { Db } from './types';
-import { releaseLock } from './processLocks';
-
-export default function fastfailHandler(
-  errorContext: string,
-  err?: unknown,
-  db?: Db,
-): never {
+import { MongoServerError } from './types';
+export default function logError(errorContext: string, err?: unknown) {
   console.error(`\x1b[31m Migration failed: ${errorContext}\x1b[0m`);
-  if (err instanceof Error) console.error(err.message);
-  else console.error(err);
-
-  if (db) releaseLock(db);
-  process.exit(1);
+  if (err instanceof MongoServerError) {
+    if (err.code === 11000) {
+      console.error('Key duplicated');
+    }
+  }
+  // MongoServerError is also an Error, so this still logs the original message
+  if (err instanceof Error) {
+    console.error(err.message);
+  } else {
+    console.error(err);
+  }
 }

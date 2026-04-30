@@ -1,6 +1,6 @@
 import { DBMigrationItem, AppJSONSchema } from '../types';
 
-const schemaVersions: AppJSONSchema = {
+const schemaVersions = {
   bsonType: 'object',
   required: ['objectName', 'objectType', 'version', 'createdAt'],
   properties: {
@@ -37,7 +37,7 @@ const schemaVersions: AppJSONSchema = {
       properties: { objectType: { enum: ['col'] } },
     },
   ],
-};
+} as const satisfies AppJSONSchema;
 
 export const migrationItem: DBMigrationItem = {
   collectionName: 'object_versions',

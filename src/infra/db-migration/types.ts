@@ -1,4 +1,5 @@
 import type { Db, CreateIndexesOptions } from 'mongodb';
+export { MongoServerError } from 'mongodb';
 //re-export / import and export
 export type { Db };
 export type { IndexDescription } from 'mongodb';
