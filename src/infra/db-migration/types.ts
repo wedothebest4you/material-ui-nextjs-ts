@@ -1,3 +1,4 @@
+import { Schema } from 'inspector/promises';
 import type { Db, CreateIndexesOptions } from 'mongodb';
 export { MongoServerError } from 'mongodb';
 //re-export / import and export
@@ -64,8 +65,8 @@ type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
 type AppSchemaProperties = Record<string, AppJSONSchemaNode>;
 
 type AppJSONSchemaNode = {
-  bsonType?: BsonType | BsonType[];
-  properties?: AppSchemaProperties;
+  bsonType: BsonType | BsonType[];
+  properties: AppSchemaProperties;
   description?: string;
   minimum?: number;
   maximum?: number;
@@ -145,9 +146,17 @@ export interface ObjectVersionDocument {
 
 //export type MigrationFunction = (db: Db) => Promise<void>;
 
+const allowedOptionKeys = [
+  'unique',
+  'sparse',
+  'expireAfterSeconds',
+  'partialFilterExpression',
+] as const;
+
 type SafeIndexOptions = Pick<
   CreateIndexesOptions,
-  'unique' | 'sparse' | 'expireAfterSeconds' | 'partialFilterExpression'
+  // 'unique' | 'sparse' | 'expireAfterSeconds' | 'partialFilterExpression'
+  (typeof allowedOptionKeys)[number]
 >;
 
 export interface EnsureIndexParams {
@@ -164,51 +173,122 @@ type JSONSchema = {
 };
 
 type MigrationItemBase = { collectionName: string };
+type MigrationItemSchema = {
+  schema: JSONSchema;
+  indexes?: EnsureIndexParams[];
+};
+type MigrationItemIndexes = {
+  schema?: JSONSchema;
+  indexes: EnsureIndexParams[];
+};
+export type DBMigrationItem = MigrationItemBase &
+  (MigrationItemSchema | MigrationItemIndexes);
 
-export type DBMigrationItem =
-  | (MigrationItemBase & {
-      schema: JSONSchema;
-      indexes?: EnsureIndexParams[];
-    })
-  | (MigrationItemBase & {
-      schema?: JSONSchema;
-      indexes: EnsureIndexParams[];
-    });
+export function isMigrationItem(item: unknown): item is DBMigrationItem {
+  if (
+    !isRecord(item) ||
+    !('collectionName' in item) ||
+    typeof item.collectionName !== 'string'
+  ) {
+    return false;
+  }
 
-export function hasSchema(item: any): item is JSONSchema {
-  const hasBase =
-    item !== null &&
-    typeof item === 'object' &&
-    typeof item.collectionName === 'string';
-
-  if (!hasBase) return false;
-
-  const hasValidSchema =
-    item.schema !== undefined &&
-    item.schema !== null &&
-    typeof item.schema === 'object' &&
-    typeof item.schema.title === 'string' &&
-    typeof item.schema.version === 'string' &&
-    typeof item.schema.schema === 'object';
-
-  return hasValidSchema;
+  return (
+    ('schema' in item && hasSchema(item.schema)) ||
+    ('indexes' in item && hasIndexes(item.indexes))
+  );
 }
 
-export function hasIndexes(item: any): item is DBMigrationItem {
-  const hasBase =
-    item !== null &&
-    typeof item === 'object' &&
-    typeof item.collectionName === 'string';
-
-  if (!hasBase) return false;
-
-  const hasValidIndexes =
-    item.indexes !== undefined && Array.isArray(item.indexes);
-
-  // 4. Final Logic: Base is true AND (at least one optional block is valid)
-  return hasValidIndexes;
+export function hasIndexes(indexes: unknown): indexes is EnsureIndexParams[] {
+  return Array.isArray(indexes) && indexes.every(isEnsureIndexParams);
 }
 
-export function isMigrationItem(item: any): item is DBMigrationItem {
-  return hasSchema(item) || hasIndexes(item);
+type PropertyKey = 'string';
+
+type ObjectRecord = Record<PropertyKey, unknown>;
+
+function isRecord(value: unknown): value is ObjectRecord {
+  return value != null && typeof value === 'object';
+}
+
+function isAppJSONSchema(value: unknown): value is AppJSONSchema {
+  return (
+    isRecord(value) &&
+    'bsonType' in value &&
+    value.bsonType === 'object' &&
+    'properties' in value &&
+    isRecord(value.properties)
+  );
+}
+
+export function hasSchema(schema: unknown): schema is JSONSchema {
+  return (
+    isRecord(schema) &&
+    'title' in schema &&
+    typeof schema.title === 'string' &&
+    'version' in schema &&
+    typeof schema.version === 'string' &&
+    'JSONschema' in schema &&
+    isAppJSONSchema(schema.JSONschema)
+  );
+}
+
+function isIndexKeys(value: unknown): value is Record<string, 1 | -1> {
+  return (
+    isRecord(value) &&
+    Object.entries(value).length > 0 &&
+    Object.values(value).every(
+      (direction) => direction === 1 || direction === -1,
+    )
+  );
+}
+
+// function hasOnlyAllowedOptionKeys(
+//   value: Record<PropertyKey, unknown>,
+// ): boolean {
+//   return Object.keys(value).every((key) => allowedOptionKeys.includes(key));
+// }
+
+function isSafeIndexOptions(value: unknown): value is SafeIndexOptions {
+  if (value === undefined) {
+    return true;
+  }
+
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  const hasValidUnique =
+    !('unique' in value) || typeof value.unique === 'boolean';
+
+  const hasValidSparse =
+    !('sparse' in value) || typeof value.sparse === 'boolean';
+
+  const hasValidExpireAfterSeconds =
+    !('expireAfterSeconds' in value) ||
+    typeof value.expireAfterSeconds === 'number';
+
+  const hasValidPartialFilterExpression =
+    !('partialFilterExpression' in value) ||
+    isRecord(value.partialFilterExpression);
+
+  return (
+    hasValidUnique &&
+    hasValidSparse &&
+    hasValidExpireAfterSeconds &&
+    hasValidPartialFilterExpression
+  );
+}
+
+function isEnsureIndexParams(value: unknown): value is EnsureIndexParams {
+  return (
+    isRecord(value) &&
+    'indexName' in value &&
+    typeof value.indexName === 'string' &&
+    'version' in value &&
+    typeof value.version === 'string' &&
+    'keys' in value &&
+    isIndexKeys(value.keys) &&
+    isSafeIndexOptions('options' in value ? value.options : undefined)
+  );
 }

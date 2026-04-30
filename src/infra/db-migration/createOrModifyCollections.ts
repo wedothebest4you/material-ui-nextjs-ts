@@ -37,7 +37,7 @@ export default async function createOrModifyCollections(
   }
   const version = versionDef.enum[0];
 
-  checkDuplicateVersion(db, {
+  await checkDuplicateVersion(db, {
     objectName,
     objectType: COLLECTION,
     version,

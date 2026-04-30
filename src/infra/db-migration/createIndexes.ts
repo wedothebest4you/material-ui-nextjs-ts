@@ -1,4 +1,3 @@
-import { ListIndexesCursor } from 'mongodb';
 import { Db, EnsureIndexParams, INDEX } from './types';
 import checkDuplicateVersion from './checkDuplicateVersion';
 import recordObjectVersion from './recordNewVersion';
@@ -16,7 +15,7 @@ export default async function createIndexes(
     throw new Error(`The script has no version set for the new index object`);
   }
 
-  checkDuplicateVersion(db, {
+  await checkDuplicateVersion(db, {
     objectName: indexName,
     objectType: INDEX,
     baseObjectName: collection,

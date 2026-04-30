@@ -1,10 +1,10 @@
-import { Db, ObjectVersionDocument, VersionParams, INDEX } from './types';
+import { Db, ObjectVersionDocument, DBObjectVersionInfo, INDEX } from './types';
 
 export default async function recordObjectVersion(
   db: Db,
-  params: VersionParams,
+  versionInfo: DBObjectVersionInfo,
 ): Promise<void> {
-  const { objectName, objectType, version, baseObjectName } = params;
+  const { objectName, objectType, version, baseObjectName } = versionInfo;
 
   console.log(`Updating object version ${version}`);
 
