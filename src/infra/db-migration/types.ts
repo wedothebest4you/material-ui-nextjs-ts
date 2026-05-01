@@ -1,5 +1,5 @@
 import { Schema } from 'inspector/promises';
-import type { Db, CreateIndexesOptions } from 'mongodb';
+import type { Db, IndexDescription, CreateIndexesOptions } from 'mongodb';
 export { MongoServerError } from 'mongodb';
 //re-export / import and export
 export type { Db };
@@ -144,27 +144,14 @@ export interface ObjectVersionDocument {
   revisions: string[];
 }
 
-//export type MigrationFunction = (db: Db) => Promise<void>;
-
-const allowedOptionKeys = [
-  'unique',
-  'sparse',
-  'expireAfterSeconds',
-  'partialFilterExpression',
-] as const;
-
-type SafeIndexOptions = Pick<
-  CreateIndexesOptions,
-  // 'unique' | 'sparse' | 'expireAfterSeconds' | 'partialFilterExpression'
-  (typeof allowedOptionKeys)[number]
->;
-
-export interface EnsureIndexParams {
-  indexName: string;
-  version: string;
-  keys: Record<string, 1 | -1>;
-  options?: SafeIndexOptions;
+interface IndexDescriptionNameRequired extends IndexDescription {
+  name: string;
 }
+
+interface CreateIndexesOptionsNameOmitted extends Omit<
+  CreateIndexesOptions,
+  'name'
+> {}
 
 type JSONSchema = {
   title: string;
@@ -172,14 +159,19 @@ type JSONSchema = {
   JSONschema: AppJSONSchema;
 };
 
+type IndexSpecWithOptions = {
+  indexSpec: IndexDescriptionNameRequired[];
+  options?: CreateCollectionOptions;
+};
+
 type MigrationItemBase = { collectionName: string };
 type MigrationItemSchema = {
   schema: JSONSchema;
-  indexes?: EnsureIndexParams[];
+  indexes?: IndexSpecWithOptions;
 };
 type MigrationItemIndexes = {
   schema?: JSONSchema;
-  indexes: EnsureIndexParams[];
+  indexes: IndexSpecWithOptions[];
 };
 export type DBMigrationItem = MigrationItemBase &
   (MigrationItemSchema | MigrationItemIndexes);
@@ -199,8 +191,8 @@ export function isMigrationItem(item: unknown): item is DBMigrationItem {
   );
 }
 
-export function hasIndexes(indexes: unknown): indexes is EnsureIndexParams[] {
-  return Array.isArray(indexes) && indexes.every(isEnsureIndexParams);
+export function hasIndexes(indexes: unknown): indexes is IndexParams[] {
+  return Array.isArray(indexes) && indexes.every(reIndexParams);
 }
 
 type PropertyKey = 'string';
@@ -280,7 +272,7 @@ function isSafeIndexOptions(value: unknown): value is SafeIndexOptions {
   );
 }
 
-function isEnsureIndexParams(value: unknown): value is EnsureIndexParams {
+function reIndexParams(value: unknown): value is IndexParams {
   return (
     isRecord(value) &&
     'indexName' in value &&

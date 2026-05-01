@@ -1,11 +1,11 @@
-import { Db, EnsureIndexParams, INDEX } from './types';
+import { Db, createIndexParamsNameRequired, INDEX } from './types';
 import checkDuplicateVersion from './checkDuplicateVersion';
 import recordObjectVersion from './recordNewVersion';
 
 export default async function createIndexes(
   db: Db,
   collection: string,
-  params: EnsureIndexParams,
+  params: IndexParams,
 ): Promise<void> {
   const { indexName, version, keys, options = {} } = params;
 
