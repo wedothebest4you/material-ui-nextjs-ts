@@ -1,9 +1,7 @@
-import { Schema } from 'inspector/promises';
 import type { Db, IndexDescription, CreateIndexesOptions } from 'mongodb';
 export { MongoServerError } from 'mongodb';
 //re-export / import and export
 export type { Db };
-export type { IndexDescription } from 'mongodb';
 
 // // The folloewing interface named as DbObjectVersion
 // // since the key version is applicable to Indexe objects as well.
@@ -62,11 +60,11 @@ export interface BaseJSONSchema {
 
 type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
 
-type AppSchemaProperties = Record<string, AppJSONSchemaNode>;
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 type AppJSONSchemaNode = {
   bsonType: BsonType | BsonType[];
-  properties: AppSchemaProperties;
+  properties: Record<string, Optional<AppJSONSchemaNode, 'properties'>>;
   description?: string;
   minimum?: number;
   maximum?: number;
@@ -144,14 +142,10 @@ export interface ObjectVersionDocument {
   revisions: string[];
 }
 
-interface IndexDescriptionNameRequired extends IndexDescription {
+type IndexDescriptionWithVersion = IndexDescription & {
   name: string;
-}
-
-interface CreateIndexesOptionsNameOmitted extends Omit<
-  CreateIndexesOptions,
-  'name'
-> {}
+  migrationVersion: string;
+};
 
 type JSONSchema = {
   title: string;
@@ -159,20 +153,21 @@ type JSONSchema = {
   JSONschema: AppJSONSchema;
 };
 
-type IndexSpecWithOptions = {
-  indexSpec: IndexDescriptionNameRequired[];
-  options?: CreateCollectionOptions;
+export type CreateIndexesParameters = {
+  indexSpecs: IndexDescriptionWithVersion[];
+  options?: CreateIndexesOptions;
 };
 
 type MigrationItemBase = { collectionName: string };
 type MigrationItemSchema = {
   schema: JSONSchema;
-  indexes?: IndexSpecWithOptions;
+  indexes?: CreateIndexesParameters;
 };
 type MigrationItemIndexes = {
   schema?: JSONSchema;
-  indexes: IndexSpecWithOptions[];
+  indexes: CreateIndexesParameters;
 };
+
 export type DBMigrationItem = MigrationItemBase &
   (MigrationItemSchema | MigrationItemIndexes);
 

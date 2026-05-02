@@ -30,11 +30,15 @@ const schemaVersions = {
   },
   oneOf: [
     {
-      properties: { objectType: { enum: ['idx'] } },
+      bsonType: 'object',
+      properties: {
+        objectType: { bsonType: 'string', enum: ['idx'] },
+      },
       required: ['baseObjectName'],
     },
     {
-      properties: { objectType: { enum: ['col'] } },
+      bsonType: 'object',
+      properties: { objectType: { bsonType: 'string', enum: ['col'] } },
     },
   ],
 } as const satisfies AppJSONSchema;
@@ -46,14 +50,14 @@ export const migrationItem: DBMigrationItem = {
     version: 'v1',
     JSONschema: schemaVersions,
   },
-  indexes: [
-    {
-      indexName: 'ux_object_schema_version',
-      version: 'v1',
-      keys: { objectName: 1, baseObjectName: 1 },
-      options: {
+  indexes: {
+    indexSpecs: [
+      {
+        name: 'ux_objectName_1_baseObjectName_1',
+        migrationVersion: 'v1',
+        key: { objectName: 1, baseObjectName: 1 },
         unique: true,
       },
-    },
-  ],
+    ],
+  },
 };

@@ -17,13 +17,6 @@ export default async function dbMigrate(db: Db, item: DBMigrationItem) {
     );
   }
   if (hasIndexes(item.indexes)) {
-    for (const index of item.indexes) {
-      await createIndexes(db, item.collectionName, {
-        indexName: index.indexName,
-        version: index.version,
-        keys: index.keys,
-        options: index.options,
-      });
-    }
+    await createIndexes(db, item.collectionName, item.indexes);
   }
 }
