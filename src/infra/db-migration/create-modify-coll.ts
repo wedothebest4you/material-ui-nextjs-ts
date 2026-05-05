@@ -1,13 +1,13 @@
 import {
   Db,
   ComposedValidator,
-  CreateCollectionOptions,
+  CreateCollectionOptionsExtended,
   COLLECTION,
   BaseJSONSchema,
   AppJSONSchema,
 } from './types';
-import checkDuplicateVersion from './checkDuplicateVersion';
-import recordObjectVersion from './recordNewVersion';
+import checkDuplicateVersion from './check-dup-version';
+import recordObjectVersion from './record-new-ver';
 
 export default async function createOrModifyCollections(
   db: Db,
@@ -21,20 +21,24 @@ export default async function createOrModifyCollections(
     },
   };
 
-  const createCollectionOptions: CreateCollectionOptions = {
+  const createCollectionOptions: Omit<
+    CreateCollectionOptionsExtended,
+    'migrationVersion'
+  > = {
     validator: composedValidator,
   };
   console.log(`🔍 Ensuring collection - ${objectName}`);
 
   const versionDef =
     createCollectionOptions.validator.$jsonSchema.allOf[0].properties.version;
-  if (!versionDef || !versionDef.enum) {
-    throw new Error('Schema must define version enum');
+  if (!versionDef || versionDef.bsonType !== 'int' || !versionDef.enum) {
+    throw new Error('Schema must define version enum of type integer');
   }
 
   if (versionDef.enum.length !== 1) {
-    throw new Error('Version enum must contain only latest version');
+    throw new Error('Version enum must contain only one version - the latest');
   }
+
   const version = versionDef.enum[0];
 
   await checkDuplicateVersion(db, {
@@ -53,11 +57,8 @@ export default async function createOrModifyCollections(
   } else {
     const result = await db.command({
       collMod: objectName,
-
       validator: createCollectionOptions.validator,
-
       validationLevel: createCollectionOptions.validationLevel ?? 'strict',
-
       validationAction: createCollectionOptions.validationAction ?? 'error',
     });
 

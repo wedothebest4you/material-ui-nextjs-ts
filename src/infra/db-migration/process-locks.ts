@@ -1,6 +1,6 @@
 // Prevents multiple servers running migrations simultaneously.
 import type { Db } from './types';
-import logError from './errorHanlder';
+import logError from './error-hanlder';
 
 const LOCK = 'X';
 

@@ -25,10 +25,6 @@ export default async function recordObjectVersion(
         versionCurrent: version,
         objectType: objectType,
       },
-
-      $push: {
-        revisions: version,
-      },
     },
 
     { upsert: true },

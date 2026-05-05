@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { Db, isMigrationItem } from './types';
-import logError from './errorHanlder';
-import { acquireLock, releaseLock } from './processLocks';
+import logError from './error-hanlder';
+import { acquireLock, releaseLock } from './process-locks';
 import dbMigrate from './db-migrate';
 let lockAcquired = false;
 let exitCode = 0;

@@ -33,37 +33,6 @@ const tenants: AppJSONSchema = {
       enum: ['active', 'inactive'],
     },
 
-    createdAt: {
-      bsonType: 'date',
-      description: 'Creation Date',
-    },
-
-    updatedAt: {
-      bsonType: ['date', 'null'],
-      description: 'Last Updated Date',
-    },
-
-    deletedAt: {
-      bsonType: ['date', 'null'],
-      description: 'Soft Delete Timestamp',
-    },
-
-    version: {
-      bsonType: 'int',
-      description: 'Document Version',
-      enum: [1],
-    },
-
-    createdBy: {
-      bsonType: ['objectId', 'null'],
-      description: 'Created By User',
-    },
-
-    updatedBy: {
-      bsonType: ['objectId', 'null'],
-      description: 'Updated By User',
-    },
-
     userLimit: {
       bsonType: ['int', 'null'],
       description: 'Maximum Allowed Users',
@@ -84,25 +53,23 @@ export const migrationItem: DBMigrationItem = {
   collectionName: 'tenants',
   schema: {
     title: 'tenants',
-    version: 'v1',
+    version: 1,
     JSONschema: tenants,
   },
-  indexes: [
-    {
-      indexName: 'ux_tenant_code',
-      version: 'v1',
-      keys: { code: 1 },
-      options: {
+  indexes: {
+    indexSpecs: [
+      {
+        migrationVersion: 1,
+        key: { code: 1 },
+        versionName: undefined,
         unique: true,
       },
-    },
-    {
-      indexName: 'ux_tenant_name',
-      version: 'v1',
-      keys: { name: 1 },
-      options: {
+      {
+        migrationVersion: 2,
+        key: { name: 1 },
+        versionName: undefined,
         unique: true,
       },
-    },
-  ],
+    ],
+  },
 };

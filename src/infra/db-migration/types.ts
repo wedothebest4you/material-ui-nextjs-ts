@@ -1,8 +1,17 @@
-import type { Db, IndexDescription, CreateIndexesOptions } from 'mongodb';
-export { MongoServerError } from 'mongodb';
-//re-export / import and export
-export type { Db };
+// Type-Only Imports and Export
+// https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html
 
+import type {
+  CreateCollectionOptions,
+  IndexDescription,
+  CreateIndexesOptions,
+} from 'mongodb';
+
+//re-export / import and export
+export { MongoServerError } from 'mongodb';
+export type { Db, IndexDirection } from 'mongodb';
+
+import getBaseSchemaObject from './get-base-schema-obj';
 // // The folloewing interface named as DbObjectVersion
 // // since the key version is applicable to Indexe objects as well.
 // // If it was used exclisively for collections,
@@ -23,40 +32,41 @@ export type { Db };
 // 4. It should have at least one key required.
 // 5. It should not allow any additional keys other than the listed keys in the Validator document.
 
-type BaseJSONSchemaProperties = {
-  version: {
-    bsonType: 'string';
-    description: string;
-    enum: [string];
-  };
-  createdAt: {
-    bsonType: 'date';
-    description: string;
-  };
-  updatedAt: {
-    bsonType: ['date', 'null'];
-    description: string;
-  };
-  deletedAt: {
-    bsonType: ['date', 'null'];
-    description: string;
-  };
-  delFlag: {
-    bsonType: ['null', 'x'];
-    description: string;
-  };
-};
+// type BaseJSONSchemaProperties = {
+//   version: {
+//     bsonType: 'int';
+//     description: string;
+//     enum: [number];
+//   };
+//   createdAt: {
+//     bsonType: 'date';
+//     description: string;
+//   };
+//   updatedAt: {
+//     bsonType: ['date', 'null'];
+//     description: string;
+//   };
+//   deletedAt: {
+//     bsonType: ['date', 'null'];
+//     description: string;
+//   };
+//   delFlag: {
+//     bsonType: ['null', 'string'];
+//     description: string;
+//     enum: ['x', null];
+//   };
+// };
 
-export interface BaseJSONSchema {
-  bsonType: 'object';
-  title: string;
-  properties: BaseJSONSchemaProperties;
-  required: [
-    keyof BaseJSONSchemaProperties,
-    ...(keyof BaseJSONSchemaProperties)[],
-  ];
-  additionalProperties: false;
-}
+// export interface BaseJSONSchemaNode {
+//   bsonType: 'object';
+//   title: string;
+//   properties: BaseJSONSchemaNode;
+//   required: [keyof BaseJSONSchemaNode, ...(keyof BaseJSONSchemaNode)[]];
+//   enum?: string[];
+//   additionalProperties: false;
+// }
+
+export type BaseJSONSchema = ReturnType<typeof getBaseSchemaObject>;
 
 type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
 
@@ -103,10 +113,13 @@ export interface ComposedValidator {
 
 // The interface name is as per the reference:
 // https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#definition
-export interface CreateCollectionOptions {
+type ValidationLevel = 'strict' | 'moderate' | 'off';
+type ValidationAction = 'error' | 'warn';
+
+export interface CreateCollectionOptionsExtended extends CreateCollectionOptions {
   validator: ComposedValidator;
-  validationLevel?: 'strict';
-  validationAction?: 'error';
+  validationLevel?: ValidationLevel;
+  validationAction?: ValidationAction;
 }
 
 const DB_OBJECT_TYPES = {
@@ -124,33 +137,26 @@ export type DBObjectVersionInfo =
   | {
       objectName: string;
       objectType: typeof COLLECTION;
-      version: string;
+      version: number;
       baseObjectName?: undefined;
     }
   | {
       objectName: string;
       objectType: typeof INDEX;
       baseObjectName: string;
-      version: string;
+      version: number;
     };
 
 export interface ObjectVersionDocument {
   _id: string;
   objectType: DBObjectType;
   objectName: string;
-  versionCurrent: string;
-  revisions: string[];
+  versionCurrent: number;
 }
 
-type IndexDescriptionWithVersion = IndexDescription & {
-  name: string;
-  migrationVersion: string;
-};
-
-type JSONSchema = {
-  title: string;
-  version: string;
-  JSONschema: AppJSONSchema;
+export type IndexDescriptionWithVersion = IndexDescription & {
+  migrationVersion: number;
+  versionName: string | undefined;
 };
 
 export type CreateIndexesParameters = {
@@ -158,13 +164,26 @@ export type CreateIndexesParameters = {
   options?: CreateIndexesOptions;
 };
 
-type MigrationItemBase = { collectionName: string };
+type MigrationItemBase = {
+  collectionName: string;
+};
+
+type AppJSONSchemaExtended = {
+  title: string;
+  version: number;
+  validationLevel?: ValidationLevel;
+  validationAction?: ValidationAction;
+} & {
+  JSONschema: AppJSONSchema;
+};
+
 type MigrationItemSchema = {
-  schema: JSONSchema;
+  schema: AppJSONSchemaExtended;
   indexes?: CreateIndexesParameters;
 };
+
 type MigrationItemIndexes = {
-  schema?: JSONSchema;
+  schema?: AppJSONSchemaExtended;
   indexes: CreateIndexesParameters;
 };
 
@@ -180,14 +199,67 @@ export function isMigrationItem(item: unknown): item is DBMigrationItem {
     return false;
   }
 
-  return (
-    ('schema' in item && hasSchema(item.schema)) ||
-    ('indexes' in item && hasIndexes(item.indexes))
-  );
+  return 'schema' in item || 'indexes' in item;
 }
 
-export function hasIndexes(indexes: unknown): indexes is IndexParams[] {
-  return Array.isArray(indexes) && indexes.every(reIndexParams);
+export function hasCreateIndexParameters(
+  indexes: unknown,
+): indexes is CreateIndexesParameters {
+  return hasIndexSpecs(indexes);
+  // return Array.isArray(indexes) && indexes.every(key);
+}
+
+function hasIndexSpecs(
+  indexes: unknown,
+): indexes is IndexDescriptionWithVersion {
+  // it must be an object with the key indexSpecs
+  if (!(isRecord(indexes) && 'indexSpecs' in indexes)) {
+    return false;
+  }
+
+  // it must also have a value of an array of index descriptions
+  if (!Array.isArray(indexes.indexSpecs)) {
+    return false;
+  }
+
+  // each item of the array must have a valid index description
+  for (const indexDescription of indexes.indexSpecs) {
+    if (!hasIndexDescription(indexDescription)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function hasIndexDescription(
+  indexDescription: unknown,
+): indexDescription is IndexDescriptionWithVersion {
+  // must be a record with the keys
+  // migrationVersion, versionName and key
+  if (
+    !(
+      isRecord(indexDescription) &&
+      'migrationVersion' in indexDescription &&
+      'versionName' in indexDescription &&
+      'key' in indexDescription &&
+      isRecord(indexDescription.key)
+    )
+  ) {
+    return false;
+  }
+
+  // and each index key has index direction
+  for (const indexDirection of Object.values(indexDescription.key)) {
+    if (
+      !(
+        typeof indexDescription === 'number' &&
+        (indexDescription !== 1 || indexDescription !== -1)
+      )
+    ) {
+      return false;
+    }
+  }
+  return true;
 }
 
 type PropertyKey = 'string';
@@ -198,84 +270,28 @@ function isRecord(value: unknown): value is ObjectRecord {
   return value != null && typeof value === 'object';
 }
 
-function isAppJSONSchema(value: unknown): value is AppJSONSchema {
+function isAppJSONSchema(schema: unknown): schema is AppJSONSchema {
   return (
-    isRecord(value) &&
-    'bsonType' in value &&
-    value.bsonType === 'object' &&
-    'properties' in value &&
-    isRecord(value.properties)
+    isRecord(schema) &&
+    'bsonType' in schema &&
+    schema.bsonType === 'object' &&
+    'properties' in schema &&
+    isRecord(schema.properties)
   );
 }
 
-export function hasSchema(schema: unknown): schema is JSONSchema {
+// schema must be an object
+// it must have the key title of type string
+// it also must have the key version of type number
+// it must has the key JSON
+export function hasSchema(schema: unknown): schema is AppJSONSchemaExtended {
   return (
     isRecord(schema) &&
     'title' in schema &&
     typeof schema.title === 'string' &&
     'version' in schema &&
-    typeof schema.version === 'string' &&
+    typeof schema.version === 'number' &&
     'JSONschema' in schema &&
     isAppJSONSchema(schema.JSONschema)
-  );
-}
-
-function isIndexKeys(value: unknown): value is Record<string, 1 | -1> {
-  return (
-    isRecord(value) &&
-    Object.entries(value).length > 0 &&
-    Object.values(value).every(
-      (direction) => direction === 1 || direction === -1,
-    )
-  );
-}
-
-// function hasOnlyAllowedOptionKeys(
-//   value: Record<PropertyKey, unknown>,
-// ): boolean {
-//   return Object.keys(value).every((key) => allowedOptionKeys.includes(key));
-// }
-
-function isSafeIndexOptions(value: unknown): value is SafeIndexOptions {
-  if (value === undefined) {
-    return true;
-  }
-
-  if (!isRecord(value)) {
-    return false;
-  }
-
-  const hasValidUnique =
-    !('unique' in value) || typeof value.unique === 'boolean';
-
-  const hasValidSparse =
-    !('sparse' in value) || typeof value.sparse === 'boolean';
-
-  const hasValidExpireAfterSeconds =
-    !('expireAfterSeconds' in value) ||
-    typeof value.expireAfterSeconds === 'number';
-
-  const hasValidPartialFilterExpression =
-    !('partialFilterExpression' in value) ||
-    isRecord(value.partialFilterExpression);
-
-  return (
-    hasValidUnique &&
-    hasValidSparse &&
-    hasValidExpireAfterSeconds &&
-    hasValidPartialFilterExpression
-  );
-}
-
-function reIndexParams(value: unknown): value is IndexParams {
-  return (
-    isRecord(value) &&
-    'indexName' in value &&
-    typeof value.indexName === 'string' &&
-    'version' in value &&
-    typeof value.version === 'string' &&
-    'keys' in value &&
-    isIndexKeys(value.keys) &&
-    isSafeIndexOptions('options' in value ? value.options : undefined)
   );
 }

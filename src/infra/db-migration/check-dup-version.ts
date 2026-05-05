@@ -1,5 +1,5 @@
 import { Db, DBObjectVersionInfo } from './types';
-import getObjectVersionColl from './getObjectVersionColl';
+import getObjectVersionColl from './get-obj-version-coll';
 
 export default async function checkDuplicateVersion(
   db: Db,
@@ -11,14 +11,12 @@ export default async function checkDuplicateVersion(
   const versionRecord = await objectVersions.findOne({
     objectName: objectName,
     baseObjectName: baseObjectName,
+    versionCurrent: version,
   });
 
   if (versionRecord) {
-    const versionExists = versionRecord.revisions.find((r) => r === version);
-    if (versionExists) {
-      throw new Error(
-        `The New Index version '${version}' already exists for the object '${objectName}'.`,
-      );
-    }
+    throw new Error(
+      `The New Index version '${version}' already exists for the object '${objectName}'.`,
+    );
   }
 }
