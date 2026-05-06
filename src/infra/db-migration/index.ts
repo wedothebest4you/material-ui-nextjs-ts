@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { Db, isMigrationItem } from './types';
+import { Db } from './types';
 import logError from './error-hanlder';
 import { acquireLock, releaseLock } from './process-locks';
 import dbMigrate from './db-migrate';
@@ -100,12 +100,6 @@ export async function createOrModifyDBObjects(db: Readonly<Db>): Promise<void> {
 
           const migrationItem: unknown =
             itemDefaultOrNamed.default ?? itemDefaultOrNamed;
-
-          if (!isMigrationItem(migrationItem)) {
-            throw new Error(
-              `❌ Migration ${file} has an invalid item, please check the keys and values`,
-            );
-          }
 
           await dbMigrate(db, migrationItem);
 

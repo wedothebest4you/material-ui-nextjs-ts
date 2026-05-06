@@ -1,7 +1,6 @@
 import {
   Db,
-  ComposedValidator,
-  CreateCollectionOptionsExtended,
+  CreateOrModifyCollectionOptions,
   COLLECTION,
   BaseJSONSchema,
   AppJSONSchema,
@@ -12,34 +11,12 @@ import recordObjectVersion from './record-new-ver';
 export default async function createOrModifyCollections(
   db: Db,
   objectName: string,
-  baseJSONSchema: BaseJSONSchema,
-  appJSONSchema: AppJSONSchema,
+  createOrModifyCollectionOptions: CreateOrModifyCollectionOptions,
 ): Promise<void> {
-  const composedValidator: ComposedValidator = {
-    $jsonSchema: {
-      allOf: [baseJSONSchema, appJSONSchema],
-    },
-  };
-
-  const createCollectionOptions: Omit<
-    CreateCollectionOptionsExtended,
-    'migrationVersion'
-  > = {
-    validator: composedValidator,
-  };
-  console.log(`🔍 Ensuring collection - ${objectName}`);
-
-  const versionDef =
-    createCollectionOptions.validator.$jsonSchema.allOf[0].properties.version;
-  if (!versionDef || versionDef.bsonType !== 'int' || !versionDef.enum) {
-    throw new Error('Schema must define version enum of type integer');
+  const version = createOrModifyCollectionOptions.validator.allversion;
+  if (typeof version !== 'number') {
+    throw new Error('Schema must define version type number');
   }
-
-  if (versionDef.enum.length !== 1) {
-    throw new Error('Version enum must contain only one version - the latest');
-  }
-
-  const version = versionDef.enum[0];
 
   await checkDuplicateVersion(db, {
     objectName,
@@ -53,13 +30,11 @@ export default async function createOrModifyCollections(
   if (!collExists) {
     console.log(`Creating collection ${objectName}`);
 
-    await db.createCollection(objectName, createCollectionOptions);
+    await db.createCollection(objectName, createOrModifyCollectionOptions);
   } else {
     const result = await db.command({
       collMod: objectName,
-      validator: createCollectionOptions.validator,
-      validationLevel: createCollectionOptions.validationLevel ?? 'strict',
-      validationAction: createCollectionOptions.validationAction ?? 'error',
+      ...{ createOrModifyCollectionOptions },
     });
 
     if (!result.ok) {

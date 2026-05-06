@@ -1,7 +1,9 @@
-import { DBMigrationItem, AppJSONSchema } from '../types';
+import { MigrationItem, AppJSONSchema } from '../types';
 
-const schemaVersions = {
+const schemaVersionsJSONSchema = {
   bsonType: 'object',
+  title: 'Object versions',
+  version: 1,
   required: ['objectName', 'objectType', 'version', 'createdAt'],
   properties: {
     _id: { bsonType: 'objectId' },
@@ -15,11 +17,6 @@ const schemaVersions = {
       description: 'Object type',
       maxLength: 3,
       enum: ['col', 'idx'],
-    },
-    version: {
-      bsonType: 'int',
-      description: 'Version',
-      maxLength: 5,
     },
     baseObjectName: {
       bsonType: 'string',
@@ -42,14 +39,10 @@ const schemaVersions = {
   ],
 } as const satisfies AppJSONSchema;
 
-export const migrationItem: DBMigrationItem = {
+export const migrationItem: MigrationItem = {
   collectionName: 'object_versions',
-  schema: {
-    title: 'Object versions',
-    version: 1,
-    JSONschema: schemaVersions,
-  },
-  indexes: {
+  appJSONSchema: schemaVersionsJSONSchema,
+  createIndexes: {
     indexSpecs: [
       {
         migrationVersion: 1,

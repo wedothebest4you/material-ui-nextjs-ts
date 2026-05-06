@@ -1,16 +1,10 @@
 // import { BaseJSONSchema } from './types';
 
-export default function getBaseSchemaObject(title: string, version: number) {
+export default function getAuditJSONSchema() {
   // const baseSchemaObject: BaseJSONSchema = {
-  const baseSchemaObject = {
+  const auditJSONSchema = {
     bsonType: 'object',
-    title: title,
     properties: {
-      version: {
-        bsonType: 'int',
-        description: 'Latest schema version',
-        enum: [version],
-      },
       createdAt: {
         bsonType: 'date',
         description: 'Created on date',
@@ -41,8 +35,7 @@ export default function getBaseSchemaObject(title: string, version: number) {
         description: 'Updated By User',
       },
     },
-    required: ['version', 'createdAt', 'createdBy'],
-    additionalProperties: false,
+    required: ['createdAt', 'createdBy'],
   };
-  return baseSchemaObject;
+  return auditJSONSchema;
 }

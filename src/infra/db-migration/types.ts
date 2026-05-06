@@ -5,76 +5,26 @@ import type {
   CreateCollectionOptions,
   IndexDescription,
   CreateIndexesOptions,
+  RunCommandOptions,
+  Abortable,
 } from 'mongodb';
 
 //re-export / import and export
 export { MongoServerError } from 'mongodb';
 export type { Db, IndexDirection } from 'mongodb';
 
-import getBaseSchemaObject from './get-base-schema-obj';
-// // The folloewing interface named as DbObjectVersion
-// // since the key version is applicable to Indexe objects as well.
-// // If it was used exclisively for collections,
-// // then it would have been ideal to name as SchemaVersion or
-// // CollectionVersion. That is not the case in this utility.
-// interface DbObjectVersion {
-//   bsonType: 'string';
-//   description: string;
-//   enum: [string];
-// }
-
-// The following interface has named as JsonSchemaObject according to documentaion over here:
-// https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#mongodb-query-op.-jsonSchema
-//This base JSONSchema interface sets the following basic requiremennts:
-// 1. The JSONschema object should be the type object.
-// 2. The schema must have a title
-// 3. It must have atleast one string propery minimum
-// 4. It should have at least one key required.
-// 5. It should not allow any additional keys other than the listed keys in the Validator document.
-
-// type BaseJSONSchemaProperties = {
-//   version: {
-//     bsonType: 'int';
-//     description: string;
-//     enum: [number];
-//   };
-//   createdAt: {
-//     bsonType: 'date';
-//     description: string;
-//   };
-//   updatedAt: {
-//     bsonType: ['date', 'null'];
-//     description: string;
-//   };
-//   deletedAt: {
-//     bsonType: ['date', 'null'];
-//     description: string;
-//   };
-//   delFlag: {
-//     bsonType: ['null', 'string'];
-//     description: string;
-//     enum: ['x', null];
-//   };
-// };
-
-// export interface BaseJSONSchemaNode {
-//   bsonType: 'object';
-//   title: string;
-//   properties: BaseJSONSchemaNode;
-//   required: [keyof BaseJSONSchemaNode, ...(keyof BaseJSONSchemaNode)[]];
-//   enum?: string[];
-//   additionalProperties: false;
-// }
-
-export type BaseJSONSchema = ReturnType<typeof getBaseSchemaObject>;
+import getAuditJSONSchema from './get-audit-json-schema';
+import getVersionJSONSchema from './get-version-json-schema';
+import getComposedValidator from './get-composed-schema';
 
 type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
 
 type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 
 type AppJSONSchemaNode = {
-  bsonType: BsonType | BsonType[];
-  properties: Record<string, Optional<AppJSONSchemaNode, 'properties'>>;
+  bsonType?: BsonType | BsonType[];
+  // properties: Record<string, Optional<AppJSONSchemaNode, 'properties'>>;
+  properties?: Record<string, AppJSONSchemaNode>;
   description?: string;
   minimum?: number;
   maximum?: number;
@@ -94,65 +44,30 @@ type AppJSONSchemaNode = {
 
 export interface AppJSONSchema extends AppJSONSchemaNode {
   bsonType: 'object';
+  title: string;
+  version: number;
 }
 
-export interface ComposedValidator {
-  $jsonSchema: {
-    allOf: [BaseJSONSchema, AppJSONSchema];
-  };
-}
-
-// The following interface has named as per the documentaion over here:
-// https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#syntax
-// Aside : The document set against the key validator can be a query document as well.
-// for example, a query documnent {1:2} will forbid insertion of all documents except
-// the documents like these -  db.collection.insertOne({1:2}) or db.collection.insertOne({"1":2}).
-// interface ValidatorDocument<T>> {
-//   $jsonSchema: ComposedValidator<T>;
-// }
-
-// The interface name is as per the reference:
-// https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#definition
 type ValidationLevel = 'strict' | 'moderate' | 'off';
 type ValidationAction = 'error' | 'warn';
 
-export interface CreateCollectionOptionsExtended extends CreateCollectionOptions {
-  validator: ComposedValidator;
+type AuditJSONSchema = ReturnType<typeof getAuditJSONSchema>;
+type VersionJSONSchema = ReturnType<typeof getVersionJSONSchema>;
+
+export type ComposedJSONSchema = {
+  $jsonSchema: {
+    allOf: [AppJSONSchema, VersionJSONSchema, AuditJSONSchema];
+  };
+};
+
+interface CreateCollectionOptionsExtended extends CreateCollectionOptions {
+  validator: ComposedJSONSchema;
   validationLevel?: ValidationLevel;
   validationAction?: ValidationAction;
 }
 
-const DB_OBJECT_TYPES = {
-  COLLECTION: 'coll',
-  INDEX: 'indx',
-} as const;
-
-export const { COLLECTION, INDEX } = DB_OBJECT_TYPES;
-
-type TypeOfDBObjectType = typeof DB_OBJECT_TYPES;
-
-type DBObjectType = TypeOfDBObjectType[keyof TypeOfDBObjectType];
-
-export type DBObjectVersionInfo =
-  | {
-      objectName: string;
-      objectType: typeof COLLECTION;
-      version: number;
-      baseObjectName?: undefined;
-    }
-  | {
-      objectName: string;
-      objectType: typeof INDEX;
-      baseObjectName: string;
-      version: number;
-    };
-
-export interface ObjectVersionDocument {
-  _id: string;
-  objectType: DBObjectType;
-  objectName: string;
-  versionCurrent: number;
-}
+export interface CreateOrModifyCollectionOptions
+  extends CreateCollectionOptionsExtended, RunCommandOptions, Abortable {}
 
 export type IndexDescriptionWithVersion = IndexDescription & {
   migrationVersion: number;
@@ -164,33 +79,34 @@ export type CreateIndexesParameters = {
   options?: CreateIndexesOptions;
 };
 
-type MigrationItemBase = {
+type MigrationCollection = {
+  createOrModifyCollectionOptions: CreateOrModifyCollectionOptions;
+  createIndexes?: CreateIndexesParameters;
+};
+
+type MigrationIndexes = {
+  createOrModifyCollectionOptions?: CreateOrModifyCollectionOptions;
+  createIndexes: CreateIndexesParameters;
+};
+
+export type MigrationDefinition = {
   collectionName: string;
-};
+} & (MigrationCollection | MigrationIndexes);
 
-type AppJSONSchemaExtended = {
-  title: string;
-  version: number;
-  validationLevel?: ValidationLevel;
-  validationAction?: ValidationAction;
-} & {
-  JSONschema: AppJSONSchema;
-};
+export type MigrationItem = {
+  collectionName: string;
+} & (
+  | {
+      appJSONSchema: AppJSONSchema;
+      createIndexes?: CreateIndexesParameters;
+    }
+  | {
+      appJSONSchema?: AppJSONSchema;
+      createIndexes: CreateIndexesParameters;
+    }
+);
 
-type MigrationItemSchema = {
-  schema: AppJSONSchemaExtended;
-  indexes?: CreateIndexesParameters;
-};
-
-type MigrationItemIndexes = {
-  schema?: AppJSONSchemaExtended;
-  indexes: CreateIndexesParameters;
-};
-
-export type DBMigrationItem = MigrationItemBase &
-  (MigrationItemSchema | MigrationItemIndexes);
-
-export function isMigrationItem(item: unknown): item is DBMigrationItem {
+export function isMigrationItem(item: unknown): item is MigrationItem {
   if (
     !isRecord(item) ||
     !('collectionName' in item) ||
@@ -199,7 +115,7 @@ export function isMigrationItem(item: unknown): item is DBMigrationItem {
     return false;
   }
 
-  return 'schema' in item || 'indexes' in item;
+  return 'appJSONSchema' in item || 'createIndexes' in item;
 }
 
 export function hasCreateIndexParameters(
@@ -295,3 +211,100 @@ export function hasSchema(schema: unknown): schema is AppJSONSchemaExtended {
     isAppJSONSchema(schema.JSONschema)
   );
 }
+
+// The following interface has named as per the documentaion over here:
+// https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#syntax
+// Aside : The document set against the key validator can be a query document as well.
+// for example, a query documnent {1:2} will forbid insertion of all documents except
+// the documents like these -  db.collection.insertOne({1:2}) or db.collection.insertOne({"1":2}).
+// interface ValidatorDocument<T>> {
+//   $jsonSchema: ComposedValidator<T>;
+// }
+
+// The interface name is as per the reference:
+// https://www.mongodb.com/docs/manual/reference/method/db.createCollection/#definition
+
+const DB_OBJECT_TYPES = {
+  COLLECTION: 'coll',
+  INDEX: 'indx',
+} as const;
+
+export const { COLLECTION, INDEX } = DB_OBJECT_TYPES;
+
+type TypeOfDBObjectType = typeof DB_OBJECT_TYPES;
+
+type DBObjectType = TypeOfDBObjectType[keyof TypeOfDBObjectType];
+
+export type DBObjectVersionInfo =
+  | {
+      objectName: string;
+      objectType: typeof COLLECTION;
+      version: number;
+      baseObjectName?: undefined;
+    }
+  | {
+      objectName: string;
+      objectType: typeof INDEX;
+      baseObjectName: string;
+      version: number;
+    };
+
+export interface ObjectVersionDocument {
+  _id: string;
+  objectType: DBObjectType;
+  objectName: string;
+  versionCurrent: number;
+}
+// // The folloewing interface named as DbObjectVersion
+// // since the key version is applicable to Indexe objects as well.
+// // If it was used exclisively for collections,
+// // then it would have been ideal to name as SchemaVersion or
+// // CollectionVersion. That is not the case in this utility.
+// interface DbObjectVersion {
+//   bsonType: 'string';
+//   description: string;
+//   enum: [string];
+// }
+
+// The following interface has named as JsonSchemaObject according to documentaion over here:
+// https://www.mongodb.com/docs/manual/reference/operator/query/jsonSchema/#mongodb-query-op.-jsonSchema
+//This base JSONSchema interface sets the following basic requiremennts:
+// 1. The JSONschema object should be the type object.
+// 2. The schema must have a title
+// 3. It must have atleast one string propery minimum
+// 4. It should have at least one key required.
+// 5. It should not allow any additional keys other than the listed keys in the Validator document.
+
+// type BaseJSONSchemaProperties = {
+//   version: {
+//     bsonType: 'int';
+//     description: string;
+//     enum: [number];
+//   };
+//   createdAt: {
+//     bsonType: 'date';
+//     description: string;
+//   };
+//   updatedAt: {
+//     bsonType: ['date', 'null'];
+//     description: string;
+//   };
+//   deletedAt: {
+//     bsonType: ['date', 'null'];
+//     description: string;
+//   };
+//   delFlag: {
+//     bsonType: ['null', 'string'];
+//     description: string;
+//     enum: ['x', null];
+//   };
+// };
+
+// export interface BaseJSONSchemaNode {
+//   bsonType: 'object';
+//   title: string;
+//   properties: BaseJSONSchemaNode;
+//   required: [keyof BaseJSONSchemaNode, ...(keyof BaseJSONSchemaNode)[]];
+//   enum?: string[];
+//   additionalProperties: false;
+// }
