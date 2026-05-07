@@ -1,11 +1,16 @@
-import { Db, CreateIndexesParameters, IndexDirection, INDEX } from './types';
+import {
+  Db,
+  CreateIndexesParametersDTOIn,
+  IndexDirection,
+  INDEX,
+} from './types';
 import checkDuplicateVersion from './check-dup-version';
 import recordObjectVersion from './record-new-ver';
 
 export default async function createIndexes(
   db: Db,
   collection: string,
-  params: CreateIndexesParameters,
+  params: CreateIndexesParametersDTOIn,
 ): Promise<void> {
   const { indexSpecs } = params;
   const indexVersionNames = [];
@@ -34,7 +39,7 @@ export default async function createIndexes(
       version: migrationVersion,
     });
   }
-
+  // https://mongodb.github.io/node-mongodb-native/7.2/classes/Collection.html#createIndexes
   await coll.createIndexes(params.indexSpecs, params.options);
 
   for (const [index, { migrationVersion }] of indexSpecs.entries()) {

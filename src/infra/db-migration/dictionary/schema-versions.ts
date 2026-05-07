@@ -1,4 +1,4 @@
-import { MigrationItem, AppJSONSchema } from '../types';
+import { MigrationItemDefinition, AppJSONSchema } from '../types';
 
 const schemaVersionsJSONSchema = {
   bsonType: 'object',
@@ -39,10 +39,14 @@ const schemaVersionsJSONSchema = {
   ],
 } as const satisfies AppJSONSchema;
 
-export const migrationItem: MigrationItem = {
+export const migrationItem: MigrationItemDefinition = {
   collectionName: 'object_versions',
-  appJSONSchema: schemaVersionsJSONSchema,
-  createIndexes: {
+  collectionDescription: {
+    createOrModifyCollectionOptions: {
+      validator: schemaVersionsJSONSchema,
+    },
+  },
+  createIndexesParameters: {
     indexSpecs: [
       {
         migrationVersion: 1,

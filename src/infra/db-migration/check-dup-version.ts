@@ -5,18 +5,18 @@ export default async function checkDuplicateVersion(
   db: Db,
   params: DBObjectVersionInfo,
 ) {
-  const { objectName, version, baseObjectName } = params;
+  const { objectName, newVersion, baseObjectName } = params;
   const objectVersions = await getObjectVersionColl(db);
 
   const versionRecord = await objectVersions.findOne({
     objectName: objectName,
     baseObjectName: baseObjectName,
-    versionCurrent: version,
   });
 
   if (versionRecord) {
-    throw new Error(
-      `The New Index version '${version}' already exists for the object '${objectName}'.`,
-    );
+    if (newVersion - versionRecord.versionCurrent !== 1)
+      throw new Error(
+        `Version missing in the object ${objectName}, new version : ${newVersion}, old version : ${versionRecord.versionCurrent}`,
+      );
   }
 }

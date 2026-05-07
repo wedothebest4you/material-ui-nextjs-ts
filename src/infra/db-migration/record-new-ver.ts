@@ -4,9 +4,9 @@ export default async function recordObjectVersion(
   db: Db,
   versionInfo: DBObjectVersionInfo,
 ): Promise<void> {
-  const { objectName, objectType, version, baseObjectName } = versionInfo;
+  const { objectName, objectType, newVersion, baseObjectName } = versionInfo;
 
-  console.log(`Updating object version ${version}`);
+  console.log(`Updating object version ${newVersion}`);
 
   if (objectType === INDEX && !baseObjectName) {
     throw new Error(`BaseObject name is missing for the index ${objectName}`);
@@ -22,7 +22,7 @@ export default async function recordObjectVersion(
 
     {
       $set: {
-        versionCurrent: version,
+        versionCurrent: newVersion,
         objectType: objectType,
       },
     },
