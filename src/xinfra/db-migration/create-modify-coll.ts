@@ -4,11 +4,14 @@ import {
   CreateOrModifyCollectionOptions,
   ComposedJSONSchema,
   COLLECTION,
+  DBObjectVersionInfo,
 } from './types';
-import checkDuplicateVersion from './check-dup-version';
+import checkVersionMissing from './check-version-missing';
 import recordObjectVersion from './record-new-ver';
 import getVersionJSONSchema from './get-version-json-schema';
 import getAuditJSONSchema from './get-audit-json-schema';
+import getCurrentVersion from './get-current-version';
+import checkVersionUnchanged from './check-version-unchanged';
 
 export default async function createOrModifyCollections(
   db: Db,
@@ -21,11 +24,19 @@ export default async function createOrModifyCollections(
     throw new Error('Schema must define version type number');
   }
 
-  await checkDuplicateVersion(db, {
+  const versionInfo: DBObjectVersionInfo = {
     objectName,
     objectType: COLLECTION,
     newVersion,
-  });
+  };
+
+  const currentVersion = await getCurrentVersion(db, versionInfo);
+
+  if (checkVersionUnchanged(newVersion, currentVersion)) {
+    return;
+  }
+
+  await checkVersionMissing(newVersion, currentVersion);
 
   const appSchema = {
     ...optionsDTOIn.createOrModifyCollectionOptions.validator,
@@ -38,6 +49,7 @@ export default async function createOrModifyCollections(
       allOf: [appSchema, versionSchema, auditSchema],
     },
   };
+
   const options: CreateOrModifyCollectionOptions = {
     ...optionsDTOIn,
     createOrModifyCollectionOptions: {
@@ -61,6 +73,7 @@ export default async function createOrModifyCollections(
       {
         collMod: objectName,
         ...options.createOrModifyCollectionOptions,
+        ...optionsDTOIn.commandOptions,
       },
       options.commandOptions,
     );

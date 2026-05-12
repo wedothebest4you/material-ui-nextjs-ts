@@ -45,13 +45,15 @@ export const migrationItem: MigrationItemDefinition = {
     createOrModifyCollectionOptions: {
       validator: schemaVersionsJSONSchema,
     },
+    commandDocument: {},
+    commandOptions: {},
   },
   createIndexesParameters: {
     indexSpecs: [
       {
         migrationVersion: 1,
         key: { objectName: 1, baseObjectName: 1 },
-        versionName: undefined,
+        name: 'ui_objectName_baseObjectName',
         unique: true,
       },
     ],

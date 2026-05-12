@@ -20,7 +20,6 @@ import {
   RouteDictionarybyFullPath,
   Navigation,
 } from '@/shared/types';
-import React from 'react';
 
 export default class ModuleRegistry {
   static modules: ModuleDefinition = {};

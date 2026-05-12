@@ -12,7 +12,6 @@
  * - Prevents direct access to internal platform implementation
  */
 
-export { default as PlatformShell } from './shell/PlatformShell';
-export { default as ShellLayout } from './shell/ShellLayout';
+export { default as PlatformShellAdapter } from './routes/platform-shell-adapter';
 export { default as modules } from './services/ModuleRegistry';
 export { default as PlatformRouteRenderer } from './routes/PlatformRouteRenderer';

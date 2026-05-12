@@ -3,9 +3,12 @@ import {
   CreateIndexesParametersDTOIn,
   IndexDirection,
   INDEX,
+  DBObjectVersionInfo,
 } from './types';
-import checkDuplicateVersion from './check-dup-version';
 import recordObjectVersion from './record-new-ver';
+import getCurrentVersion from './get-current-version';
+import checkVersionMissing from './check-version-missing';
+import checkVersionUnchanged from './check-version-unchanged';
 
 export default async function createIndexes(
   db: Db,
@@ -13,41 +16,49 @@ export default async function createIndexes(
   params: CreateIndexesParametersDTOIn,
 ): Promise<void> {
   const { indexSpecs } = params;
-  const indexVersionNames = [];
+  const indexVersionUnchanged = [];
   const coll = db.collection(collection);
 
   if (!coll) {
     throw new Error(`The collection ${coll} does not exist to create its in`);
   }
   //es5 will mark an error on this usage, so esnext to target
-  for (const [
-    index,
-    { versionName, migrationVersion, key },
-  ] of indexSpecs.entries()) {
-    console.log(`🔍 Validating 
-      spec. of the Index - ${name}`);
+  for (const [index, { name, migrationVersion, key }] of indexSpecs.entries()) {
     if (!migrationVersion) {
       throw new Error(`The script has no version set for the new index object`);
     }
-    indexVersionNames[index] =
-      versionName || generateIndexVersionNames(migrationVersion, key);
+    const indexName = name
+      ? `${name}_${migrationVersion}`
+      : generateIndexVersionNames(migrationVersion, key);
 
-    await checkDuplicateVersion(db, {
-      objectName: indexVersionNames[index],
+    const versionInfo: DBObjectVersionInfo = {
+      objectName: indexName,
       objectType: INDEX,
       baseObjectName: collection,
-      version: migrationVersion,
-    });
+      newVersion: migrationVersion,
+    };
+
+    const currentVersion = await getCurrentVersion(db, versionInfo);
+
+    if (checkVersionUnchanged(migrationVersion, currentVersion)) {
+      indexVersionUnchanged[indexVersionUnchanged.length] = indexName;
+      continue;
+    }
+
+    await checkVersionMissing(migrationVersion, currentVersion);
+
+    indexSpecs[index].name = indexName;
   }
+
   // https://mongodb.github.io/node-mongodb-native/7.2/classes/Collection.html#createIndexes
   await coll.createIndexes(params.indexSpecs, params.options);
 
-  for (const [index, { migrationVersion }] of indexSpecs.entries()) {
+  for (const { migrationVersion, name } of indexSpecs) {
     await recordObjectVersion(db, {
-      objectName: indexVersionNames[index],
+      objectName: name!,
       objectType: INDEX,
       baseObjectName: collection,
-      version: migrationVersion,
+      newVersion: migrationVersion,
     });
   }
 }

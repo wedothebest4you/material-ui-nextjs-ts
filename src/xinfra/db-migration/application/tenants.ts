@@ -1,7 +1,9 @@
-import { DBMigrationItem, AppJSONSchema } from '../types';
+import { MigrationItemDefinition, AppJSONSchema } from '../types';
 
 const tenants: AppJSONSchema = {
   bsonType: 'object',
+  title: 'tenant',
+  version: 1,
   required: ['_id', 'name', 'code', 'plan', 'status', 'createdAt', 'version'],
   properties: {
     _id: {
@@ -49,25 +51,23 @@ const tenants: AppJSONSchema = {
   },
 };
 
-export const migrationItem: DBMigrationItem = {
+export const migrationItem: MigrationItemDefinition = {
   collectionName: 'tenants',
-  schema: {
-    title: 'tenants',
-    version: 1,
-    JSONschema: tenants,
+  collectionDescription: {
+    createOrModifyCollectionOptions: {
+      validator: tenants,
+    },
   },
-  indexes: {
+  createIndexesParameters: {
     indexSpecs: [
       {
         migrationVersion: 1,
         key: { code: 1 },
-        versionName: undefined,
         unique: true,
       },
       {
         migrationVersion: 2,
         key: { name: 1 },
-        versionName: undefined,
         unique: true,
       },
     ],

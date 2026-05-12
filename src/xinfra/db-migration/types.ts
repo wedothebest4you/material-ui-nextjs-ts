@@ -9,6 +9,7 @@ import type {
   ClientSession,
   BSONSerializeOptions,
   Abortable,
+  Document,
 } from 'mongodb';
 
 //re-export / import and export
@@ -86,12 +87,12 @@ export type CreateOrModifyCollectionOptions = {
 
 export type CreateOrModifyCollectionOptionsDTOIn = {
   createOrModifyCollectionOptions: CreateCollectionOptionsDTOIn;
+  commandDocument?: Document;
   commandOptions?: CommandOptions;
 };
 
 export type IndexDescriptionDTOIn = IndexDescription & {
   migrationVersion: number;
-  versionName: string | undefined;
 };
 
 export type CreateIndexesParametersDTOIn = {

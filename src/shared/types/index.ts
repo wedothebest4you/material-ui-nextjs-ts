@@ -47,3 +47,33 @@ export interface IUser {
     [namespace: string]: string[];
   };
 }
+
+type BsonType = 'object' | 'string' | 'objectId' | 'date' | 'null' | 'int';
+
+type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+
+type AppJSONSchemaNode = {
+  bsonType?: BsonType | BsonType[];
+  properties: Record<string, Optional<AppJSONSchemaNode, 'properties'>>;
+  description?: string;
+  minimum?: number;
+  maximum?: number;
+  maxLength?: number;
+  items?: AppJSONSchemaNode;
+
+  required?: string[];
+
+  enum?: unknown[];
+
+  oneOf?: AppJSONSchemaNode[];
+
+  anyOf?: AppJSONSchemaNode[];
+
+  allOf?: AppJSONSchemaNode[];
+};
+
+export interface AppJSONSchema extends AppJSONSchemaNode {
+  bsonType: 'object';
+  title: string;
+  version: number;
+}
