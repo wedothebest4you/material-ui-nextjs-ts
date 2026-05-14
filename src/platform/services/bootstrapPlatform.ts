@@ -16,9 +16,9 @@
 import ModuleRegistry from './ModuleRegistry';
 import { financeModuleDefinition } from '@/modules/finance/index';
 import { ModuleDefinition } from '@/shared/types';
-
 import { IUser } from '@/shared/types';
-
+import env from '@/env';
+console.log('bootstrap loader');
 let bootstrapped = false;
 
 export default function bootstrapPlatform(user: IUser) {
