@@ -75,5 +75,4 @@ type AppJSONSchemaNode = {
 export interface AppJSONSchema extends AppJSONSchemaNode {
   bsonType: 'object';
   title: string;
-  version: number;
 }

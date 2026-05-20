@@ -3,7 +3,7 @@ import { AppJSONSchema } from '@/shared/types/index';
 const TENANT_JSONSCHEMA = {
   bsonType: 'object',
   title: 'tenant',
-  required: ['name', 'code', 'plan', 'status', 'createdAt', 'version'],
+  required: ['name', 'code', 'plan', 'status', 'createdAt'],
   properties: {
     name: {
       bsonType: 'string',
@@ -34,13 +34,6 @@ const TENANT_JSONSCHEMA = {
       description: 'Maximum Allowed Users',
       minimum: 1,
       maximum: 100,
-    },
-
-    storageQuotaMb: {
-      bsonType: ['int', 'null'],
-      description: 'Storage Quota (MB)',
-      minimum: 100,
-      maximum: 1000000,
     },
   },
 } as const satisfies AppJSONSchema;

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -9,33 +8,32 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    // "resolveJsonModule": true,
+    // "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
     "strictPropertyInitialization": true,
     "sourceMap": true,
+    "target": "esnext",
+    "types": ["node"],
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "baseUrl": "src/",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/platform/*": ["platform/*"],
-      "@/modules/finance/*": ["modules/finance/*"],
-      "@/shared/*": ["shared/*"]
-    }
+      "@/*": ["./*"],
+      "@/platform/*": ["./src/platform/*"],
+      "@/modules/finance/*": ["./src/modules/finance/*"],
+      "@/modules/platform/*": ["./src/modules/platform/*"],
+      "@/shared/*": ["./src/shared/*"]
+    },
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "src/db/scripts/startMigration.js"
-  ],
-  "exclude": ["node_modules"]
+  // "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["./node_modules"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"]
 }

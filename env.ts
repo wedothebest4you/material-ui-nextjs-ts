@@ -24,7 +24,8 @@ function requireEnv(name: string): string {
 }
 
 const env = {
-  MONGODB_URI: requireEnv('MONGODB_URI'),
+  DB_BASE_URI: requireEnv('DB_BASE_URI'),
+  DB_NAME: requireEnv('DB_NAME'),
   ENV: nodeEnv,
 };
 
