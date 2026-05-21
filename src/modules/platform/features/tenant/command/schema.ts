@@ -34,8 +34,6 @@ const schemaObject = {
   },
 };
 
-export const tenantSchemaPropsObj = createCommandSchema(schemaObject);
+export const tenantSchema = createCommandSchema(schemaObject);
 
-export type TenantSchemaPropstype = InferSchemaType<
-  typeof tenantSchemaPropsObj
->;
+export type TenantSchemaType = InferSchemaType<typeof tenantSchema>;

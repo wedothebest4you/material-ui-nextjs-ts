@@ -9,8 +9,6 @@ const schemaObject = {
   userLimit: { type: Number, required: true },
 };
 
-export const tenantSchemaPropsObj = createQuerySchema(schemaObject);
+export const tenantSchema = createQuerySchema(schemaObject);
 
-export type TenantSchemaPropstype = InferSchemaType<
-  typeof tenantSchemaPropsObj
->;
+export type TenantSchemaType = InferSchemaType<typeof tenantSchema>;

@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose, { HydratedDocument, Model } from 'mongoose';
 import { COLLECTION_VIEW } from '../constants';
-import { tenantSchemaPropsObj, TenantSchemaPropstype } from './props';
+import { tenantSchema, TenantSchemaType } from './schema';
 
-const Tenant = mongoose.model<TenantSchemaPropstype>(
+const Tenant = mongoose.model<TenantSchemaType>(
   COLLECTION_VIEW,
-  tenantSchemaPropsObj,
+  tenantSchema,
   COLLECTION_VIEW,
 );
 

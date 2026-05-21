@@ -1,10 +1,10 @@
 'use server';
 
 import TenantCommand from './service';
-import { TenantSchemaPropstype } from './props';
+import { TenantSchemaType } from './schema';
 import { revalidatePath } from 'next/cache';
 
-export async function createTenant(tenantFormData: TenantSchemaPropstype) {
+export async function createTenant(tenantFormData: TenantSchemaType) {
   try {
     await TenantCommand.createTenant(tenantFormData);
 

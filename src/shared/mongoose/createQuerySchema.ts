@@ -10,8 +10,6 @@ export default function createQuerySchema<
     {
       // optimisticConcurrency: true,
       // timestamps: true,
-      _id: false,
-      versionKey: false,
       ...options,
     },
   );

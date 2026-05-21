@@ -5,7 +5,6 @@ export default function createCommandSchema<
 >(definition: Definition, options = {}) {
   return new Schema(
     { ...definition },
-    // spot to add reusable schema fragments
     {
       optimisticConcurrency: true,
       timestamps: true,

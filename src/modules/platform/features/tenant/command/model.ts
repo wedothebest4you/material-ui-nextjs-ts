@@ -1,10 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { COLLECTION_NAME } from '../constants';
-import { tenantSchemaPropsObj } from './props';
-import TenantSchemaMethods from './methods';
+import { tenantSchema, TenantSchemaType } from './schema';
+import { TenantClass } from './class';
+import { MakeModel } from '@/shared/index';
 
-tenantSchemaPropsObj.loadClass(TenantSchemaMethods);
+tenantSchema.loadClass(TenantClass);
 
-const Tenant = mongoose.model(COLLECTION_NAME, tenantSchemaPropsObj);
+type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
+
+const Tenant = mongoose.model<any, combinedModel>(
+  COLLECTION_NAME,
+  tenantSchema,
+);
 
 export default Tenant;
