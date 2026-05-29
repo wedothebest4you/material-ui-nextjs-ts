@@ -16,6 +16,8 @@ const someSchema = new Schema({
     of: String,
   },
 });
+console.log(someSchema.obj);
+
 const SomeModel = mongoose.model('somecoll', someSchema);
 const doc = new SomeModel({
   arrOfSubDocs: [
@@ -40,4 +42,4 @@ let rec;
 //   rec = await doc.save();
 //   console.log(rec);
 // })();
-console.log(someSchema.path('arrOfSubDocs'));
+// console.log(someSchema.path('arrOfSubDocs'));
