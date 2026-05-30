@@ -1,39 +1,43 @@
-import { InferSchemaType } from 'mongoose';
+import { InferSchemaType, SchemaDefinition } from 'mongoose';
 import { createCommandSchema } from '@/shared/index';
+import TENANT from '../constants';
 
 const schemaObject = {
   name: {
     type: String,
-    required: true,
-    maxlength: 60,
     trim: true,
-    uppercase: true,
+    required: [true, TENANT.name.required],
+    maxLength: [30, TENANT.code.required],
   },
   code: {
     type: String,
-    required: true,
-    maxlength: 30,
-    uppercase: true,
+    trim: true,
+    required: [true, TENANT.code.required],
+    maxLength: [15, TENANT.code.maxLength],
   },
   plan: {
     type: String,
-    required: true,
-    enum: ['basic', 'standard', 'enterprise'],
-    default: 'basic',
+    required: [true, TENANT.plan.required],
+    enum: TENANT.plan.enum,
   },
   status: {
     type: String,
-    required: true,
-    enum: ['active', 'inactive'],
+    required: [true, TENANT.status.required],
+    enum: TENANT.status.enum,
     default: 'active',
   },
   userLimit: {
-    type: Number, // Mongoose uses Number for int
-    min: 1,
-    max: 100,
+    type: Number,
+    required: [true, TENANT.userLimit.required],
+    enum: TENANT.userLimit.enum,
   },
-};
+} satisfies SchemaDefinition;
 
 export const tenantSchema = createCommandSchema(schemaObject);
 
-export type TenantSchemaType = InferSchemaType<typeof tenantSchema>;
+type tenantSchemaType = InferSchemaType<typeof tenantSchema>;
+
+export type TenantSchemaType = Omit<
+  tenantSchemaType,
+  'createdAt' | 'updatedAt'
+>;

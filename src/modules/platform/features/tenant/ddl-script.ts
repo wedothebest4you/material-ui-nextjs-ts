@@ -1,15 +1,25 @@
 import TENANT_JSONSCHEMA from './jsonschema';
-import { COLLECTION_NAME } from './constants';
+import TENANT_QUERY_VALIDATION from './query-validation';
+import TENANT from './constants';
 import { getDbByMongoDbClient } from '@/shared/index';
 
 async function createDBObjects() {
   const db = await getDbByMongoDbClient();
 
-  await db.createCollection(COLLECTION_NAME, {
-    validator: TENANT_JSONSCHEMA,
+  await db.createCollection(TENANT.collectionName, {
+    validator: {
+      $and: [
+        {
+          $expr: TENANT_QUERY_VALIDATION,
+        },
+        {
+          $jsonschema: TENANT_JSONSCHEMA,
+        },
+      ],
+    },
   });
 
-  const coll = db.collection(COLLECTION_NAME);
+  const coll = db.collection(TENANT.collectionName);
 
   await coll.createIndexes([
     {
@@ -25,7 +35,7 @@ async function createDBObjects() {
   ]);
 
   await db.createCollection('tenatsList', {
-    viewOn: COLLECTION_NAME, // The source collection
+    viewOn: TENANT.collectionName, // The source collection
     pipeline: [
       {
         $project: {

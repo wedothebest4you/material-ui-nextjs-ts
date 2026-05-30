@@ -2,6 +2,7 @@ import Tenant from './model';
 
 export default class TenantQuery {
   static async getFullList() {
-    return await Tenant.find();
+    const doc = await Tenant.find().lean();
+    return doc;
   }
 }

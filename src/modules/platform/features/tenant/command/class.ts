@@ -1,7 +1,10 @@
 import { TenantSchemaType } from './schema';
+import { HydratedDocument } from 'mongoose';
+import TENANT from '../constants';
+
+type TenantDocument = HydratedDocument<TenantSchemaType>;
 
 export class TenantClass {
-  self = this as TenantSchemaType;
   // methods, statics and getters and setters will be added on need basis
   someMethod() {
     return 1;
@@ -21,5 +24,19 @@ export class TenantClass {
   }
   get someVirtual2() {
     return 1;
+  }
+
+  async onPreValidate(this: TenantDocument) {
+    if (this.isModified('plan')) {
+      const validationError = this.validateSync('plan');
+      if (validationError && validationError.errors['plan']) {
+        throw validationError.errors['plan'];
+      }
+
+      this.userLimit =
+        TENANT.userLimit.enum[
+          TENANT.plan.enum.findIndex((i) => i === this.plan)
+        ];
+    }
   }
 }

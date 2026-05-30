@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache';
 export async function getFullList() {
   try {
     const data = await TenantQuery.getFullList();
-
     // please see how to avoid this hard coded value
     revalidatePath('/tenant');
     return {

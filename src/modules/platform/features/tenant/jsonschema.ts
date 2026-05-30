@@ -1,39 +1,60 @@
 import { AppJSONSchema } from '@/shared/types/index';
+import TENANT from './constants';
 
 const TENANT_JSONSCHEMA = {
   bsonType: 'object',
-  title: 'tenant',
-  required: ['name', 'code', 'plan', 'status', 'createdAt'],
+  title: 'Tenant object validation',
+  required: [
+    'name',
+    'code',
+    'plan',
+    'status',
+    'userLimit',
+    '_v',
+    'createdAt',
+    'updatedAt',
+  ],
   properties: {
     name: {
       bsonType: 'string',
-      description: 'Tenant name',
-      maxLength: 60,
+      maxLength: 30,
+      description: `${TENANT.name.required}\n${TENANT.name.maxLength}`,
     },
 
     code: {
       bsonType: 'string',
-      description: 'Unique tenant code',
-      maxLength: 30,
+      description: `${TENANT.code.required}\n${TENANT.code.maxLength}`,
+      maxLength: 15,
     },
 
     plan: {
       bsonType: 'string',
-      description: 'Subscription Plan',
-      enum: ['basic', 'standard', 'enterprise'],
+      enum: TENANT.plan.enum,
+      description: `${TENANT.plan.required}`,
     },
 
     status: {
       bsonType: 'string',
-      description: 'Tenant Status',
-      enum: ['active', 'inactive'],
+      description: `${TENANT.status.required}`,
+      enum: TENANT.status.enum,
     },
 
     userLimit: {
-      bsonType: ['int', 'null'],
-      description: 'Maximum Allowed Users',
-      minimum: 1,
-      maximum: 100,
+      bsonType: 'int',
+      description: `${TENANT.userLimit.required}`,
+      enum: TENANT.userLimit.enum,
+    },
+    _v: {
+      bsonType: 'int',
+      description: `${TENANT._v.required}`,
+    },
+    createdAt: {
+      bsonType: 'date',
+      description: `${TENANT.createdAt.required}`,
+    },
+    updatedAt: {
+      bsonType: ['date', 'null'],
+      description: `${TENANT.createdAt.required}`,
     },
   },
 } as const satisfies AppJSONSchema;

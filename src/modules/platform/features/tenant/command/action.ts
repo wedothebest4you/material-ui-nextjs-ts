@@ -1,21 +1,27 @@
 'use server';
 
 import TenantCommand from './service';
+import { createDTO } from './dto';
 import { TenantSchemaType } from './schema';
 import { revalidatePath } from 'next/cache';
+import { type ActionState } from '@/src/shared';
 
-export async function createTenant(tenantFormData: TenantSchemaType) {
+export async function createTenantAction(
+  prevState: ActionState,
+  tenantFormData: FormData,
+): Promise<ActionState> {
   try {
-    await TenantCommand.createTenant(tenantFormData);
+    const rawData = Object.fromEntries(tenantFormData.entries());
+    const cleanData = createDTO.parse(rawData);
+    await TenantCommand.createTenant(cleanData);
 
-    // please see how to avoid this hard coded value
     revalidatePath('/tenant');
-    return { success: true };
+    return { success: true, message: '' };
   } catch (error) {
     console.error('Command Action Error:', error);
     return {
       success: false,
-      error: 'Failed to create the Tenant',
+      message: 'Failed to create the Tenant',
     };
   }
 }
