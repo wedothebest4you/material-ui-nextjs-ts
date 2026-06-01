@@ -63,7 +63,7 @@ type AppJSONSchemaNode = {
 
   required?: string[];
 
-  enum?: unknown[];
+  enum?: ReadonlyArray<unknown>;
 
   oneOf?: AppJSONSchemaNode[];
 
@@ -76,3 +76,10 @@ export interface AppJSONSchema extends AppJSONSchemaNode {
   bsonType: 'object';
   title: string;
 }
+
+// Shape of the state managed by the hook
+export type ActionState = {
+  success: boolean;
+  message: string | undefined;
+  errors?: Record<string, string>;
+};

@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 import TENANT from '../constants';
 import { tenantSchema, TenantSchemaType } from './schema';
 import { TenantClass } from './class';
-import { MakeModel } from '@/shared/index';
+import { MakeModel, loadClassCustom } from '@/shared/index';
 
-tenantSchema.loadClass(TenantClass);
+loadClassCustom(TenantClass, tenantSchema);
 
 type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
 

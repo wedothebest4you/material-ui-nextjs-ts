@@ -1,6 +1,7 @@
 import { TenantSchemaType } from './schema';
 import { HydratedDocument } from 'mongoose';
 import TENANT from '../constants';
+import { SchemaOperationError } from '@/src/shared';
 
 type TenantDocument = HydratedDocument<TenantSchemaType>;
 
@@ -38,5 +39,9 @@ export class TenantClass {
           TENANT.plan.enum.findIndex((i) => i === this.plan)
         ];
     }
+  }
+
+  async onPostSave(error: Error, doc: TenantDocument, next: any) {
+    next(new SchemaOperationError(error, next));
   }
 }

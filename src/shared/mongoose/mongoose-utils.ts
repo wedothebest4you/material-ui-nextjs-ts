@@ -1,8 +1,12 @@
-import { Model } from 'mongoose';
+import { Model, MongooseQueryOrDocumentMiddleware } from 'mongoose';
 
 // 1. Core structural filter types
 type ExtractMethods<T> = {
-  [K in keyof T as T[K] extends (...args: any[]) => any ? K : never]: T[K];
+  [K in keyof T as K extends `onPre${string}` | `onPost${string}`
+    ? never
+    : T[K] extends (...args: any[]) => any
+      ? K
+      : never]: T[K];
 };
 
 type ExtractVirtuals<T, Blacklist extends string = never> = {
@@ -31,3 +35,27 @@ export type MakeModel<
   ExtractVirtuals<InstanceType<ClassConstructor>, BlacklistKeys>
 > &
   ClassConstructor; // Combine directly with the constructor type for static methods!
+
+export interface ClassConstructorValidHooksOnly {
+  new (...args: any[]): any;
+  prototype: ValidateClassHooks<InstanceType<ClassConstructorValidHooksOnly>>; // 🎯 Evaluates type validity natively
+  [key: string]: any;
+}
+
+type ValidateClassHooks<T> = {
+  [K in keyof T]: K extends string
+    ? K extends `onPre${string}` | `onPost${string}`
+      ? ExtractMiddlewareEvent<K> extends never
+        ? '❌ Invalid Mongoose Lifecycle Event Name'
+        : T[K]
+      : T[K]
+    : T[K];
+};
+
+export type ExtractMiddlewareEvent<T extends string> = T extends
+  | `onPre${infer Event}`
+  | `onPost${infer Event}`
+  ? Lowercase<Event> extends MongooseQueryOrDocumentMiddleware
+    ? Lowercase<Event>
+    : never
+  : never;

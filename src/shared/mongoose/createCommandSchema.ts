@@ -6,6 +6,7 @@ export default function createCommandSchema<
   return new Schema(
     { ...definition },
     {
+      //this setting is very vital since the CRUD apps, leverages the same.
       optimisticConcurrency: true,
       timestamps: true,
       ...options,
