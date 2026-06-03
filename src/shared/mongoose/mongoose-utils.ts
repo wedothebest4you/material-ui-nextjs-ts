@@ -2,7 +2,10 @@ import { Model, MongooseQueryOrDocumentMiddleware } from 'mongoose';
 
 // 1. Core structural filter types
 type ExtractMethods<T> = {
-  [K in keyof T as K extends `onPre${string}` | `onPost${string}`
+  [K in keyof T as K extends
+    | `onPre${string}`
+    | `onPost${string}`
+    | `${string}Validator`
     ? never
     : T[K] extends (...args: any[]) => any
       ? K

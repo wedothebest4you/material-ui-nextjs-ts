@@ -1,13 +1,11 @@
+import { CustomError } from '@/shared/index';
 import { Error as MongooseError } from 'mongoose';
 import { MongoServerError } from 'mongodb';
 
 export default class SchemaOperationError extends Error {
   errorDetails = '';
   errorBypassed: boolean = false;
-  constructor(
-    private error: Error,
-    private next: (error: Error) => void,
-  ) {
+  constructor(private error: Error) {
     super();
 
     // 2. Guard for Mongoose native validation issues
@@ -16,7 +14,6 @@ export default class SchemaOperationError extends Error {
         (e) => `${e.path}: ${e.message}`,
       );
       this.errorDetails = `Validation Failed: ${errorDetails.join(', ')}`;
-      return;
     }
 
     // 3. Guard for MongoDB Server Constraint Violations (like Unique Keys)
@@ -29,7 +26,6 @@ export default class SchemaOperationError extends Error {
         ? Object.keys(serverError.keyValue)[0]
         : 'field';
       this.errorDetails = `The provided ${duplicatedField} is already registered.`;
-      return;
     }
 
     // 4. Guard for Malformed MongoDB ObjectIDs / Type Casting issues

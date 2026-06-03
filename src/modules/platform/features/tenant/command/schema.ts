@@ -12,24 +12,34 @@ const schemaObject = {
   code: {
     type: String,
     trim: true,
+    uppercase: true,
     required: [true, TENANT.code.required],
     maxLength: [15, TENANT.code.maxLength],
   },
   plan: {
     type: String,
     required: [true, TENANT.plan.required],
-    enum: TENANT.plan.enum,
+    enum: {
+      values: TENANT.plan.enum.value,
+      message: TENANT.plan.enum.message,
+    },
   },
   status: {
     type: String,
     required: [true, TENANT.status.required],
-    enum: TENANT.status.enum,
+    enum: {
+      values: TENANT.status.enum.value,
+      message: TENANT.status.enum.message,
+    },
     default: 'active',
   },
   userLimit: {
     type: Number,
     required: [true, TENANT.userLimit.required],
-    enum: TENANT.userLimit.enum,
+    enum: {
+      values: TENANT.userLimit.enum.value,
+      message: TENANT.userLimit.enum.message,
+    },
   },
 } satisfies SchemaDefinition;
 

@@ -43,6 +43,26 @@ export default function loadClassCustom(
         schema.post(eventName, prototype[methodName]);
       }
       delete prototype[methodName];
+    } else if (methodName.endsWith('Validator')) {
+      const pathName = methodName.replace('Validator', '');
+      if (schema.path(pathName)) {
+        schema.path(pathName).validate({
+          // Defer execution until runtime by using a standard function block
+          validator: function (value) {
+            // Dynamically bind the live document instance ('this') to the behavior method
+            const result = prototype[methodName].call(this, value) as {
+              isValid: boolean;
+              message: string;
+            };
+            schema.path(pathName).options.validate.message = result.message;
+            return result.isValid;
+          },
+          message:
+            schema.path(pathName).options.validate.message ||
+            `Validation failed for ${pathName}.`,
+        });
+      }
+      delete prototype[methodName];
     } else {
       // Standard methods are registered cleanly as native instance methods
       schema.method(methodName, prototype[methodName]);

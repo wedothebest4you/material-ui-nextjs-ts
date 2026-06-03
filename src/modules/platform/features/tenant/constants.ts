@@ -15,24 +15,32 @@ const TENANT = {
   viewName: 'tenantsList',
   name: {
     required: 'Tenant Name is required',
-    maxLength: 'Tenant Name is limited to 30 characters',
+    maxLength: '{VALUE} exceeds 30 characters',
   },
   code: {
     required: 'Tenant Code is required.',
-    maxLength: 'Tenant Code is limited to 15 characters',
+    maxLength: '{VALUE} exceeds 15 characters',
   },
   plan: {
-    required: `Allowed values for plan are - [${planEnum.join(arrayJoinChars)}]`,
-    enum: planEnum,
+    required: 'Plan is required',
+    enum: {
+      value: planEnum,
+      message: `{VALUE} is incorrect. The allowed values  are  [${planEnum.join(arrayJoinChars)}]`,
+    },
   },
-
   status: {
-    required: `Allowed values for status are - [${statusEnum.join(arrayJoinChars)}]`,
-    enum: statusEnum,
+    required: 'Status is required',
+    enum: {
+      value: statusEnum,
+      message: `{VALUE} is incorrect. The allowed values are - [${statusEnum.join(arrayJoinChars)}]`,
+    },
   },
   userLimit: {
-    required: `Allowed values for userLimit are - [${userLimitEnum.join(arrayJoinChars)}]`,
-    enum: userLimitEnum,
+    required: 'User Limit is required',
+    enum: {
+      value: userLimitEnum,
+      message: `{VALUE} is incorrect. The allowed values are - [${userLimitEnum.join(arrayJoinChars)}]`,
+    },
   },
   _v: {
     required: 'Version is required',

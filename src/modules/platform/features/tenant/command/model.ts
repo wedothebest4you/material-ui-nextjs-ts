@@ -1,12 +1,13 @@
-import mongoose from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import TENANT from '../constants';
 import { tenantSchema, TenantSchemaType } from './schema';
+import { MakeModel } from '@/shared/index';
+import { loadClassCustom } from '@/shared/index';
 import { TenantClass } from './class';
-import { MakeModel, loadClassCustom } from '@/shared/index';
-
-loadClassCustom(TenantClass, tenantSchema);
 
 type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
+
+loadClassCustom(TenantClass, tenantSchema);
 
 const Tenant = mongoose.model<any, combinedModel>(
   TENANT.collectionName,
@@ -14,3 +15,5 @@ const Tenant = mongoose.model<any, combinedModel>(
 );
 
 export default Tenant;
+
+const doc = new Tenant({});

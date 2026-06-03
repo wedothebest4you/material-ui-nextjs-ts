@@ -1,4 +1,5 @@
 import { GridLegacy } from '@mui/material';
+import { setPrototypeFix } from './jsquirks/subclass-built-in-class';
 
 export { default as createCommandSchema } from './mongoose/createCommandSchema';
 export { default as createQuerySchema } from './mongoose/createQuerySchema';
@@ -14,3 +15,5 @@ export { secureNumber, secureString } from './zod/uilts';
 export { default as RequestValidationError } from './errors/request-validation-error';
 export { default as DatabaseOperationError } from './errors/database-operation-error';
 export { default as SchemaOperationError } from './errors/schema-operation-error';
+export { default as CustomError } from './errors/custom-error';
+export { setPrototypeFix as setPrototypeFix } from './jsquirks/subclass-built-in-class';
