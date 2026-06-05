@@ -13,7 +13,8 @@ export { default as Grid } from '@mui/material/GridLegacy';
 export { default as getDbByMongoDbClient } from './db/mongo-db-client';
 export { secureNumber, secureString } from './zod/uilts';
 export { default as RequestValidationError } from './errors/request-validation-error';
-export { default as DatabaseOperationError } from './errors/database-operation-error';
+export { default as DatabaseConnectionError } from './errors/database-connection-error';
 export { default as SchemaOperationError } from './errors/schema-operation-error';
-export { default as CustomError } from './errors/custom-error';
+export { default as SchemaDatabseError } from './errors/schema-database-error';
+
 export { setPrototypeFix as setPrototypeFix } from './jsquirks/subclass-built-in-class';

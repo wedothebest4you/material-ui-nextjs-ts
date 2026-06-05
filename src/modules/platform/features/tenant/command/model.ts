@@ -15,5 +15,3 @@ const Tenant = mongoose.model<any, combinedModel>(
 );
 
 export default Tenant;
-
-const doc = new Tenant({});

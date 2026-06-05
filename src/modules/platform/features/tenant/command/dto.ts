@@ -1,17 +1,18 @@
 import { z } from 'zod';
 import { secureString, secureNumber } from '@/src/shared';
-import { secureNumberOptional } from '@/src/shared/zod/uilts';
+import TENANT from '../constants';
+
 export const createDTO = z.object({
   // Trim and convert to uppercase immediately at the edge
   name: secureString(),
 
-  code: secureNumber(),
+  code: secureString(),
 
-  plan: secureString(20),
+  plan: z.enum(TENANT.plan.enum.value),
 
-  status: secureString(10),
+  status: z.enum(TENANT.status.enum.value),
 
-  userLimit: secureNumberOptional(),
+  userLimit: z.union(TENANT.userLimit.enum.value.map((v) => z.literal(v))),
 });
 
 // Infer TypeScript Type for application use
