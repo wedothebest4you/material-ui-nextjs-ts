@@ -1,4 +1,5 @@
 import { Model, MongooseQueryOrDocumentMiddleware } from 'mongoose';
+import { never } from 'zod';
 
 // 1. Core structural filter types
 type ExtractMethods<T> = {
@@ -6,10 +7,19 @@ type ExtractMethods<T> = {
     | `onPre${string}`
     | `onPost${string}`
     | `${string}Validator`
+    | `by${string}`
     ? never
     : T[K] extends (...args: any[]) => any
       ? K
       : never]: T[K];
+};
+
+type ExtractQueryHelpers<T> = {
+  [K in keyof T as K extends `by${string}`
+    ? T[K] extends (...args: any[]) => any
+      ? K
+      : never
+    : never]: T[K];
 };
 
 type ExtractVirtuals<T, Blacklist extends string = never> = {
@@ -33,7 +43,7 @@ export type MakeModel<
   BlacklistKeys extends string = never,
 > = Model<
   RawDoc,
-  {}, // Query helpers (leave empty or pass a separate type if needed)
+  ExtractQueryHelpers<InstanceType<ClassConstructor>>,
   ExtractMethods<InstanceType<ClassConstructor>>,
   ExtractVirtuals<InstanceType<ClassConstructor>, BlacklistKeys>
 > &

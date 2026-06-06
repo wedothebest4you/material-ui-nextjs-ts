@@ -83,3 +83,7 @@ export type ActionState = {
   message: string | undefined;
   errors?: Record<string, string>;
 };
+
+import { type SortOrder } from 'mongoose';
+
+type SortOrderDocument<T> = Partial<Record<keyof T, SortOrder>>;

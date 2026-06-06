@@ -1,10 +1,11 @@
 import { SchemaOperationError } from '@/src/shared';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Query } from 'mongoose';
 import { TenantSchemaType } from './schema';
 import TENANT from '../constants';
 import EntityBase from './entity-base';
 
 type TenantDocument = HydratedDocument<TenantSchemaType, typeof TenantClass>;
+type TenantQuery = Query<TenantSchemaType, TenantSchemaType>;
 
 export class TenantClass extends EntityBase {
   async nameValidator(
@@ -94,7 +95,11 @@ export class TenantClass extends EntityBase {
       this.userLimit = this.plan;
     }
   }
+  testMethod() {}
 
+  byActiveTenants(this: TenantQuery) {
+    // this.model(this.constructor.name).find<TenantDocument>({ namxe: 'x' });
+  }
   // async onPostSave(error: Error, doc: TenantDocument, next: any) {
   //   next(new SchemaOperationError(error, next));
   // }
