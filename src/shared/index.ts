@@ -4,6 +4,8 @@ import { setPrototypeFix } from './jsquirks/subclass-built-in-class';
 export { default as createCommandSchema } from './mongoose/createCommandSchema';
 export { default as createQuerySchema } from './mongoose/createQuerySchema';
 export type { MakeModel as MakeModel } from './mongoose/mongoose-utils';
+export type { MakeQueryWithHelpers as MakeQueryWithHelpers } from './mongoose/mongoose-utils';
+export type { MakeHydratedDocument as MakeHydratedDocument } from './mongoose/mongoose-utils';
 export { default as loadClassCustom } from './mongoose/loadClassCustom';
 export type { ActionState as ActionState } from './types/index';
 

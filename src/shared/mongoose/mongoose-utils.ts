@@ -1,4 +1,9 @@
-import { Model, MongooseQueryOrDocumentMiddleware } from 'mongoose';
+import {
+  HydratedDocument,
+  Model,
+  MongooseQueryOrDocumentMiddleware,
+  QueryWithHelpers,
+} from 'mongoose';
 import { never } from 'zod';
 
 // 1. Core structural filter types
@@ -48,6 +53,25 @@ export type MakeModel<
   ExtractVirtuals<InstanceType<ClassConstructor>, BlacklistKeys>
 > &
   ClassConstructor; // Combine directly with the constructor type for static methods!
+
+export type MakeHydratedDocument<
+  RawDoc,
+  ClassConstructor extends abstract new (...args: any[]) => any,
+> = HydratedDocument<
+  RawDoc,
+  ExtractMethods<InstanceType<ClassConstructor>>,
+  {},
+  ExtractVirtuals<InstanceType<ClassConstructor>>
+>;
+
+export type MakeQueryWithHelpers<
+  RawDoc,
+  ClassConstructor extends abstract new (...args: any[]) => any,
+> = QueryWithHelpers<
+  HydratedDocument<RawDoc>[],
+  HydratedDocument<RawDoc>,
+  ExtractQueryHelpers<InstanceType<ClassConstructor>>
+>;
 
 export interface ClassConstructorValidHooksOnly {
   new (...args: any[]): any;

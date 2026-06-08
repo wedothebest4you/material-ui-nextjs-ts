@@ -1,7 +1,7 @@
 import mongoose, { HydratedDocument } from 'mongoose';
 import TENANT from '../constants';
 import { tenantSchema, TenantSchemaType } from './schema';
-import { MakeModel } from '@/shared/index';
+import { MakeModel, MakeHydratedDocument } from '@/shared/index';
 import { loadClassCustom } from '@/shared/index';
 import { TenantClass } from './class';
 
@@ -14,9 +14,13 @@ const Tenant = mongoose.model<any, combinedModel>(
   tenantSchema,
 );
 
+export type TenantHydratedDocument = MakeHydratedDocument<
+  TenantSchemaType,
+  typeof TenantClass
+>;
+
 export default Tenant;
 
-const query = Tenant.find();
-const doc = new Tenant({});
-doc.testMethod();
-query.byActiveTenants();
+// const query = Tenant.find();
+// const doc = query.byActiveTenants().exec();
+// doc.then((d) => d[0]);

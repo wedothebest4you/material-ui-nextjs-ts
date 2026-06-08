@@ -1,13 +1,22 @@
-import { SchemaOperationError } from '@/src/shared';
-import { HydratedDocument, Query } from 'mongoose';
+import { MakeQueryWithHelpers } from '@/src/shared';
+import { HydratedDocument, Query, QueryWithHelpers } from 'mongoose';
 import { TenantSchemaType } from './schema';
 import TENANT from '../constants';
 import EntityBase from './entity-base';
+import Tenant, { TenantHydratedDocument } from './model';
 
-type TenantDocument = HydratedDocument<TenantSchemaType, typeof TenantClass>;
-type TenantQuery = Query<TenantSchemaType, TenantSchemaType>;
+type TenantDocument = TenantHydratedDocument;
+
+type TenantQueryWithHelpers = MakeQueryWithHelpers<
+  TenantSchemaType,
+  typeof TenantClass
+>;
 
 export class TenantClass extends EntityBase {
+  async saveTenant(this: TenantDocument) {
+    await this.save();
+  }
+
   async nameValidator(
     this: TenantDocument,
     value: string,
@@ -76,6 +85,9 @@ export class TenantClass extends EntityBase {
     });
   }
 
+  get userLimit(): number {
+    return this.userLimit;
+  }
   set userLimit(plan: string) {
     const self = this as TenantSchemaType;
     self.userLimit =
@@ -95,11 +107,17 @@ export class TenantClass extends EntityBase {
       this.userLimit = this.plan;
     }
   }
-  testMethod() {}
 
-  byActiveTenants(this: TenantQuery) {
-    // this.model(this.constructor.name).find<TenantDocument>({ namxe: 'x' });
+  // byActiveTenants(this: TenantQueryWithHelpers) {
+  //   return this.find({
+  //     name: 'x',
+  //   });
+  // }
+
+  byTenantId(this: TenantQueryWithHelpers, id: string) {
+    return this.findById(id);
   }
+
   // async onPostSave(error: Error, doc: TenantDocument, next: any) {
   //   next(new SchemaOperationError(error, next));
   // }
