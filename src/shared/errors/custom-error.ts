@@ -13,7 +13,7 @@ export default abstract class CustomError extends Error {
     super();
     setPrototypeFix(this);
   }
-  static getCustoErrorClass(): new (
+  static getCustomErrorClass(): new (
     errCode: number,
     errMsg: string,
     errDtl: ErrorDetails,
@@ -31,12 +31,12 @@ export default abstract class CustomError extends Error {
       }
     };
   }
-  static createCustmError(
+  static createCustomError(
     errCode: number,
     errShortMsg: string,
     errDtl: string,
   ) {
-    const customErrorclass = this.getCustoErrorClass();
+    const customErrorclass = this.getCustomErrorClass();
     return new customErrorclass(errCode, errShortMsg, { message: errDtl });
   }
 }

@@ -43,11 +43,11 @@ const schemaObject = {
   },
 } satisfies SchemaDefinition;
 
-export const tenantSchema = createCommandSchema(schemaObject);
+const tenantSchema = createCommandSchema(schemaObject);
 
-type tenantSchemaType = InferSchemaType<typeof tenantSchema>;
+export default tenantSchema;
 
 export type TenantSchemaType = Omit<
-  tenantSchemaType,
+  InferSchemaType<typeof tenantSchema>,
   'createdAt' | 'updatedAt'
 >;

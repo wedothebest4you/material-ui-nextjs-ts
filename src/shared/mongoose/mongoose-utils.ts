@@ -64,12 +64,21 @@ export type MakeHydratedDocument<
   ExtractVirtuals<InstanceType<ClassConstructor>>
 >;
 
-export type MakeQueryWithHelpers<
+export type MakeQueryWithHelpersFind<
   RawDoc,
   ClassConstructor extends abstract new (...args: any[]) => any,
 > = QueryWithHelpers<
-  HydratedDocument<RawDoc>[],
-  HydratedDocument<RawDoc>,
+  MakeHydratedDocument<RawDoc, ClassConstructor>[],
+  MakeHydratedDocument<RawDoc, ClassConstructor>,
+  ExtractQueryHelpers<InstanceType<ClassConstructor>>
+>;
+
+export type MakeQueryWithHelpersFindOne<
+  RawDoc,
+  ClassConstructor extends abstract new (...args: any[]) => any,
+> = QueryWithHelpers<
+  MakeHydratedDocument<RawDoc, ClassConstructor> | null,
+  MakeHydratedDocument<RawDoc, ClassConstructor>,
   ExtractQueryHelpers<InstanceType<ClassConstructor>>
 >;
 

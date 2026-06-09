@@ -25,8 +25,7 @@ type SchemaawareProjection<T> = Partial<Record<keyof T, 1 | 0 | true | false>>;
 
 export default class TenantCommand {
   static async createTenant(tenant: TenantDTO) {
-    const tenantDoc = new Tenant(tenant);
-    return await tenantDoc.saveTenant();
+    return Tenant.createTenant(tenant);
   }
   // static async listTenants() {
   //   const queryFilter: SchemaawareFilterQuery<TenantSchemaType> = {
@@ -46,18 +45,6 @@ export default class TenantCommand {
   //   return await Tenant.findById(tenantId);
   // }
   static async updateTenat(tenant: TenantDTO) {
-    const doc = await Tenant.find().byTenantId(tenant.id);
-    if (doc) {
-      doc.name = tenant.name;
-      doc.save();
-    } else {
-      throw CustomError.createCustmError(
-        500,
-        'Retrieval failed',
-        `Retrieval failed for id ${tenant.id}`,
-      );
-    }
+    return Tenant.updateTenant(tenant);
   }
-
-  static async deactivateTenat(tenatDTO: TenantDTO) {}
 }

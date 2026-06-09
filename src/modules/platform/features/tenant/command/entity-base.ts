@@ -1,8 +1,10 @@
 import monggose, { Error } from 'mongoose';
 import { SchemaOperationError } from '@/src/shared';
 import { SchemaDatabseError } from '@/src/shared';
+import CustomError from '@/shared/errors/custom-error';
 
 export default class EntityBase {
+  static customError: typeof CustomError;
   async onPostSave(
     err: Error.ValidationError | monggose.mongo.MongoServerError | Error,
     doc: any,
@@ -13,16 +15,13 @@ export default class EntityBase {
     } else if (err instanceof monggose.mongo.MongoServerError) {
       next(new SchemaDatabseError(err));
     } else {
-      next({
-        errorCode: 500,
-        errorMessage: 'Internal Server Error',
-        errorDetails: [
-          {
-            message: (err && err.message) || 'An unexpected error occurred.',
-            kind: 'internal',
-          },
-        ],
-      });
+      next(
+        CustomError.createCustomError(
+          500,
+          'Internal Server Error',
+          (err && err.message) || 'An unexpected error occurred.',
+        ),
+      );
     }
   }
 }

@@ -1,13 +1,27 @@
-import { MakeQueryWithHelpers } from '@/src/shared';
-import { HydratedDocument, Query, QueryWithHelpers } from 'mongoose';
-import { TenantSchemaType } from './schema';
+import {
+  MakeQueryWithHelpersFind,
+  MakeQueryWithHelpersFindOne,
+  MakeHydratedDocument,
+} from '@/src/shared';
+import { InferSchemaType } from 'mongoose';
 import TENANT from '../constants';
 import EntityBase from './entity-base';
-import Tenant, { TenantHydratedDocument } from './model';
+import Tenant from './model';
+import tenantSchema, { TenantSchemaType } from './schema';
+import { TenantDTO } from './dto';
 
-type TenantDocument = TenantHydratedDocument;
+type TenantModel = typeof Tenant;
 
-type TenantQueryWithHelpers = MakeQueryWithHelpers<
+type TenantDocument = MakeHydratedDocument<
+  TenantSchemaType,
+  typeof TenantClass
+>;
+
+type TenantQueryWithHelpersFind = MakeQueryWithHelpersFind<
+  TenantSchemaType,
+  typeof TenantClass
+>;
+type TenantQueryWithHelpersFindOne = MakeQueryWithHelpersFindOne<
   TenantSchemaType,
   typeof TenantClass
 >;
@@ -85,26 +99,19 @@ export class TenantClass extends EntityBase {
     });
   }
 
-  get userLimit(): number {
-    return this.userLimit;
-  }
-  set userLimit(plan: string) {
-    const self = this as TenantSchemaType;
-    self.userLimit =
-      TENANT.userLimit.enum.value[
-        TENANT.plan.enum.value.findIndex((i) => i === plan)
-      ];
+  set userLimit(index: number) {
+    //ToDo: typing issue, the key is typed as per the argument type
+    const self = this as TenantDocument;
+    self.userLimit = TENANT.userLimit.enum.value[index];
   }
 
-  async onPreValidate(
-    this: HydratedDocument<TenantSchemaType, InstanceType<typeof TenantClass>>,
-  ) {
+  async onPreValidate(this: TenantDocument) {
     if (this.isModified('plan')) {
       const validationError = this.validateSync('plan');
       if (validationError && validationError.errors['plan']) {
         throw validationError.errors['plan'];
       }
-      this.userLimit = this.plan;
+      this.userLimit = TENANT.plan.enum.value.findIndex((i) => i === this.plan);
     }
   }
 
@@ -114,11 +121,59 @@ export class TenantClass extends EntityBase {
   //   });
   // }
 
-  byTenantId(this: TenantQueryWithHelpers, id: string) {
+  byTenantId(this: TenantQueryWithHelpersFind, id: string) {
     return this.findById(id);
   }
 
   // async onPostSave(error: Error, doc: TenantDocument, next: any) {
   //   next(new SchemaOperationError(error, next));
   // }
+
+  static async createOrUpdateTenant(this: TenantModel, tenant: TenantDTO) {
+    if (!tenant.id) {
+      await this.createTenant(tenant);
+    } else {
+      await this.updateTenant(tenant);
+    }
+  }
+
+  static async createTenant(this: TenantModel, tenant: TenantDTO) {
+    const doc = new Tenant(tenant);
+    doc.loadDTO(tenant);
+    return await doc.saveTenant();
+  }
+
+  static async deleteTenant(this: TenantModel, id: string) {
+    const doc = await Tenant.find()
+      .byTenantId(id)
+      .byorThrow(`tenandtId = ${id}`);
+    doc.deleteOne();
+  }
+
+  static async updateTenant(this: TenantModel, tenant: TenantDTO) {
+    const doc = await Tenant.find()
+      .byTenantId(tenant.id)
+      .byorThrow(`tenandtId = ${tenant.id}`);
+    doc.loadDTO(tenant);
+    doc.saveTenant();
+  }
+
+  async byorThrow(this: TenantQueryWithHelpersFindOne, queryName: string) {
+    const doc = await this.exec();
+    if (!doc) {
+      throw TenantClass.customError.createCustomError(
+        500,
+        'Retrieval failed',
+        `Retrieval failed for the query : ${queryName}`,
+      );
+    }
+    return doc;
+  }
+
+  loadDTO(this: TenantDocument, dto: TenantDTO) {
+    this.name = dto.name;
+    this.code = dto.code;
+    this.plan = dto.plan;
+    this.status = dto.status;
+  }
 }
