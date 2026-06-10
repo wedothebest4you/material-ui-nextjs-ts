@@ -29,20 +29,20 @@ const TENANT_JSONSCHEMA = {
 
     plan: {
       bsonType: 'string',
-      enum: TENANT.plan.enum,
+      enum: TENANT.plan.enum.value,
       description: `${TENANT.plan.required}`,
     },
 
     status: {
       bsonType: 'string',
       description: `${TENANT.status.required}`,
-      enum: TENANT.status.enum,
+      enum: TENANT.status.enum.value,
     },
 
     userLimit: {
       bsonType: 'int',
       description: `${TENANT.userLimit.required}`,
-      enum: TENANT.userLimit.enum,
+      enum: TENANT.userLimit.enum.value,
     },
     _v: {
       bsonType: 'int',

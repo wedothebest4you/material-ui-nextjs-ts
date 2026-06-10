@@ -47,7 +47,4 @@ const tenantSchema = createCommandSchema(schemaObject);
 
 export default tenantSchema;
 
-export type TenantSchemaType = Omit<
-  InferSchemaType<typeof tenantSchema>,
-  'createdAt' | 'updatedAt'
->;
+export type TenantSchemaType = InferSchemaType<typeof tenantSchema>;

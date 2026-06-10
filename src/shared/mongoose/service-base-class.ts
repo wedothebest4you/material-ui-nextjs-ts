@@ -3,7 +3,7 @@ import { SchemaOperationError } from '@/src/shared';
 import { SchemaDatabseError } from '@/src/shared';
 import CustomError from '@/shared/errors/custom-error';
 
-export default class EntityBase {
+export default class ServiceBase {
   static customError: typeof CustomError;
   async onPostSave(
     err: Error.ValidationError | monggose.mongo.MongoServerError | Error,

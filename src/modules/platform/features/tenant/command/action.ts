@@ -1,6 +1,4 @@
 'use server';
-
-import TenantCommand from './service';
 import { TenantDTO, tenantDTO } from './dto';
 import { TenantSchemaType } from './schema';
 import { revalidatePath } from 'next/cache';

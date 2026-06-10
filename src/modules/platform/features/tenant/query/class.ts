@@ -7,7 +7,7 @@ import {
   FieldOperator,
   SchemaFilterQuery,
   SchemaProjection,
-  CommandBase,
+  QueryBase,
 } from '@/src/shared';
 
 import TENANT from '../constants';
@@ -31,7 +31,7 @@ type TenantQueryWithHelpersFindOne = MakeQueryWithHelpersFindOne<
   typeof TenantClass
 >;
 
-export class TenantClass extends CommandBase {
+export class TenantClass extends QueryBase {
   async saveTenant(this: TenantDocument) {
     await this.save();
   }

@@ -1,14 +1,18 @@
-import { InferSchemaType } from 'mongoose';
+import { InferSchemaType, SchemaDefinition } from 'mongoose';
 import { createQuerySchema } from '@/shared/index';
 
 const schemaObject = {
-  name: { type: String, required: true },
-  code: { type: String, required: true },
-  plan: { type: String, required: true },
-  status: { type: String, required: true },
-  userLimit: { type: Number, required: true },
-};
+  name: String,
+  code: String,
+  plan: String,
+  status: String,
+  userLimit: Number,
+  createdAt: Date,
+  updatedAt: Date,
+} satisfies SchemaDefinition;
 
-export const tenantSchema = createQuerySchema(schemaObject);
+const tenantSchema = createQuerySchema(schemaObject);
+
+export default tenantSchema;
 
 export type TenantSchemaType = InferSchemaType<typeof tenantSchema>;

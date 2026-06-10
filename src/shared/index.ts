@@ -7,6 +7,15 @@ export type { MakeModel as MakeModel } from './mongoose/mongoose-utils';
 export type { MakeQueryWithHelpersFind as MakeQueryWithHelpersFind } from './mongoose/mongoose-utils';
 export type { MakeQueryWithHelpersFindOne as MakeQueryWithHelpersFindOne } from './mongoose/mongoose-utils';
 export type { MakeHydratedDocument as MakeHydratedDocument } from './mongoose/mongoose-utils';
+export type { OverrideType as OverrideType } from './mongoose/mongoose-utils';
+
+export type { SchemaSortDocument as SchemaSortDocument } from './mongoose/mongoose-utils';
+export type { FieldOperator as FieldOperator } from './mongoose/mongoose-utils';
+export type { SchemaFilterQuery as SchemaFilterQuery } from './mongoose/mongoose-utils';
+export type { SchemaProjection as SchemaProjection } from './mongoose/mongoose-utils';
+export { default as CommandBase } from './mongoose/command-base-class';
+export { default as QueryBase } from './mongoose/query-base-class';
+
 export { default as loadClassCustom } from './mongoose/loadClassCustom';
 export type { ActionState as ActionState } from './types/index';
 

@@ -1,3 +1,4 @@
+import { SortOrder } from 'mongoose';
 import {
   HydratedDocument,
   Model,
@@ -105,3 +106,29 @@ export type ExtractMiddlewareEvent<T extends string> = T extends
     ? Lowercase<Event>
     : never
   : never;
+
+export type OverrideType<Doc, Key extends keyof Doc, T> = {
+  [K in keyof Doc]: K extends Key ? T : Doc[K];
+};
+
+export type SchemaSortDocument<T> = Partial<
+  Record<Extract<keyof T, string>, SortOrder>
+>;
+
+export type FieldOperator<T> = {
+  $eq?: T;
+  $ne?: T;
+  $gt?: T;
+  $gte?: T;
+  $lt?: T;
+  $lte?: T;
+  $in?: T[];
+};
+
+export type SchemaFilterQuery<T> = {
+  [K in keyof T]?: T[K] | FieldOperator<T[K]>;
+};
+
+export type SchemaProjection<T> = Partial<
+  Record<keyof T, 1 | 0 | true | false>
+>;
