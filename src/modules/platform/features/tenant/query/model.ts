@@ -15,7 +15,3 @@ const Tenant = mongoose.model<any, combinedModel>(
 );
 
 export default Tenant;
-
-// const query = Tenant.find();
-// const doc = query.byActiveTenants().exec();
-// doc.then((d) => d[0]);

@@ -125,28 +125,6 @@ export class TenantClass extends CommandBase {
     }
   }
 
-  async byActiveTenants(this: TenantQueryWithHelpersFind) {
-    const filter: SchemaFilterQuery<TenantSchemaTypeAll> = {
-      status: TENANT.status.enum.value[0],
-    };
-    const projection: SchemaProjection<TenantSchemaType> = {
-      name: 1,
-      code: 1,
-      plan: 1,
-    };
-    const sort: SchemaSortDocument<TenantSchemaType> = { name: 1 };
-
-    const query = Tenant.findOne(filter);
-    query.projection(projection);
-    query.sort(sort);
-
-    return await query.exec();
-  }
-
-  byTenantId(this: TenantQueryWithHelpersFind, id: string) {
-    return this.findById(id);
-  }
-
   static async createOrUpdateTenant(this: TenantModel, tenant: TenantDTO) {
     if (!tenant.id) {
       await this.createTenant(tenant);
@@ -161,22 +139,20 @@ export class TenantClass extends CommandBase {
     return await doc.saveTenant();
   }
 
-  static async deleteTenant(this: TenantModel, id: string) {
-    const doc = await Tenant.find()
-      .byTenantId(id)
-      .byorThrow(`tenandtId = ${id}`);
-    doc.deleteOne();
-  }
-
   static async updateTenant(this: TenantModel, tenant: TenantDTO) {
     const doc = await Tenant.find()
       .byTenantId(tenant.id)
-      .byorThrow(`tenandtId = ${tenant.id}`);
+      .byNotFound(`tenandtId = ${tenant.id}`);
     doc.loadDTO(tenant);
     doc.saveTenant();
   }
 
-  async byorThrow(this: TenantQueryWithHelpersFindOne, queryName: string) {
+  byTenantId(this: TenantQueryWithHelpersFind, id: string) {
+    const doc = this.findById({ id });
+    return doc;
+  }
+
+  async byNotFound(this: TenantQueryWithHelpersFindOne, queryName: string) {
     const doc = await this.exec();
     if (!doc) {
       throw TenantClass.customError.createCustomError(

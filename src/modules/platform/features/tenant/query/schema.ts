@@ -2,13 +2,13 @@ import { InferSchemaType, SchemaDefinition } from 'mongoose';
 import { createQuerySchema } from '@/shared/index';
 
 const schemaObject = {
-  name: String,
-  code: String,
-  plan: String,
-  status: String,
-  userLimit: Number,
-  createdAt: Date,
-  updatedAt: Date,
+  name: { type: String, required: true },
+  code: { type: String, required: true },
+  plan: { type: String, required: true },
+  status: { type: String, required: true },
+  userLimit: { type: Number, required: true },
+  createdAt: { type: Date, required: true },
+  updatedAt: { type: Date, required: true },
 } satisfies SchemaDefinition;
 
 const tenantSchema = createQuerySchema(schemaObject);

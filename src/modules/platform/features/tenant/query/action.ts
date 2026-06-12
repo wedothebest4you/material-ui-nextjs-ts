@@ -1,16 +1,15 @@
 'use server';
-import { TenantDTO, tenantDTO } from './dto';
-import { TenantSchemaType } from './schema';
 import { revalidatePath } from 'next/cache';
 import { type ActionState } from '@/src/shared';
-import TenantService from './service';
+import Tenant from './model';
+import TenanatService from './service';
 
-export default async function tenatReducer(
+export async function getActiveTenants(
   prevState: ActionState,
   tenantFormData: FormData,
 ): Promise<ActionState> {
   try {
-    TenantService.createOrUpdateTenant(tenantFormData);
+    TenanatService.getActiveTenants();
 
     revalidatePath('/tenant');
     return { success: true, message: '' };
