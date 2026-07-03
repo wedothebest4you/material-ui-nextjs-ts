@@ -15,13 +15,18 @@
  * This is owned by Next.js App Router, not by platform or modules.
  */
 
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
         {/* Layout UI */}
         {/* Place children where you want to render a page or nested layout */}
-        <main>{children}</main>
+        <AppRouterCacheProvider>
+          <main>{children}</main>
+        </AppRouterCacheProvider>
+        {/* <main>{children}</main> */}
       </body>
     </html>
   );

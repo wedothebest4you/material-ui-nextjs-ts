@@ -21,21 +21,21 @@ import {
   FormControl,
   Divider,
 } from '@mui/material';
-import { IAccountTemplate, AccountTemplate } from '../model/account-template';
+// import { IAccountTemplate, AccountTemplate } from '../model/account-template';
 
-interface TemplateFormProps {
-  open: boolean;
-  selectedItem: IAccountTemplate | undefined;
-  onClose: () => void;
-  onSubmit: (data: IAccountTemplate) => Promise<IAccountTemplate>;
-}
+// interface TemplateFormProps {
+//   open: boolean;
+//   selectedItem: IAccountTemplate | undefined;
+//   onClose: () => void;
+//   onSubmit: (data: IAccountTemplate) => Promise<IAccountTemplate>;
+// }
 
 export default function TemplateForm({
   open,
   selectedItem,
   onClose,
   onSubmit,
-}: TemplateFormProps) {
+}) {
   let initialData = selectedItem;
   let dialogTitle = '';
   if (!selectedItem) {

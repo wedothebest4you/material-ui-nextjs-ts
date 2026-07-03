@@ -1,0 +1,103 @@
+<html>
+  <header>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 0;
+      }
+      header {
+        background: purple;
+        height: 100px;
+      }
+      h1 {
+        text-align: center;
+        color: white;
+        line-height: 100px;
+        margin: 0;
+      }
+      article {
+        padding: 10px;
+        margin: 10px;
+        background: aqua;
+      }
+      section {
+        display: flex;
+        zoom: 0.8;
+        height: 100vh;
+      }
+      article {
+        flex: 1 170px;
+      }
+      article:nth-of-type(3) {
+        flex: 3 170px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        /* flex-flow: column; */
+      }
+      article:nth-of-type(3) div {
+        flex: 1;
+      }
+      article:nth-of-type(3) div:first-child {
+        background-color: rebeccapurple;
+        flex: 1 50px;
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-around;
+      }
+      button {
+        flex: 1 auto;
+        margin: 5px;
+        font-size: 18px;
+        line-height: 1.5;
+      }
+    </style>
+  </header>
+
+  <body>
+    <header>
+      <h1>Complex flexbox example</h1>
+    </header>
+    <section>
+      <article>
+        <h2>First article</h2>
+        <p>Content…</p>
+      </article>
+      <article>
+        <h2>Second article</h2>
+        <p>Content…</p>
+      </article>
+      <article>
+        <div>
+          <button>Smile</button>
+          <button>Laugh</button>
+          <button>Wink</button>
+          <button>Shrug</button>
+          <button>Blush</button>
+        </div>
+        <div>
+          <p>Paragraph one content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+        <div>
+          <p>Paragraph two content…</p>
+        </div>
+      </article>
+    </section>
+  </body>
+</html>

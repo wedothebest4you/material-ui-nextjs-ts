@@ -31,7 +31,7 @@ export default class ModuleRegistry {
 
     if (!user.isAdmin) {
       routesbyId = {};
-      for (const routeId of grantedRoutes) {
+      for (const routeId of grantedRoutes || []) {
         routesbyId[routeId] = module[namespace].routesbyId[routeId];
       }
     }

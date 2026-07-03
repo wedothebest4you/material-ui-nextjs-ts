@@ -7,7 +7,7 @@ export type RouteNode = {
   segment: string;
   fullPath: string;
 
-  component?: () => Promise<{ default: React.ComponentType<any> }>;
+  component?: () => Promise<{ default: any }>;
 
   shortDescription: string;
   longDescription: string;

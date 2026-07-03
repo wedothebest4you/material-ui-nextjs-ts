@@ -1,6 +1,4 @@
 'use server';
-import { TenantDTO, tenantDTO } from './dto';
-import { TenantSchemaType } from './schema';
 import { revalidatePath } from 'next/cache';
 import { type ActionState } from '@/src/shared';
 import TenantService from './service';

@@ -1,0 +1,171 @@
+/* General styles */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  color: #333333;
+  margin: 0;
+  font: 1.2em / 1.6 sans-serif;
+  padding: 0 20px 20px 20px;
+}
+
+img {
+  display: block;
+  border: 1px solid black;
+  width: 100%;
+}
+
+/* Mobile layout */
+
+header {
+  padding: 50px 0;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 200%;
+}
+
+button {
+  font-size: 250%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  text-shadow: 0 0 2px black;
+}
+
+nav {
+  position: fixed;
+  inset: 10%;
+  background-color: white;
+  display: none;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+nav li {
+  flex: 1;
+}
+
+nav a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 150%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  color: white;
+  text-decoration: none;
+}
+
+nav a:hover,
+nav a:focus {
+  font-weight: bold;
+}
+
+.photos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.feature {
+  width: 200px;
+  float: left;
+  margin: 8px 30px 20px 0;
+}
+
+@media screen and (min-width: 801px) and (max-width: 1300px) {
+  button {
+    display: none;
+  }
+
+  main nav {
+    display: block;
+  }
+
+  main nav {
+    position: sticky;
+    top: 0;
+  }
+
+  nav ul {
+    flex-direction: row;
+  }
+
+  nav a {
+    padding: 10px 0 10px 0;
+    font-size: 100%;
+  }
+
+  main section {
+    display: flex;
+    gap: 20px;
+  }
+
+  main section:first-child {
+    flex: 3;
+  }
+
+  main section:last-child {
+    flex: 1;
+  }
+}
+
+@media screen and (min-width: 1301px) {
+  button {
+    display: none;
+  }
+
+  main nav {
+    position: sticky;
+    left: 0;
+    top: 5px;
+    display: block;
+  }
+
+  main {
+    display: flex;
+    gap: 15px;
+  }
+
+  main nav {
+    flex: 1;
+    height: fit-content;
+  }
+
+  nav a {
+    font-size: 100%;
+  }
+
+  main article {
+    flex: 3;
+  }
+
+  main aside {
+    flex: 1;
+  }
+}

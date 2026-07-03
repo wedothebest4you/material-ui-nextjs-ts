@@ -8,6 +8,7 @@ export default class TenantService {
 
     if (tenant instanceof FormData) {
       const rawData = Object.fromEntries(tenant.entries());
+    } else {
     }
     const cleanData = tenantDTO.parse(rawData);
     return Tenant.createOrUpdateTenant(cleanData);

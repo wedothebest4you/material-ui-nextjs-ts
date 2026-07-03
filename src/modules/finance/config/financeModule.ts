@@ -15,6 +15,7 @@
  */
 
 import { ModuleDefinition } from '@/shared/types/index';
+import { ComponentType } from 'react';
 
 export const financeModule: ModuleDefinition = {
   finance: {
@@ -66,17 +67,17 @@ export const financeModule: ModuleDefinition = {
         showInNavigation: false,
       },
 
-      fn4: {
-        routeId: 'fn4',
-        parentId: 'fnl',
-        lineItemId: 5,
-        segment: ':id',
-        fullPath: '/finance/ledger/:id',
-        component: () => import('../ui/LedgerEditDialog'),
-        shortDescription: 'Edit Ledger',
-        longDescription: 'Allows user to edit ledger entries.',
-        showInNavigation: false,
-      },
+      // fn4: {
+      //   routeId: 'fn4',
+      //   parentId: 'fnl',
+      //   lineItemId: 5,
+      //   segment: ':id',
+      //   fullPath: '/finance/ledger/:id',
+      //   component: () => import('../finance/ui/LedgerEditDialog.jsx'),
+      //   shortDescription: 'Edit Ledger',
+      //   longDescription: 'Allows user to edit ledger entries.',
+      //   showInNavigation: false,
+      // },
     },
     routesbyPath: {},
     navigation: {},

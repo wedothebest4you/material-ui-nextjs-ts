@@ -32,6 +32,7 @@ export default async function PlatformShell({
     grantedRoutes: {
       finance: ['fn1', 'fnl'],
       dashboard: ['db1'],
+      admn: ['att'],
     },
   };
 

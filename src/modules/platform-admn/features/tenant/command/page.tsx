@@ -17,19 +17,20 @@ const initialState: ActionState = { success: false, message: undefined };
 export default function TenantWorkspace() {
   return (
     <div className="tenant-workspace">
-      <TenantWorkspaceHeader />
+      <WorkspaceHeader />
 
-      <TenantWorkspaceBody>
+      <WorkspaceBody>
         <TenantEditorPanel />
         <TenantListPanel />
-      </TenantWorkspaceBody>
+      </WorkspaceBody>
 
-      <TenantWorkspaceFooter />
+      <WorkspaceFooter />
     </div>
   );
 }
+type t = typeof TenantWorkspace;
 
-export function TenantWorkspaceHeader() {
+export function WorkspaceHeader() {
   return (
     <header>
       <h1>Tenant Workspace</h1>
@@ -41,7 +42,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-export function TenantWorkspaceBody(props: Props) {
+export function WorkspaceBody(props: Props) {
   return (
     <main
       style={{
@@ -128,6 +129,40 @@ export function TenantList() {
     </ul>
   );
 }
-export function TenantWorkspaceFooter() {
+export function WorkspaceFooter() {
   return <footer>Total Tenants: 125</footer>;
 }
+
+// TenantPage
+
+// Owns page-level concerns:
+
+// Layout
+// Data loading orchestration
+// Permissions
+// Navigation integration
+
+// TenantHeader
+
+// Owns:
+
+// Title
+// Toolbar actions
+// Breadcrumbs
+// Page-level commands
+// TenantEditorPanel
+
+// Owns:
+
+// Form state
+// Validation
+// Create/Edit operations
+// TenantListPanel
+
+// Owns:
+
+// Grid
+// Search
+// Sorting
+// Pagination
+// Row selection

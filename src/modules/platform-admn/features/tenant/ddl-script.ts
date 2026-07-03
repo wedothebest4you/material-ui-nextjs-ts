@@ -1,3 +1,5 @@
+'use server';
+
 import TENANT_JSONSCHEMA from './jsonschema';
 import TENANT_QUERY_VALIDATION from './query-validation';
 import TENANT from './constants';

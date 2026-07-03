@@ -14,11 +14,12 @@
  */
 
 import ModuleRegistry from './ModuleRegistry';
-import { financeModuleDefinition } from '@/modules/finance/index';
+import { financeModuleDefinition } from '@/finance/index';
+import { platformAdmnModule } from '@/admn/index';
+
 import { ModuleDefinition } from '@/shared/types';
 import { IUser } from '@/shared/types';
-import env from '@/env';
-console.log('bootstrap loader');
+
 let bootstrapped = false;
 
 export default function bootstrapPlatform(user: IUser) {
@@ -43,6 +44,7 @@ export default function bootstrapPlatform(user: IUser) {
   };
   if (!bootstrapped) {
     ModuleRegistry.register('dashboard', dashboard, user);
+    ModuleRegistry.register('admn', platformAdmnModule, user);
     ModuleRegistry.register('finance', financeModuleDefinition, user);
   }
   bootstrapped = true;
