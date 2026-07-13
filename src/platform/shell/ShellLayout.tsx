@@ -18,7 +18,7 @@
 
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -32,12 +32,23 @@ import Link from 'next/link';
 import { RouteNode } from '@/shared/types';
 import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
+import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
+import { Tooltip } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material';
+import { useColorScheme } from '@mui/material';
 
 const drawerWidth = 240;
+
+declare module '@mui/material/styles' {
+  interface ColorSchemeOverrides {
+    system: true;
+  }
+}
 
 export default function ShellLayout({
   children,
@@ -53,12 +64,15 @@ export default function ShellLayout({
   console.log(moduleList);
   console.log('Item : Navigation');
   console.log(navigation);
+  const [menuExpanded, setMenuExpanded] = useState(false);
   const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
+  const menuStatus = menuExpanded
+    ? 'Collapse'
+    : 'Expand' + ' '.repeat(1) + 'sidebar, the navigational menu';
   return (
     <Box
       sx={{
         display: 'flex',
-        flexDirection: 'column',
       }}
     >
       {/* APP BAR */}
@@ -75,14 +89,22 @@ export default function ShellLayout({
           <Box
             sx={{
               display: 'flex',
-              flexDirection: 'column',
-              flex: 2,
+              m: { xs: 0.5, md: 1 },
             }}
           >
-            <Typography variant="overline">e.r.p</Typography>
+            <Tooltip title={menuStatus}>
+              <IconButton
+                aria-label={menuStatus}
+                aria-expanded={menuExpanded!}
+                size="small"
+              >
+                <MenuIcon fontSize="large"></MenuIcon>
+              </IconButton>
+            </Tooltip>
+            {/* <Typography variant="overline">e.r.p</Typography>
             <Typography variant="caption">
               enterprise resource planner
-            </Typography>
+            </Typography> */}
           </Box>
 
           <Box
@@ -162,6 +184,8 @@ export default function ShellLayout({
               flex: 0.25,
             }}
           >
+            <ColorScheSwitcher />
+
             <IconButton
               aria-label="more options"
               size="small"
@@ -227,3 +251,46 @@ export default function ShellLayout({
 
 //   {children}
 // </Box>
+function ColorScheSwitcher() {
+  const { colorScheme, setColorScheme } = useColorScheme();
+  // first render will have no colorSchem - both the SSR and CSR
+  // performs an early return here.
+  // the actual state will receive here once the special script updates the
+  // browser store.
+  if (!colorScheme) {
+    return;
+  }
+  const colorSchemes = {
+    system: {
+      icon: SettingsBrightness,
+      next: 'light',
+    },
+    light: {
+      icon: LightMode,
+      next: 'dark',
+    },
+    dark: {
+      icon: DarkMode,
+      next: 'system',
+    },
+  } as const;
+
+  const colorSchemeButtonCycles = () => {
+    setColorScheme(colorSchemes[colorScheme].next);
+  };
+
+  const Icon = colorSchemes[colorScheme].icon;
+  const IconDisplay = <Icon fontSize="small" />;
+  const colorSchemeStatus = `Theme : ${colorScheme} - click for ${colorSchemes[colorScheme].next}`;
+
+  return (
+    <Tooltip title={colorSchemeStatus}>
+      <IconButton
+        aria-label={colorSchemeStatus}
+        onClick={colorSchemeButtonCycles}
+      >
+        {IconDisplay}
+      </IconButton>
+    </Tooltip>
+  );
+}

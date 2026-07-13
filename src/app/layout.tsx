@@ -14,19 +14,34 @@
  *
  * This is owned by Next.js App Router, not by platform or modules.
  */
+'use client';
 
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import { Inter } from 'next/font/google';
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+
+const fontInter = Inter({
+  variable: '--font-Inter',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+// console.log(fontInter);
+import fluidTheme from './theme';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={fontInter.variable}>
       <body>
         {/* Layout UI */}
         {/* Place children where you want to render a page or nested layout */}
         <AppRouterCacheProvider>
-          <main>{children}</main>
+          <ThemeProvider theme={fluidTheme} defaultMode="system">
+            <InitColorSchemeScript attribute="class" />
+            <main>{children}</main>
+          </ThemeProvider>
         </AppRouterCacheProvider>
-        {/* <main>{children}</main> */}
       </body>
     </html>
   );
