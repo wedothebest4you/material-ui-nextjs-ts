@@ -18,7 +18,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -44,11 +44,11 @@ import { useColorScheme } from '@mui/material';
 
 const drawerWidth = 240;
 
-declare module '@mui/material/styles' {
-  interface ColorSchemeOverrides {
-    system: true;
-  }
-}
+// declare module '@mui/material/styles' {
+//   interface ColorSchemeOverrides {
+//     system: true;
+//   }
+// }
 
 export default function ShellLayout({
   children,
@@ -186,17 +186,12 @@ export default function ShellLayout({
           >
             <ColorScheSwitcher />
 
-            <IconButton
-              aria-label="more options"
-              size="small"
-              color="secondary"
-            >
-              <MoreVertIcon />
-            </IconButton>
+            <Tooltip title="more options">
+              <IconButton size="small" color="secondary">
+                <MoreVertIcon />
+              </IconButton>
+            </Tooltip>
           </Box>
-        </Toolbar>
-        <Toolbar disableGutters>
-          <Typography variant="caption">Breadcrumb</Typography>
         </Toolbar>
       </AppBar>
     </Box>
@@ -252,15 +247,15 @@ export default function ShellLayout({
 //   {children}
 // </Box>
 function ColorScheSwitcher() {
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const { mode, setMode } = useColorScheme();
   // first render will have no colorSchem - both the SSR and CSR
   // performs an early return here.
   // the actual state will receive here once the special script updates the
   // browser store.
-  if (!colorScheme) {
+  if (!mode) {
     return;
   }
-  const colorSchemes = {
+  const modes = {
     system: {
       icon: SettingsBrightness,
       next: 'light',
@@ -276,21 +271,16 @@ function ColorScheSwitcher() {
   } as const;
 
   const colorSchemeButtonCycles = () => {
-    setColorScheme(colorSchemes[colorScheme].next);
+    setMode(modes[mode].next);
   };
 
-  const Icon = colorSchemes[colorScheme].icon;
+  const Icon = modes[mode].icon;
   const IconDisplay = <Icon fontSize="small" />;
-  const colorSchemeStatus = `Theme : ${colorScheme} - click for ${colorSchemes[colorScheme].next}`;
+  const colorSchemeStatus = `Color mode : ${mode} - click for ${modes[mode].next}`;
 
   return (
     <Tooltip title={colorSchemeStatus}>
-      <IconButton
-        aria-label={colorSchemeStatus}
-        onClick={colorSchemeButtonCycles}
-      >
-        {IconDisplay}
-      </IconButton>
+      <IconButton onClick={colorSchemeButtonCycles}>{IconDisplay}</IconButton>
     </Tooltip>
   );
 }

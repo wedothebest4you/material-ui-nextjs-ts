@@ -32,13 +32,13 @@ import fluidTheme from './theme';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={fontInter.variable}>
+    <html lang="en" className={fontInter.variable} suppressHydrationWarning>
       <body>
         {/* Layout UI */}
         {/* Place children where you want to render a page or nested layout */}
         <AppRouterCacheProvider>
-          <ThemeProvider theme={fluidTheme} defaultMode="system">
-            <InitColorSchemeScript attribute="class" />
+          <InitColorSchemeScript attribute="class" />
+          <ThemeProvider theme={fluidTheme}>
             <main>{children}</main>
           </ThemeProvider>
         </AppRouterCacheProvider>

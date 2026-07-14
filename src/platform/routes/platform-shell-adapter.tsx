@@ -6,11 +6,5 @@ export default function PlatformShellAdapter({
 }: {
   children: ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body>
-        <PlatformShell>{children}</PlatformShell>
-      </body>
-    </html>
-  );
+  return <PlatformShell>{children}</PlatformShell>;
 }
