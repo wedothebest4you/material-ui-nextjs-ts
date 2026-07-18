@@ -20,6 +20,7 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import { Inter } from 'next/font/google';
 import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const fontInter = Inter({
   variable: '--font-Inter',
@@ -39,7 +40,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <AppRouterCacheProvider>
           <InitColorSchemeScript attribute="class" />
           <ThemeProvider theme={fluidTheme}>
-            <main>{children}</main>
+            <CssBaseline>
+              <main>{children}</main>
+            </CssBaseline>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

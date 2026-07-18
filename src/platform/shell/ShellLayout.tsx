@@ -32,6 +32,8 @@ import Link from 'next/link';
 import { RouteNode } from '@/shared/types';
 import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
+
 import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -41,6 +43,7 @@ import { Tooltip } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 import { useColorScheme } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const drawerWidth = 240;
 
@@ -75,7 +78,6 @@ export default function ShellLayout({
         display: 'flex',
       }}
     >
-      {/* APP BAR */}
       <AppBar
         position="fixed"
         elevation={1}
@@ -85,50 +87,41 @@ export default function ShellLayout({
           zIndex: 1,
         }}
       >
-        <Toolbar variant="dense" disableGutters>
-          <Box
-            sx={{
-              display: 'flex',
-              m: { xs: 0.5, md: 1 },
-            }}
-          >
+        <Toolbar
+          variant="dense"
+          disableGutters
+          sx={{ justifyContent: 'space-between' }}
+        >
+          <Box>
             <Tooltip title={menuStatus}>
-              <IconButton
-                aria-label={menuStatus}
-                aria-expanded={menuExpanded!}
-                size="small"
-              >
-                <MenuIcon fontSize="large"></MenuIcon>
+              <IconButton aria-expanded={menuExpanded!} size={'small'}>
+                <MenuIcon fontSize={'small'}></MenuIcon>
               </IconButton>
             </Tooltip>
-            {/* <Typography variant="overline">e.r.p</Typography>
-            <Typography variant="caption">
-              enterprise resource planner
-            </Typography> */}
+            <Typography variant="caption">erp</Typography>
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 2,
-              justifyContent: 'space-between',
-            }}
-          >
-            <Typography variant="caption">Notifications</Typography>
+          <Box>
             <TextField
-              id="standard-search"
               variant="standard"
               type="search"
-              label="Search"
+              placeholder="search anywhere in ERP system"
               sx={{
                 typography: 'caption',
+                display: { xs: 'none' },
               }}
               slotProps={{
                 input: {
                   sx: {
                     typography: 'caption',
                   },
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
                 },
                 inputLabel: {
                   sx: {
@@ -142,53 +135,19 @@ export default function ShellLayout({
                 },
               }}
             />
+
+            <Typography variant="caption">T</Typography>
+            <Typography variant="caption">C</Typography>
+            <Typography variant="caption">U</Typography>
+            <Typography variant="caption">P</Typography>
           </Box>
 
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              flex: 3,
-              justifyContent: 'flex-start',
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-              }}
-            >
-              <Typography sx={{ flex: 1 }} variant="caption">
-                Tenant
-              </Typography>
-              <Typography sx={{ flex: 1 }} variant="caption">
-                Company
-              </Typography>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-              }}
-            >
-              <Typography sx={{ flex: 1 }} variant="caption">
-                User
-              </Typography>
-              <Typography sx={{ flex: 1 }} variant="caption">
-                Period
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            sx={{
-              display: 'flex',
-              flex: 0.25,
-            }}
-          >
+          <Box>
             <ColorScheSwitcher />
 
             <Tooltip title="more options">
-              <IconButton size="small" color="secondary">
-                <MoreVertIcon />
+              <IconButton size="small">
+                <MoreVertIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           </Box>
@@ -252,6 +211,7 @@ function ColorScheSwitcher() {
   // performs an early return here.
   // the actual state will receive here once the special script updates the
   // browser store.
+  // console.log(`mode : ${mode}`);
   if (!mode) {
     return;
   }
@@ -274,13 +234,15 @@ function ColorScheSwitcher() {
     setMode(modes[mode].next);
   };
 
-  const Icon = modes[mode].icon;
-  const IconDisplay = <Icon fontSize="small" />;
+  //we need an component indentifier not an expression for the same.
+  const IconIdentifier = modes[mode].icon;
   const colorSchemeStatus = `Color mode : ${mode} - click for ${modes[mode].next}`;
 
   return (
     <Tooltip title={colorSchemeStatus}>
-      <IconButton onClick={colorSchemeButtonCycles}>{IconDisplay}</IconButton>
+      <IconButton size="small" onClick={colorSchemeButtonCycles}>
+        {<IconIdentifier fontSize={'small'} />}
+      </IconButton>
     </Tooltip>
   );
 }
