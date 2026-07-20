@@ -44,6 +44,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 import { useColorScheme } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
+import CircleSharpIcon from '@mui/icons-material/CircleSharp';
+import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
+import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
+import Badge from '@mui/material/Badge';
 
 const drawerWidth = 240;
 
@@ -103,12 +107,13 @@ export default function ShellLayout({
 
           <Box>
             <TextField
+              size="small"
               variant="standard"
               type="search"
               placeholder="search anywhere in ERP system"
               sx={{
                 typography: 'caption',
-                display: { xs: 'none' },
+                display: 'none',
               }}
               slotProps={{
                 input: {
@@ -117,8 +122,8 @@ export default function ShellLayout({
                   },
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton>
-                        <SearchIcon />
+                      <IconButton size="small">
+                        <SearchIcon fontSize="small" />
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -135,11 +140,29 @@ export default function ShellLayout({
                 },
               }}
             />
-
-            <Typography variant="caption">T</Typography>
-            <Typography variant="caption">C</Typography>
-            <Typography variant="caption">U</Typography>
-            <Typography variant="caption">P</Typography>
+            <Tooltip title="search anywhere ERP wide">
+              <IconButton size="small">
+                <SearchIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <Box sx={{ display: 'flex', p: 1 }}>
+            <Tooltip title="Context switching awareness indicator">
+              <CircleSharpIcon
+                fontSize="small"
+                aria-hidden="true"
+                color="success"
+              />
+            </Tooltip>
+          </Box>
+          <Box>
+            <IconButton size="small">
+              <Badge badgeContent={1} max={100}></Badge>
+              <NotificationsSharpIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small">
+              <PersonOutlineSharpIcon fontSize="small" />
+            </IconButton>
           </Box>
 
           <Box>
