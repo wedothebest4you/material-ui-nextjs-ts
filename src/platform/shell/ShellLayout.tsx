@@ -34,12 +34,17 @@ import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { LightMode, DarkMode, SettingsBrightness } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
+import {
+  LightMode,
+  DarkMode,
+  SettingsBrightness,
+  VerticalAlignTop,
+} from '@mui/icons-material';
+import IconButton, { IconButtonOwnProps } from '@mui/material/IconButton';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
-import { Tooltip } from '@mui/material';
+import { Avatar, AvatarGroup, Tooltip } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 import { useColorScheme } from '@mui/material';
@@ -48,6 +53,11 @@ import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
 import Badge from '@mui/material/Badge';
+import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import { SvgTextIcon } from '@/src/shared/client';
+import { styled } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material/styles';
+import { size } from 'zod';
 
 const drawerWidth = 240;
 
@@ -56,6 +66,11 @@ const drawerWidth = 240;
 //     system: true;
 //   }
 // }
+
+// const IconButtonStyled = styled(IconButton)<IconButtonOwnProps>({
+//   fontFamily: '--font-Inter',
+//   fontSize: '20px',
+// } as IconButtonOwnProps);
 
 export default function ShellLayout({
   children,
@@ -94,86 +109,97 @@ export default function ShellLayout({
         <Toolbar
           variant="dense"
           disableGutters
-          sx={{ justifyContent: 'space-between' }}
+          sx={{ justifyContent: 'space-between', gap: 1 }}
         >
-          <Box>
-            <Tooltip title={menuStatus}>
-              <IconButton aria-expanded={menuExpanded!} size={'small'}>
-                <MenuIcon fontSize={'small'}></MenuIcon>
-              </IconButton>
-            </Tooltip>
+          <Tooltip title={menuStatus}>
+            <IconButton aria-expanded={menuExpanded!}>
+              <MenuIcon></MenuIcon>
+            </IconButton>
+          </Tooltip>
+          <IconButton size="large">
             <Typography variant="caption">erp</Typography>
-          </Box>
+          </IconButton>
 
-          <Box>
-            <TextField
-              size="small"
-              variant="standard"
-              type="search"
-              placeholder="search anywhere in ERP system"
-              sx={{
-                typography: 'caption',
-                display: 'none',
-              }}
-              slotProps={{
-                input: {
-                  sx: {
-                    typography: 'caption',
-                  },
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton size="small">
-                        <SearchIcon fontSize="small" />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+          <TextField
+            size="small"
+            variant="standard"
+            type="search"
+            placeholder="search anywhere in ERP system"
+            sx={{
+              typography: 'caption',
+              display: 'none',
+            }}
+            slotProps={{
+              input: {
+                sx: {
+                  typography: 'caption',
                 },
-                inputLabel: {
-                  sx: {
-                    typography: 'caption',
-                  },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton size="small">
+                      <SearchIcon fontSize="small" />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
+              inputLabel: {
+                sx: {
+                  typography: 'caption',
                 },
-                formHelperText: {
-                  sx: {
-                    typography: 'caption',
-                  },
+              },
+              formHelperText: {
+                sx: {
+                  typography: 'caption',
                 },
-              }}
-            />
-            <Tooltip title="search anywhere ERP wide">
-              <IconButton size="small">
-                <SearchIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
-          <Box sx={{ display: 'flex', p: 1 }}>
-            <Tooltip title="Context switching awareness indicator">
-              <CircleSharpIcon
-                fontSize="small"
-                aria-hidden="true"
-                color="success"
-              />
-            </Tooltip>
-          </Box>
-          <Box>
-            <IconButton size="small">
-              <Badge badgeContent={1} max={100}></Badge>
-              <NotificationsSharpIcon fontSize="small" />
+              },
+            }}
+          />
+          <Tooltip title="search anywhere ERP wide">
+            <IconButton>
+              <SearchIcon />
             </IconButton>
-            <IconButton size="small">
-              <PersonOutlineSharpIcon fontSize="small" />
+          </Tooltip>
+          <Tooltip title="Contextual information">
+            <IconButton>
+              <InfoTwoToneIcon aria-hidden="true" color="success" />
             </IconButton>
-          </Box>
+          </Tooltip>
+          <Tooltip title="Notifications">
+            <IconButton>
+              <Badge
+                badgeContent={1}
+                color="secondary"
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <NotificationsSharpIcon />
+              </Badge>
+            </IconButton>
+          </Tooltip>
+          {/* <Box>
+            <IconButton size="small" sx={{ typography: 'caption' }}>
+              <SvgTextIcon size="small" initials="PR"></SvgTextIcon>
+            </IconButton>
+            <IconButton size="small" sx={{ typography: 'caption' }}>
+              <SvgTextIcon size="small" initials="CS"></SvgTextIcon>
+            </IconButton>
+            <IconButton size="small" sx={{ typography: 'caption' }}>
+              <SvgTextIcon size="small" initials="TN"></SvgTextIcon>
+            </IconButton>
+            <IconButton size="small" sx={{ typography: 'caption' }}>
+              <SvgTextIcon size="small" initials="UR"></SvgTextIcon>
+            </IconButton>
+          </Box> */}
 
-          <Box>
-            <ColorScheSwitcher />
+          <ColorScheSwitcher />
 
-            <Tooltip title="more options">
-              <IconButton size="small">
-                <MoreVertIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <Tooltip title="more options">
+            <IconButton>
+              <MoreVertIcon />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
     </Box>

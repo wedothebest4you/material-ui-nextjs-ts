@@ -8,8 +8,8 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "preserve",
+    "moduleResolution": "bundler",
     // "resolveJsonModule": true,
     // "isolatedModules": true,
     "jsx": "preserve",
@@ -26,8 +26,8 @@
     "paths": {
       "@/*": ["./*"],
       "@/platform/*": ["./src/platform/*"],
-      "@/modules/finance/*": ["./src/modules/finance/*"],
-      "@/modules/platform/*": ["./src/modules/platform/*"],
+      "@/finance/*": ["./src/modules/finance/*"],
+      "@/admn/*": ["./src/modules/platform-admn/*"],
       "@/shared/*": ["./src/shared/*"]
     },
     "resolveJsonModule": true,
