@@ -17,7 +17,22 @@ const fluidText = (minRem: number, maxRem: number) => {
 };
 
 const fluidTheme = createTheme({
-  colorSchemes: { light: true, dark: true },
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          main: '#b4a939',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        primary: {
+          main: '#00e676',
+        },
+      },
+    },
+  },
   cssVariables: {
     colorSchemeSelector: 'class',
   },
@@ -40,6 +55,16 @@ const fluidTheme = createTheme({
     body2: { fontSize: fluidText(0.8125, 0.875) }, // 13px -> 14px
 
     // Captions & Metadata: Kept static to respect minimal visual rendering limits
+  },
+  components: {
+    MuiBadge: {
+      styleOverrides: {
+        badge: {
+          backgroundColor: 'var(--mui-palette-common-black)',
+          color: 'var(--mui-palette-common-white)',
+        },
+      },
+    },
   },
 });
 

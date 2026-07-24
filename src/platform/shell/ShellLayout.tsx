@@ -116,9 +116,10 @@ export default function ShellLayout({
               <MenuIcon></MenuIcon>
             </IconButton>
           </Tooltip>
-          <IconButton size="large">
+          {/* <IconButton size="large">
             <Typography variant="caption">erp</Typography>
-          </IconButton>
+          </IconButton> */}
+          <SvgTextIcon size="small" initials="erp" />
 
           <TextField
             size="small"
@@ -161,7 +162,7 @@ export default function ShellLayout({
           </Tooltip>
           <Tooltip title="Contextual information">
             <IconButton>
-              <InfoTwoToneIcon aria-hidden="true" color="success" />
+              <InfoTwoToneIcon aria-hidden="true" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Notifications">
@@ -289,8 +290,8 @@ function ColorScheSwitcher() {
 
   return (
     <Tooltip title={colorSchemeStatus}>
-      <IconButton size="small" onClick={colorSchemeButtonCycles}>
-        {<IconIdentifier fontSize={'small'} />}
+      <IconButton onClick={colorSchemeButtonCycles}>
+        {<IconIdentifier />}
       </IconButton>
     </Tooltip>
   );
