@@ -101,8 +101,8 @@ export default function ShellLayout({
         position="fixed"
         elevation={1}
         sx={{
-          color: 'text.primary',
-          bgcolor: 'transparent', //'background.paper',
+          // color: 'text.primary',
+          // bgcolor: 'transparent', //'background.paper',
           zIndex: 1,
         }}
       >

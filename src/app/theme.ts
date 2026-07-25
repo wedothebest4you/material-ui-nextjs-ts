@@ -21,14 +21,31 @@ const fluidTheme = createTheme({
     light: {
       palette: {
         primary: {
-          main: '#b4a939',
+          main: '#d914bb7a',
+        },
+        background: {
+          paper: '#ea9ee7f5',
+          default: '#dd8ed3',
+        },
+        warning: {
+          main: '#d957ebf4',
+        },
+        action: {
+          active: 'currentColor',
         },
       },
     },
     dark: {
       palette: {
         primary: {
-          main: '#00e676',
+          main: '#90e66b',
+        },
+        secondary: {
+          main: '#90e66b',
+        },
+        background: {
+          default: '#09090b',
+          paper: '#09090b',
         },
       },
     },
@@ -56,16 +73,22 @@ const fluidTheme = createTheme({
 
     // Captions & Metadata: Kept static to respect minimal visual rendering limits
   },
-  components: {
-    MuiBadge: {
-      styleOverrides: {
-        badge: {
-          backgroundColor: 'var(--mui-palette-common-black)',
-          color: 'var(--mui-palette-common-white)',
-        },
-      },
-    },
-  },
+  // components: {
+  //   MuiBadge: {
+  //     styleOverrides: {
+  //       badge: ({ theme }) => {
+  //         theme.applyStyles('light', {
+  //           backgroundColor: 'var(--mui-palette-background-paper)',
+  //           color: 'currentColor',
+  //         });
+  //         theme.applyStyles('dark', {
+  //           backgroundColor: 'var(--mui-palette-background-paper)',
+  //           color: 'currentColor',
+  //         });
+  //       },
+  //     },
+  //   },
+  // },
 });
 
 export default fluidTheme;
