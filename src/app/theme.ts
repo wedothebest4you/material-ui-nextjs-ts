@@ -21,34 +21,20 @@ const fluidTheme = createTheme({
     light: {
       palette: {
         primary: {
-          main: '#d914bb7a',
+          main: '#bf0572f5',
+        },
+        secondary: {
+          main: '#f899c1',
         },
         background: {
-          paper: '#ea9ee7f5',
-          default: '#dd8ed3',
-        },
-        warning: {
-          main: '#d957ebf4',
+          default: '#d933c463',
         },
         action: {
           active: 'currentColor',
         },
       },
     },
-    dark: {
-      palette: {
-        primary: {
-          main: '#90e66b',
-        },
-        secondary: {
-          main: '#90e66b',
-        },
-        background: {
-          default: '#09090b',
-          paper: '#09090b',
-        },
-      },
-    },
+    dark: true,
   },
   cssVariables: {
     colorSchemeSelector: 'class',
@@ -77,16 +63,21 @@ const fluidTheme = createTheme({
   //   MuiBadge: {
   //     styleOverrides: {
   //       badge: ({ theme }) => {
-  //         theme.applyStyles('light', {
-  //           backgroundColor: 'var(--mui-palette-background-paper)',
-  //           color: 'currentColor',
+  //         const cssObjDark = theme.applyStyles('dark', {
+  //           backgroundColor: 'var(--mui-palette-common-white)',
   //         });
-  //         theme.applyStyles('dark', {
-  //           backgroundColor: 'var(--mui-palette-background-paper)',
-  //           color: 'currentColor',
+  //         const cssObjLight = theme.applyStyles('light', {
+  //           backgroundColor: 'var(--mui-palette-common-black)',
   //         });
+  //         return { ...cssObjLight, ...cssObjDark };
   //       },
   //     },
+  //     //  ({ theme }) => {
+
+  //     // theme.applyStyles('dark', {
+  //     //   backgroundColor: 'var(--mui-palette-background-paper)',
+  //     //   color: 'currentColor',
+  //     // });
   //   },
   // },
 });

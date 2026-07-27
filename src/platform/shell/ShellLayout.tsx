@@ -111,96 +111,101 @@ export default function ShellLayout({
           disableGutters
           sx={{ justifyContent: 'space-between', gap: 1 }}
         >
-          <Tooltip title={menuStatus}>
-            <IconButton aria-expanded={menuExpanded!}>
-              <MenuIcon></MenuIcon>
-            </IconButton>
-          </Tooltip>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Tooltip title={menuStatus}>
+              <IconButton aria-expanded={menuExpanded!}>
+                <MenuIcon></MenuIcon>
+              </IconButton>
+            </Tooltip>
+            <TextField
+              variant="standard"
+              type="search"
+              placeholder="search anywhere in ERP system"
+              fullWidth
+              sx={{
+                typography: 'caption',
+                display: { xs: 'none', md: 'block' },
+              }}
+              slotProps={{
+                input: {
+                  sx: {
+                    typography: 'caption',
+                    backgroundColor: 'white',
+                  },
+                },
+                inputLabel: {
+                  sx: {
+                    typography: 'caption',
+                  },
+                },
+                formHelperText: {
+                  sx: {
+                    typography: 'caption',
+                  },
+                },
+              }}
+            />
+            <Tooltip title="search anywhere ERP wide">
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
           {/* <IconButton size="large">
             <Typography variant="caption">erp</Typography>
           </IconButton> */}
-          <SvgTextIcon size="small" initials="erp" />
-
-          <TextField
-            size="small"
-            variant="standard"
-            type="search"
-            placeholder="search anywhere in ERP system"
+          <Box
             sx={{
-              typography: 'caption',
-              display: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
             }}
-            slotProps={{
-              input: {
-                sx: {
-                  typography: 'caption',
-                },
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton size="small">
-                      <SearchIcon fontSize="small" />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              },
-              inputLabel: {
-                sx: {
-                  typography: 'caption',
-                },
-              },
-              formHelperText: {
-                sx: {
-                  typography: 'caption',
-                },
-              },
-            }}
-          />
-          <Tooltip title="search anywhere ERP wide">
-            <IconButton>
-              <SearchIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Contextual information">
-            <IconButton>
-              <InfoTwoToneIcon aria-hidden="true" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Notifications">
-            <IconButton>
-              <Badge
-                badgeContent={1}
-                color="secondary"
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-              >
-                <NotificationsSharpIcon />
-              </Badge>
-            </IconButton>
-          </Tooltip>
-          {/* <Box>
-            <IconButton size="small" sx={{ typography: 'caption' }}>
-              <SvgTextIcon size="small" initials="PR"></SvgTextIcon>
-            </IconButton>
-            <IconButton size="small" sx={{ typography: 'caption' }}>
-              <SvgTextIcon size="small" initials="CS"></SvgTextIcon>
-            </IconButton>
-            <IconButton size="small" sx={{ typography: 'caption' }}>
-              <SvgTextIcon size="small" initials="TN"></SvgTextIcon>
-            </IconButton>
-            <IconButton size="small" sx={{ typography: 'caption' }}>
-              <SvgTextIcon size="small" initials="UR"></SvgTextIcon>
-            </IconButton>
-          </Box> */}
+          >
+            <SvgTextIcon size="small" initials="erp" />
 
-          <ColorScheSwitcher />
+            <Tooltip title="Contextual information">
+              <IconButton>
+                <InfoTwoToneIcon aria-hidden="true" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Notifications">
+              <IconButton>
+                <Badge
+                  badgeContent={1}
+                  color="secondary"
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                >
+                  <NotificationsSharpIcon />
+                </Badge>
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+              <IconButton sx={{ typography: 'caption' }}>
+                <SvgTextIcon size="small" initials="PR"></SvgTextIcon>
+              </IconButton>
+              <IconButton size="small" sx={{ typography: 'caption' }}>
+                <SvgTextIcon size="small" initials="CS"></SvgTextIcon>
+              </IconButton>
+              <IconButton size="small" sx={{ typography: 'caption' }}>
+                <SvgTextIcon size="small" initials="TN"></SvgTextIcon>
+              </IconButton>
+              <IconButton size="small" sx={{ typography: 'caption' }}>
+                <SvgTextIcon size="small" initials="UR"></SvgTextIcon>
+              </IconButton>
+            </Box>
 
-          <Tooltip title="more options">
-            <IconButton>
-              <MoreVertIcon />
-            </IconButton>
-          </Tooltip>
+            <ColorScheSwitcher />
+            <Tooltip title="more options">
+              <IconButton>
+                <MoreVertIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
