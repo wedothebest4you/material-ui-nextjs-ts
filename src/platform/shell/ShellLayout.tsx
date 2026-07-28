@@ -54,6 +54,7 @@ import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
 import Badge from '@mui/material/Badge';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
+import InfoIcon from '@mui/icons-material/Info';
 import { SvgTextIcon } from '@/src/shared/client';
 import { styled } from '@mui/material/styles';
 import { SxProps, Theme } from '@mui/material/styles';
@@ -111,9 +112,9 @@ export default function ShellLayout({
           disableGutters
           sx={{ justifyContent: 'space-between', gap: 1 }}
         >
-          <Box sx={{ display: 'flex', gap: 1 }}>
+          <Box sx={{ display: 'flex', gap: 1, flex: { xs: 0, md: 0.75 } }}>
             <Tooltip title={menuStatus}>
-              <IconButton aria-expanded={menuExpanded!}>
+              <IconButton>
                 <MenuIcon></MenuIcon>
               </IconButton>
             </Tooltip>
@@ -122,16 +123,27 @@ export default function ShellLayout({
               type="search"
               placeholder="search anywhere in ERP system"
               fullWidth
+              margin="dense"
               sx={{
+                display: { xs: 'none', md: 'inline' },
                 typography: 'caption',
-                display: { xs: 'none', md: 'block' },
+                marginBottom: 1,
               }}
               slotProps={{
                 input: {
                   sx: {
                     typography: 'caption',
-                    backgroundColor: 'white',
+                    // backgroundColor: 'var(--mui-palette-background-default)',
+                    color: 'currentColor',
+                    '&.Mui-focused': {
+                      backgroundColor: 'white',
+                      color: 'var(--mui-palette-text-primary)',
+                    },
+                    '& ::placeholder': {
+                      opacity: 1,
+                    },
                   },
+                  endAdornment: <SearchIcon />,
                 },
                 inputLabel: {
                   sx: {
@@ -141,12 +153,13 @@ export default function ShellLayout({
                 formHelperText: {
                   sx: {
                     typography: 'caption',
+                    opacity: 1,
                   },
                 },
               }}
             />
-            <Tooltip title="search anywhere ERP wide">
-              <IconButton>
+            <Tooltip title="open search anywhere ERP wide">
+              <IconButton sx={{ display: { xs: 'flex', md: 'none' } }}>
                 <SearchIcon />
               </IconButton>
             </Tooltip>
@@ -165,7 +178,7 @@ export default function ShellLayout({
 
             <Tooltip title="Contextual information">
               <IconButton>
-                <InfoTwoToneIcon aria-hidden="true" />
+                <InfoIcon aria-hidden="true" />
               </IconButton>
             </Tooltip>
             <Tooltip title="Notifications">
