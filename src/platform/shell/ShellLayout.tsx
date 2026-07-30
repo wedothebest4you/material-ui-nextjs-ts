@@ -112,50 +112,69 @@ export default function ShellLayout({
           disableGutters
           sx={{ justifyContent: 'space-between', gap: 1 }}
         >
-          <Box sx={{ display: 'flex', gap: 1, flex: { xs: 0, md: 0.75 } }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Tooltip title={menuStatus}>
               <IconButton>
                 <MenuIcon></MenuIcon>
               </IconButton>
             </Tooltip>
+
+            <SvgTextIcon size="small" initials="erp" />
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              flex: { xs: 0, md: 0.5 },
+            }}
+          >
             <TextField
-              variant="standard"
+              variant="outlined"
               type="search"
+              size="small"
               placeholder="search anywhere in ERP system"
               fullWidth
               margin="dense"
               sx={{
                 display: { xs: 'none', md: 'inline' },
-                typography: 'caption',
-                marginBottom: 1,
+                //typography: 'caption',
+                '&.MuiTextField-root': {
+                  margin: 0,
+                },
+                '& .MuiOutlinedInput-root': {
+                  color: 'var(--mui-palette-common-white)',
+                  borderRadius: '20px',
+                  border: '1px solid var(--mui-palette-background-default)',
+                  fontSize: '14px',
+                },
+                '& ::placeholder': {
+                  opacity: 0.75,
+                },
+                '& .Mui-focused': {
+                  backgroundColor: 'var(--mui-palette-common-white)',
+                  color: 'var(--mui-palette-text-primary)',
+                },
               }}
               slotProps={{
                 input: {
                   sx: {
-                    typography: 'caption',
+                    //  typography: 'caption',
                     // backgroundColor: 'var(--mui-palette-background-default)',
-                    color: 'currentColor',
-                    '&.Mui-focused': {
-                      backgroundColor: 'white',
-                      color: 'var(--mui-palette-text-primary)',
-                    },
-                    '& ::placeholder': {
-                      opacity: 1,
-                    },
+                    // color: 'currentColor',
                   },
                   endAdornment: <SearchIcon />,
                 },
-                inputLabel: {
-                  sx: {
-                    typography: 'caption',
-                  },
-                },
-                formHelperText: {
-                  sx: {
-                    typography: 'caption',
-                    opacity: 1,
-                  },
-                },
+                // inputLabel: {
+                //   sx: {
+                //     typography: 'caption',
+                //   },
+                // },
+                // formHelperText: {
+                //   sx: {
+                //     typography: 'caption',
+                //     opacity: 1,
+                //   },
+                // },
               }}
             />
             <Tooltip title="open search anywhere ERP wide">
@@ -174,8 +193,6 @@ export default function ShellLayout({
               gap: 1,
             }}
           >
-            <SvgTextIcon size="small" initials="erp" />
-
             <Tooltip title="Contextual information">
               <IconButton>
                 <InfoIcon aria-hidden="true" />
