@@ -27,6 +27,7 @@ const fluidTheme = createTheme({
           main: '#f899c1',
         },
         background: {
+          paper: '#ed9dd0',
           default: '#d933c463',
         },
         action: {

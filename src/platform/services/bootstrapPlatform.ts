@@ -25,6 +25,7 @@ let bootstrapped = false;
 export default function bootstrapPlatform(user: IUser) {
   const dashboard: ModuleDefinition = {
     dashboard: {
+      moduleDisplayName: 'ERP Hub',
       routesbyId: {
         db1: {
           routeId: 'db1',

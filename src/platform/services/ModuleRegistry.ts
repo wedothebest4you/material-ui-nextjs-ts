@@ -39,6 +39,7 @@ export default class ModuleRegistry {
     // console.log(routesbyId);
 
     this.modules[namespace] = {
+      moduleDisplayName: module[namespace].moduleDisplayName,
       routesbyId,
       routesbyPath: addRoutesbyFullPath(routesbyId),
       navigation: resolveNavigation(routesbyId),
@@ -53,7 +54,14 @@ export default class ModuleRegistry {
   }
 
   static getModuleList() {
-    return Object.keys(this.modules);
+    return Object.entries(this.modules).map(([key, value]) => ({
+      modulename: key,
+      moduleDisplayName: value.moduleDisplayName,
+    }));
+  }
+
+  static getModuleInfo() {
+    return this.modules;
   }
 
   static getNavigation() {
@@ -61,7 +69,7 @@ export default class ModuleRegistry {
       [module: string]: Navigation;
     } = {};
     Object.entries(this.modules).map(([key, value]) => {
-      navigation[key] = value.navigation;
+      navigation[key] = { ...value.navigation };
     });
     return navigation;
   }

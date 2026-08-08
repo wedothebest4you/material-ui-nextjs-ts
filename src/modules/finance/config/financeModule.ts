@@ -19,6 +19,7 @@ import { ComponentType } from 'react';
 
 export const financeModule: ModuleDefinition = {
   finance: {
+    moduleDisplayName: 'Fianance',
     routesbyId: {
       fn1: {
         routeId: 'fn1',

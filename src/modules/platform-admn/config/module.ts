@@ -2,6 +2,7 @@ import { ModuleDefinition } from '@/shared/types/index';
 
 export const platformAdmnModule: ModuleDefinition = {
   admn: {
+    moduleDisplayName: 'Platform Admin.',
     routesbyId: {
       att: {
         routeId: 'att',

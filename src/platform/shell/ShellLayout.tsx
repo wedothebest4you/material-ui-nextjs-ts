@@ -18,6 +18,7 @@
 
 'use client';
 
+import ModuleRegistry from '../services/ModuleRegistry';
 import React, { useState, Dispatch, SetStateAction } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -33,6 +34,7 @@ import { RouteNode } from '@/shared/types';
 import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 import {
   LightMode,
@@ -44,7 +46,14 @@ import IconButton, { IconButtonOwnProps } from '@mui/material/IconButton';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import TextField from '@mui/material/TextField';
-import { Avatar, AvatarGroup, Tooltip } from '@mui/material';
+import {
+  Avatar,
+  AvatarGroup,
+  Collapse,
+  ListItem,
+  ListItemIcon,
+  Tooltip,
+} from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
 import { useColorScheme } from '@mui/material';
@@ -52,13 +61,15 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
 import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Badge from '@mui/material/Badge';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import InfoIcon from '@mui/icons-material/Info';
 import { SvgTextIcon } from '@/src/shared/client';
 import { styled } from '@mui/material/styles';
 import { SxProps, Theme } from '@mui/material/styles';
-import { size } from 'zod';
+import { boolean, object, size } from 'zod';
 
 const drawerWidth = 240;
 
@@ -87,8 +98,11 @@ export default function ShellLayout({
   console.log(moduleList);
   console.log('Item : Navigation');
   console.log(navigation);
+  const [sidebar, setSidebar] = useState(false);
+  const [mobileSearchMode, setMobileSearchMode] = useState(false);
   const [menuExpanded, setMenuExpanded] = useState(false);
   const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
+
   const menuStatus = menuExpanded
     ? 'Collapse'
     : 'Expand' + ' '.repeat(1) + 'sidebar, the navigational menu';
@@ -104,17 +118,21 @@ export default function ShellLayout({
         sx={{
           // color: 'text.primary',
           // bgcolor: 'transparent', //'background.paper',
-          zIndex: 1,
+          zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
       >
         <Toolbar
           variant="dense"
           disableGutters
-          sx={{ justifyContent: 'space-between', gap: 1 }}
+          sx={{
+            display: mobileSearchMode ? 'none' : 'flex',
+            justifyContent: 'space-between',
+            gap: 1,
+          }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Tooltip title={menuStatus}>
-              <IconButton>
+              <IconButton onClick={() => setSidebar(!sidebar)}>
                 <MenuIcon></MenuIcon>
               </IconButton>
             </Tooltip>
@@ -137,22 +155,29 @@ export default function ShellLayout({
               margin="dense"
               sx={{
                 display: { xs: 'none', md: 'inline' },
-                //typography: 'caption',
-                '&.MuiTextField-root': {
-                  margin: 0,
-                },
+                //   //typography: 'caption',
                 '& .MuiOutlinedInput-root': {
-                  color: 'var(--mui-palette-common-white)',
+                  //     color: 'var(--mui-palette-common-white)',
                   borderRadius: '20px',
-                  border: '1px solid var(--mui-palette-background-default)',
+                  border: '1.34px solid var(--mui-palette-common-white)',
                   fontSize: '14px',
                 },
                 '& ::placeholder': {
-                  opacity: 0.75,
+                  color: 'white !important',
+                  opacity: 1,
                 },
+                // },
+                //   '& .Mui-focused': (theme) =>
+                //     theme.applyStyles('light', {
+                //       backgroundColor: 'var(--mui-palette-common-white)',
+                //       color: 'var(--mui-palette-text-primary)',
+                //     }),
                 '& .Mui-focused': {
-                  backgroundColor: 'var(--mui-palette-common-white)',
-                  color: 'var(--mui-palette-text-primary)',
+                  bgcolor: 'background.paper',
+                  '& ::placeholder': {
+                    color: 'grey !important',
+                    // opacity: 0.75,
+                  },
                 },
               }}
               slotProps={{
@@ -161,6 +186,10 @@ export default function ShellLayout({
                     //  typography: 'caption',
                     // backgroundColor: 'var(--mui-palette-background-default)',
                     // color: 'currentColor',
+                    // '&::placeholder': {
+                    //   color: 'white',
+                    //   opacity: 1,
+                    // },
                   },
                   endAdornment: <SearchIcon />,
                 },
@@ -178,7 +207,12 @@ export default function ShellLayout({
               }}
             />
             <Tooltip title="open search anywhere ERP wide">
-              <IconButton sx={{ display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                sx={{ display: { xs: 'flex', md: 'none' } }}
+                onClick={() => {
+                  setMobileSearchMode(!mobileSearchMode);
+                }}
+              >
                 <SearchIcon />
               </IconButton>
             </Tooltip>
@@ -237,9 +271,114 @@ export default function ShellLayout({
             </Tooltip>
           </Box>
         </Toolbar>
+        <Toolbar
+          variant="dense"
+          disableGutters
+          sx={{
+            display: mobileSearchMode ? 'flex' : 'none',
+            justifyContent: 'space-between',
+            gap: 1,
+          }}
+        >
+          <TextField
+            variant="standard"
+            type="search"
+            placeholder="Search"
+            size="small"
+            margin="dense"
+            fullWidth
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <IconButton
+                    onClick={() => {
+                      setMobileSearchMode(!mobileSearchMode);
+                    }}
+                  >
+                    <ArrowBackRoundedIcon />
+                  </IconButton>
+                ),
+                endAdornment: (
+                  <IconButton>
+                    <SearchIcon></SearchIcon>
+                  </IconButton>
+                ),
+              },
+            }}
+            sx={{
+              //   '& .MuiInput-root': (theme) =>
+              //     theme.applyStyles('light', {
+              //       backgroundColor: 'var(--mui-palette-common-white)',
+              //       color: 'var(--mui-palette-text-primary)',
+              //     }),
+              bgcolor: 'background.paper',
+              // '& ::placeholder': {
+              //   opacity: 0.75,
+              // },
+              fontSize: '14px',
+            }}
+          ></TextField>
+        </Toolbar>
       </AppBar>
+      {/* <Drawer
+          variant="temporary"
+          sx={{ display: { xs: 'block', md: 'none' } }}
+          open={sidebar}
+          onClose={() => setSidebar(!sidebar)}
+        >
+          Item 1
+        </Drawer> */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          display: { xs: 'none', md: 'block' },
+          '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
+        }}
+      >
+        <Toolbar variant="dense" />
+        <List>
+          <ParentChildUnit navigation={navigation}></ParentChildUnit>
+        </List>
+      </Drawer>
+      <Box>{children}</Box>
     </Box>
   );
+}
+
+function ParentChildUnit({
+  navigation,
+  depth = 0,
+}: {
+  navigation: { [module: string]: Navigation };
+  depth?: number;
+}) {
+  const [modules, setModule] = useState<{
+    [module: string]: { open: boolean };
+  }>({});
+  console.log(modules);
+  return Object.entries(navigation).map(([module, navigation]) => (
+    <>
+      <ListItemButton
+        onClick={() =>
+          setModule({
+            ...modules,
+            [module]: { open: !modules[module]?.open },
+          })
+        }
+      >
+        <ListItemText>
+          {ModuleRegistry.getModuleInfo()[module]?.moduleDisplayName}
+        </ListItemText>
+      </ListItemButton>
+      <Collapse in={modules[module]?.open}>
+        {Object.entries(navigation).map(([RouteKind, routeInfo]) => (
+          <ListItemButton component={Link} href={routeInfo.fullPath}>
+            <ListItemText>{routeInfo.longDescription}</ListItemText>
+          </ListItemButton>
+        ))}
+      </Collapse>
+    </>
+  ));
 }
 
 // DRAWER
