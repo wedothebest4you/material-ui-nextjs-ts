@@ -16,10 +16,6 @@
  * - Must NOT register modules
  */
 
-'use client';
-
-import ModuleRegistry from '../services/ModuleRegistry';
-import React, { useState, Dispatch, SetStateAction } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -34,7 +30,6 @@ import { RouteNode } from '@/shared/types';
 import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 import {
   LightMode,
@@ -66,10 +61,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Badge from '@mui/material/Badge';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import InfoIcon from '@mui/icons-material/Info';
-import { SvgTextIcon } from '@/src/shared/client';
-import { styled } from '@mui/material/styles';
-import { SxProps, Theme } from '@mui/material/styles';
-import { boolean, object, size } from 'zod';
+import { SvgTextIcon } from '@/shared/client';
+import { HamburgerButton } from '@/shared/client/index';
+import { ResponsiveSearchBar } from '@/shared/client/index';
 
 const drawerWidth = 240;
 
@@ -98,14 +92,8 @@ export default function ShellLayout({
   console.log(moduleList);
   console.log('Item : Navigation');
   console.log(navigation);
-  const [sidebar, setSidebar] = useState(false);
-  const [mobileSearchMode, setMobileSearchMode] = useState(false);
-  const [menuExpanded, setMenuExpanded] = useState(false);
-  const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
+  // const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
 
-  const menuStatus = menuExpanded
-    ? 'Collapse'
-    : 'Expand' + ' '.repeat(1) + 'sidebar, the navigational menu';
   return (
     <Box
       sx={{
@@ -118,25 +106,20 @@ export default function ShellLayout({
         sx={{
           // color: 'text.primary',
           // bgcolor: 'transparent', //'background.paper',
-          zIndex: (theme) => theme.zIndex.drawer + 1,
+          zIndex: 'zIndex.drawer' + 1,
         }}
       >
         <Toolbar
           variant="dense"
           disableGutters
           sx={{
-            display: mobileSearchMode ? 'none' : 'flex',
+            display: 'flex',
             justifyContent: 'space-between',
             gap: 1,
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Tooltip title={menuStatus}>
-              <IconButton onClick={() => setSidebar(!sidebar)}>
-                <MenuIcon></MenuIcon>
-              </IconButton>
-            </Tooltip>
-
+            <HamburgerButton />
             <SvgTextIcon size="small" initials="erp" />
           </Box>
           <Box
@@ -146,76 +129,7 @@ export default function ShellLayout({
               flex: { xs: 0, md: 0.5 },
             }}
           >
-            <TextField
-              variant="outlined"
-              type="search"
-              size="small"
-              placeholder="search anywhere in ERP system"
-              fullWidth
-              margin="dense"
-              sx={{
-                display: { xs: 'none', md: 'inline' },
-                //   //typography: 'caption',
-                '& .MuiOutlinedInput-root': {
-                  //     color: 'var(--mui-palette-common-white)',
-                  borderRadius: '20px',
-                  border: '1.34px solid var(--mui-palette-common-white)',
-                  fontSize: '14px',
-                },
-                '& ::placeholder': {
-                  color: 'white !important',
-                  opacity: 1,
-                },
-                // },
-                //   '& .Mui-focused': (theme) =>
-                //     theme.applyStyles('light', {
-                //       backgroundColor: 'var(--mui-palette-common-white)',
-                //       color: 'var(--mui-palette-text-primary)',
-                //     }),
-                '& .Mui-focused': {
-                  bgcolor: 'background.paper',
-                  '& ::placeholder': {
-                    color: 'grey !important',
-                    // opacity: 0.75,
-                  },
-                },
-              }}
-              slotProps={{
-                input: {
-                  sx: {
-                    //  typography: 'caption',
-                    // backgroundColor: 'var(--mui-palette-background-default)',
-                    // color: 'currentColor',
-                    // '&::placeholder': {
-                    //   color: 'white',
-                    //   opacity: 1,
-                    // },
-                  },
-                  endAdornment: <SearchIcon />,
-                },
-                // inputLabel: {
-                //   sx: {
-                //     typography: 'caption',
-                //   },
-                // },
-                // formHelperText: {
-                //   sx: {
-                //     typography: 'caption',
-                //     opacity: 1,
-                //   },
-                // },
-              }}
-            />
-            <Tooltip title="open search anywhere ERP wide">
-              <IconButton
-                sx={{ display: { xs: 'flex', md: 'none' } }}
-                onClick={() => {
-                  setMobileSearchMode(!mobileSearchMode);
-                }}
-              >
-                <SearchIcon />
-              </IconButton>
-            </Tooltip>
+            <ResponsiveSearchBar />
           </Box>
           {/* <IconButton size="large">
             <Typography variant="caption">erp</Typography>
@@ -271,7 +185,7 @@ export default function ShellLayout({
             </Tooltip>
           </Box>
         </Toolbar>
-        <Toolbar
+        {/* <Toolbar
           variant="dense"
           disableGutters
           sx={{
@@ -280,45 +194,7 @@ export default function ShellLayout({
             gap: 1,
           }}
         >
-          <TextField
-            variant="standard"
-            type="search"
-            placeholder="Search"
-            size="small"
-            margin="dense"
-            fullWidth
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <IconButton
-                    onClick={() => {
-                      setMobileSearchMode(!mobileSearchMode);
-                    }}
-                  >
-                    <ArrowBackRoundedIcon />
-                  </IconButton>
-                ),
-                endAdornment: (
-                  <IconButton>
-                    <SearchIcon></SearchIcon>
-                  </IconButton>
-                ),
-              },
-            }}
-            sx={{
-              //   '& .MuiInput-root': (theme) =>
-              //     theme.applyStyles('light', {
-              //       backgroundColor: 'var(--mui-palette-common-white)',
-              //       color: 'var(--mui-palette-text-primary)',
-              //     }),
-              bgcolor: 'background.paper',
-              // '& ::placeholder': {
-              //   opacity: 0.75,
-              // },
-              fontSize: '14px',
-            }}
-          ></TextField>
-        </Toolbar>
+        </Toolbar> */}
       </AppBar>
       {/* <Drawer
           variant="temporary"
@@ -367,7 +243,7 @@ function ParentChildUnit({
         }
       >
         <ListItemText>
-          {ModuleRegistry.getModuleInfo()[module]?.moduleDisplayName}
+          {/* {ModuleRegistry.getModuleInfo()[module]?.moduleDisplayName} */}
         </ListItemText>
       </ListItemButton>
       <Collapse in={modules[module]?.open}>
