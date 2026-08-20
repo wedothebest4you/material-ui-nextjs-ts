@@ -31,12 +31,6 @@ import { Navigation } from '@/shared/types';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
-import {
-  LightMode,
-  DarkMode,
-  SettingsBrightness,
-  VerticalAlignTop,
-} from '@mui/icons-material';
 import IconButton, { IconButtonOwnProps } from '@mui/material/IconButton';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -51,7 +45,7 @@ import {
 } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material';
-import { useColorScheme } from '@mui/material';
+
 import InputAdornment from '@mui/material/InputAdornment';
 import CircleSharpIcon from '@mui/icons-material/CircleSharp';
 import NotificationsSharpIcon from '@mui/icons-material/NotificationsSharp';
@@ -64,6 +58,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { SvgTextIcon } from '@/shared/client';
 import { HamburgerButton } from '@/shared/client/index';
 import { ResponsiveSearchBar } from '@/shared/client/index';
+import { ColorSchemeSwitcher } from '@/shared/client/index';
 
 const drawerWidth = 240;
 
@@ -177,7 +172,7 @@ export default function ShellLayout({
               </IconButton>
             </Box>
 
-            <ColorScheSwitcher />
+            <ColorSchemeSwitcher />
             <Tooltip title="more options">
               <IconButton>
                 <MoreVertIcon />
@@ -204,7 +199,7 @@ export default function ShellLayout({
         >
           Item 1
         </Drawer> */}
-      <Drawer
+      {/* <Drawer
         variant="permanent"
         sx={{
           display: { xs: 'none', md: 'block' },
@@ -215,47 +210,47 @@ export default function ShellLayout({
         <List>
           <ParentChildUnit navigation={navigation}></ParentChildUnit>
         </List>
-      </Drawer>
+      </Drawer> */}
       <Box>{children}</Box>
     </Box>
   );
 }
 
-function ParentChildUnit({
-  navigation,
-  depth = 0,
-}: {
-  navigation: { [module: string]: Navigation };
-  depth?: number;
-}) {
-  const [modules, setModule] = useState<{
-    [module: string]: { open: boolean };
-  }>({});
-  console.log(modules);
-  return Object.entries(navigation).map(([module, navigation]) => (
-    <>
-      <ListItemButton
-        onClick={() =>
-          setModule({
-            ...modules,
-            [module]: { open: !modules[module]?.open },
-          })
-        }
-      >
-        <ListItemText>
-          {/* {ModuleRegistry.getModuleInfo()[module]?.moduleDisplayName} */}
-        </ListItemText>
-      </ListItemButton>
-      <Collapse in={modules[module]?.open}>
-        {Object.entries(navigation).map(([RouteKind, routeInfo]) => (
-          <ListItemButton component={Link} href={routeInfo.fullPath}>
-            <ListItemText>{routeInfo.longDescription}</ListItemText>
-          </ListItemButton>
-        ))}
-      </Collapse>
-    </>
-  ));
-}
+// function ParentChildUnit({
+//   navigation,
+//   depth = 0,
+// }: {
+//   navigation: { [module: string]: Navigation };
+//   depth?: number;
+// }) {
+//   const [modules, setModule] = useState<{
+//     [module: string]: { open: boolean };
+//   }>({});
+//   console.log(modules);
+//   return Object.entries(navigation).map(([module, navigation]) => (
+//     <>
+//       <ListItemButton
+//         onClick={() =>
+//           setModule({
+//             ...modules,
+//             [module]: { open: !modules[module]?.open },
+//           })
+//         }
+//       >
+//         <ListItemText>
+//           {/* {ModuleRegistry.getModuleInfo()[module]?.moduleDisplayName} */}
+//         </ListItemText>
+//       </ListItemButton>
+//       <Collapse in={modules[module]?.open}>
+//         {Object.entries(navigation).map(([RouteKind, routeInfo]) => (
+//           <ListItemButton component={Link} href={routeInfo.fullPath}>
+//             <ListItemText>{routeInfo.longDescription}</ListItemText>
+//           </ListItemButton>
+//         ))}
+//       </Collapse>
+//     </>
+//   ));
+// }
 
 // DRAWER
 // <Drawer variant="permanent">
@@ -305,44 +300,3 @@ function ParentChildUnit({
 
 //   {children}
 // </Box>
-function ColorScheSwitcher() {
-  const { mode, setMode } = useColorScheme();
-  // first render will have no colorSchem - both the SSR and CSR
-  // performs an early return here.
-  // the actual state will receive here once the special script updates the
-  // browser store.
-  // console.log(`mode : ${mode}`);
-  if (!mode) {
-    return;
-  }
-  const modes = {
-    system: {
-      icon: SettingsBrightness,
-      next: 'light',
-    },
-    light: {
-      icon: LightMode,
-      next: 'dark',
-    },
-    dark: {
-      icon: DarkMode,
-      next: 'system',
-    },
-  } as const;
-
-  const colorSchemeButtonCycles = () => {
-    setMode(modes[mode].next);
-  };
-
-  //we need an component indentifier not an expression for the same.
-  const IconIdentifier = modes[mode].icon;
-  const colorSchemeStatus = `Color mode : ${mode} - click for ${modes[mode].next}`;
-
-  return (
-    <Tooltip title={colorSchemeStatus}>
-      <IconButton onClick={colorSchemeButtonCycles}>
-        {<IconIdentifier />}
-      </IconButton>
-    </Tooltip>
-  );
-}

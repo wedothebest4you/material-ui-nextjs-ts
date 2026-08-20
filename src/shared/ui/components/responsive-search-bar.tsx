@@ -3,13 +3,14 @@
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
 export default function ResponsiveSearchBar() {
   const [mobileSearchMode, setMobileSearchMode] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
 
   return (
     <>
@@ -17,9 +18,11 @@ export default function ResponsiveSearchBar() {
         variant="outlined"
         type="search"
         size="small"
+        value={searchInput}
         placeholder="search anywhere in ERP system"
         fullWidth
         margin="dense"
+        onChange={(e) => setSearchInput(e.target.value)}
         sx={{
           display: { xs: 'none', md: 'inline' },
           //   //typography: 'caption',
@@ -77,7 +80,10 @@ export default function ResponsiveSearchBar() {
       <Tooltip title="open search anywhere ERP wide">
         <IconButton
           sx={{
-            display: { xs: mobileSearchMode ? 'none' : 'inline', md: 'none' },
+            display: {
+              xs: mobileSearchMode ? 'none' : 'flex',
+              md: 'none',
+            },
           }}
           onClick={() => {
             setMobileSearchMode(!mobileSearchMode);
@@ -88,12 +94,10 @@ export default function ResponsiveSearchBar() {
       </Tooltip>
 
       <TextField
-        variant="standard"
         type="search"
         placeholder="Search"
-        size="small"
-        margin="dense"
-        fullWidth
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
         slotProps={{
           input: {
             startAdornment: (
@@ -107,7 +111,7 @@ export default function ResponsiveSearchBar() {
             ),
             endAdornment: (
               <IconButton>
-                <SearchIcon></SearchIcon>
+                <SearchIcon />
               </IconButton>
             ),
           },
@@ -118,12 +122,15 @@ export default function ResponsiveSearchBar() {
           //       backgroundColor: 'var(--mui-palette-common-white)',
           //       color: 'var(--mui-palette-text-primary)',
           //     }),
-          display: mobileSearchMode ? 'inline' : 'none',
+          display: mobileSearchMode ? 'flex' : 'none',
           bgcolor: 'background.paper',
           // '& ::placeholder': {
           //   opacity: 0.75,
           // },
-          fontSize: '14px',
+          position: 'absolute',
+          top: 0,
+          insetInline: 0,
+          zIndex: 2,
         }}
       ></TextField>
     </>
