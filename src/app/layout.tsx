@@ -14,7 +14,6 @@
  *
  * This is owned by Next.js App Router, not by platform or modules.
  */
-'use client';
 
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import { ThemeProvider } from '@mui/material/styles';

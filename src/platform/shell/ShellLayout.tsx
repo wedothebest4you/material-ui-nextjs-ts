@@ -101,6 +101,7 @@ export default function ShellLayout({
         sx={{
           // color: 'text.primary',
           // bgcolor: 'transparent', //'background.paper',
+          // zIndex: (theme) => theme.zIndex.appBar + 1,
           zIndex: 'zIndex.drawer' + 1,
         }}
       >
@@ -199,23 +200,31 @@ export default function ShellLayout({
         >
           Item 1
         </Drawer> */}
-      {/* <Drawer
-        variant="permanent"
-        sx={{
-          display: { xs: 'none', md: 'block' },
-          '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
-        }}
-      >
-        <Toolbar variant="dense" />
-        <List>
-          <ParentChildUnit navigation={navigation}></ParentChildUnit>
-        </List>
-      </Drawer> */}
+      <ResponsibleSidebar />
       <Box>{children}</Box>
     </Box>
   );
 }
 
+function ResponsibleSidebar() {
+  const drawer = (
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: 'none', md: 'block' },
+        '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
+      }}
+    >
+      <Toolbar variant="dense" />
+      <List>
+        {/* <ParentChildUnit navigation={navigation}></ParentChildUnit> */}
+        List1
+      </List>
+    </Drawer>
+  );
+
+  return <></>;
+}
 // function ParentChildUnit({
 //   navigation,
 //   depth = 0,
