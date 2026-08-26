@@ -16,6 +16,8 @@
  * - Must NOT register modules
  */
 
+import ModuleRegistry from '../services/ModuleRegistry';
+
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -56,9 +58,10 @@ import Badge from '@mui/material/Badge';
 import InfoTwoToneIcon from '@mui/icons-material/InfoTwoTone';
 import InfoIcon from '@mui/icons-material/Info';
 import { SvgTextIcon } from '@/shared/client';
-import { HamburgerButton } from '@/shared/client/index';
+import { TemporaryDrawerButton } from '@/shared/client/index';
 import { ResponsiveSearchBar } from '@/shared/client/index';
 import { ColorSchemeSwitcher } from '@/shared/client/index';
+import { PermanentDrawer } from '@/src/shared/client/index';
 
 const drawerWidth = 240;
 
@@ -75,13 +78,21 @@ const drawerWidth = 240;
 
 export default function ShellLayout({
   children,
-  moduleList,
-  navigation,
+  // moduleList,
+  // navigation,
 }: {
   children: React.ReactNode;
-  moduleList: string[];
-  navigation: { [module: string]: Navigation };
+  // moduleList: string[];
+  // navigation: { [module: string]: Navigation };
 }) {
+  const moduleList = ModuleRegistry.getModuleList();
+  const navigation = ModuleRegistry.getNavigation();
+  // console.log('Component : PlatformShell');
+  // console.log('Item : Module List');
+  // console.log(moduleList);
+  // console.log('Item : Navigation');
+  // console.log(navigation);
+
   console.log('Component : ShellLayout');
   console.log('Item : Module List');
   console.log(moduleList);
@@ -102,7 +113,7 @@ export default function ShellLayout({
           // color: 'text.primary',
           // bgcolor: 'transparent', //'background.paper',
           // zIndex: (theme) => theme.zIndex.appBar + 1,
-          zIndex: 'zIndex.drawer' + 1,
+          zIndex: 'calc(var(--mui-zIndex-drawer) + 1)',
         }}
       >
         <Toolbar
@@ -115,7 +126,7 @@ export default function ShellLayout({
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <HamburgerButton />
+            <TemporaryDrawerButton />
             <SvgTextIcon size="small" initials="erp" />
           </Box>
           <Box
@@ -192,39 +203,12 @@ export default function ShellLayout({
         >
         </Toolbar> */}
       </AppBar>
-      {/* <Drawer
-          variant="temporary"
-          sx={{ display: { xs: 'block', md: 'none' } }}
-          open={sidebar}
-          onClose={() => setSidebar(!sidebar)}
-        >
-          Item 1
-        </Drawer> */}
-      <ResponsibleSidebar />
+      <PermanentDrawer />
       <Box>{children}</Box>
     </Box>
   );
 }
 
-function ResponsibleSidebar() {
-  const drawer = (
-    <Drawer
-      variant="permanent"
-      sx={{
-        display: { xs: 'none', md: 'block' },
-        '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
-      }}
-    >
-      <Toolbar variant="dense" />
-      <List>
-        {/* <ParentChildUnit navigation={navigation}></ParentChildUnit> */}
-        List1
-      </List>
-    </Drawer>
-  );
-
-  return <></>;
-}
 // function ParentChildUnit({
 //   navigation,
 //   depth = 0,

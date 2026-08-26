@@ -21,7 +21,6 @@ export default function ResponsiveSearchBar() {
         value={searchInput}
         placeholder="search anywhere in ERP system"
         fullWidth
-        margin="dense"
         onChange={(e) => setSearchInput(e.target.value)}
         sx={{
           display: { xs: 'none', md: 'inline' },

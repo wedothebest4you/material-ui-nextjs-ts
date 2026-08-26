@@ -10,7 +10,7 @@ export default function ScvgTextIcon({
   initials: string;
 }) {
   return (
-    <SvgIcon fontSize={size} viewBox="0 0 24 24">
+    <SvgIcon fontSize={size} viewBox="0 0 24 24" sx={{ m: 1 }}>
       <text
         x="50%"
         y="54%"

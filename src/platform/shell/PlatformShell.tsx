@@ -19,7 +19,6 @@
 import ShellLayout from './ShellLayout';
 import bootstrapPlatform from '../services/bootstrapPlatform';
 import { IUser } from '@/shared/types';
-import ModuleRegistry from '../services/ModuleRegistry';
 
 export default async function PlatformShell({
   children,
@@ -38,17 +37,18 @@ export default async function PlatformShell({
 
   bootstrapPlatform(user);
 
-  const moduleList = ModuleRegistry.getModuleList();
-  const navigation = ModuleRegistry.getNavigation();
-  console.log('Component : PlatformShell');
-  console.log('Item : Module List');
-  console.log(moduleList);
-  console.log('Item : Navigation');
-  console.log(navigation);
+  // const moduleList = ModuleRegistry.getModuleList();
+  // const navigation = ModuleRegistry.getNavigation();
+  // console.log('Component : PlatformShell');
+  // console.log('Item : Module List');
+  // console.log(moduleList);
+  // console.log('Item : Navigation');
+  // console.log(navigation);
 
   return (
-    <ShellLayout moduleList={moduleList} navigation={navigation}>
-      {children}
-    </ShellLayout>
+    // <ShellLayout moduleList={moduleList} navigation={navigation}>
+    //   {children}
+    // </ShellLayout>
+    <ShellLayout>{children}</ShellLayout>
   );
 }
