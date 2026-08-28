@@ -15,11 +15,9 @@
  */
 
 import { ModuleDefinition } from '@/shared/types/index';
-import { ComponentType } from 'react';
 
 export const financeModule: ModuleDefinition = {
   finance: {
-    moduleDisplayName: 'Fianance',
     routesbyId: {
       fn1: {
         routeId: 'fn1',
