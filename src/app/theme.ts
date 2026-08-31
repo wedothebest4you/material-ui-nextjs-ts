@@ -33,9 +33,11 @@ const fluidTheme = createTheme({
         },
         action: {
           active: 'currentColor',
+          activeChannel: undefined,
         },
       },
     },
+
     dark: true,
   },
   cssVariables: {

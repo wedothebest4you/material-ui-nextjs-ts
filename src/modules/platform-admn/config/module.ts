@@ -1,26 +1,31 @@
 import { ModuleDefinition } from '@/shared/types/index';
 
 export const platformAdmnModule: ModuleDefinition = {
-  admn: {
-    moduleDisplayName: 'Platform Admin.',
-    routesbyId: {
-      att: {
-        routeId: 'att',
-        parentId: null,
-        lineItemId: 1,
-        segment: '/platform-adm',
-        fullPath: '/admn/platform-admm/tenant',
-        component: () => import('../features/tenant/command/page'),
-        shortDescription: 'Tenant',
-        longDescription: 'Tenant workspace',
-        showInNavigation: true,
-      },
+  platformadm: {
+    toplevelnav: {
+      description: 'Platform Admin',
+      children: ['dshbaords', 'masters'],
     },
-    routesbyPath: {},
-    navigation: {},
+    dashboards: {
+      description: 'Dashboards',
+      children: ['erpcentralview'],
+    },
+    masters: {
+      description: 'Masters',
+      children: ['tenantcreation'],
+    },
+    erpcentralview: {
+      description: 'ERP central-view dashboard',
+      fullPath: '/',
+      component: () => import('../ui/dashboard'),
+    },
+    tenantcreation: {
+      description: 'Tenant Creation',
+      fullPath: '/admn/platform-admm/tenant',
+      component: () => import('../features/tenant/command/page'),
+    },
   },
 };
-
 // const dashboard: ModuleDefinition = {
 //   dashboard: {
 //     routesbyId: {

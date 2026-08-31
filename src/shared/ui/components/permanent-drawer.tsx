@@ -1,9 +1,13 @@
 import { Toolbar } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 
-export default function PermanentDrawer() {
+export default function PermanentDrawer({
+  drawerContent,
+}: {
+  drawerContent: ReactNode;
+}) {
   const list = (
     <List>
       {/* <ParentChildUnit navigation={navigation}></ParentChildUnit> */}

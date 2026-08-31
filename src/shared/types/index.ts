@@ -1,21 +1,50 @@
 //A flattened Javascript dictionary (object) stores hierarchical data
 
-export type RouteNode = {
-  routeId: string;
-  parentId: string | null;
-  lineItemId: number;
-  segment: string;
-  fullPath: string;
+// export type RouteNode = {
+//   children?: string[];
+//   routeId: string;
+//   parentId: string | null;
+//   lineItemId: number;
+//   segment: string;
+//   fullPath: string;
 
-  component?: () => Promise<{ default: any }>;
+//   component?: () => Promise<{ default: any }>;
 
-  shortDescription: string;
-  longDescription: string;
+//   shortDescription: string;
+//   longDescription: string;
 
-  showInNavigation: boolean;
-};
+//   showInNavigation: boolean;
+//   navigationLevel?: number;
+// };
+
+export type RouteNode =
+  | {
+      description: string;
+      children: string[];
+      fullpath?: undefined;
+      component?: undefined;
+      // parentId: string | null;
+      // lineItemId: number;
+      // segment: string;
+
+      // showInNavigation: boolean;
+      // navigationLevel?: number;
+    }
+  | {
+      description: string;
+      children?: undefined;
+      fullPath: string;
+      component: () => Promise<{ default: any }>;
+      // parentId: string | null;
+      // lineItemId: number;
+      // segment: string;
+
+      // showInNavigation: boolean;
+      // navigationLevel?: number;
+    };
 
 export type RouteDictionarybyRouteId = {
+  toplevelnav: { description: string; children: string[] };
   [routeId: string]: RouteNode;
 };
 
@@ -30,12 +59,15 @@ export type Navigation = {
   };
 };
 
+// export type ModuleDefinition = {
+//   [namespace: string]: {
+//     routesbyId: RouteDictionarybyRouteId;
+//     routesbyPath: RouteDictionarybyFullPath;
+//     navigation: Navigation;
+//   };
+// };
 export type ModuleDefinition = {
-  [namespace: string]: {
-    routesbyId: RouteDictionarybyRouteId;
-    routesbyPath: RouteDictionarybyFullPath;
-    navigation: Navigation;
-  };
+  [module: string]: RouteDictionarybyRouteId;
 };
 
 export interface IUser {

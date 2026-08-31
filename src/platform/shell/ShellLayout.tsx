@@ -16,8 +16,6 @@
  * - Must NOT register modules
  */
 
-import ModuleRegistry from '../services/ModuleRegistry';
-
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Divider from '@mui/material/Divider';
@@ -62,6 +60,7 @@ import { TemporaryDrawerButton } from '@/shared/client/index';
 import { ResponsiveSearchBar } from '@/shared/client/index';
 import { ColorSchemeSwitcher } from '@/shared/client/index';
 import { PermanentDrawer } from '@/src/shared/client/index';
+import NavDrawerContent from '../ui/nav-drawer-content';
 
 const drawerWidth = 240;
 
@@ -85,19 +84,19 @@ export default function ShellLayout({
   // moduleList: string[];
   // navigation: { [module: string]: Navigation };
 }) {
-  const moduleList = ModuleRegistry.getModuleList();
-  const navigation = ModuleRegistry.getNavigation();
+  // const moduleList = ModuleRegistry.getModuleList();
+  // const navigation = ModuleRegistry.getNavigation();
   // console.log('Component : PlatformShell');
   // console.log('Item : Module List');
   // console.log(moduleList);
   // console.log('Item : Navigation');
   // console.log(navigation);
 
-  console.log('Component : ShellLayout');
-  console.log('Item : Module List');
-  console.log(moduleList);
-  console.log('Item : Navigation');
-  console.log(navigation);
+  // console.log('Component : ShellLayout');
+  // console.log('Item : Module List');
+  // console.log(moduleList);
+  // console.log('Item : Navigation');
+  // console.log(navigation);
   // const [selectedModule, setSelectedModule] = React.useState(moduleList[0]);
 
   return (
@@ -126,7 +125,7 @@ export default function ShellLayout({
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <TemporaryDrawerButton />
+            <TemporaryDrawerButton drawerContent={<></>} />
             <SvgTextIcon size="small" initials="erp" />
           </Box>
           <Box
@@ -203,7 +202,8 @@ export default function ShellLayout({
         >
         </Toolbar> */}
       </AppBar>
-      <PermanentDrawer />
+      <NavDrawerContent />
+      <PermanentDrawer drawerContent={<NavDrawerContent />} />
       <Box>{children}</Box>
     </Box>
   );
