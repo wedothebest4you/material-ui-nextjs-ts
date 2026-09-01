@@ -15,13 +15,14 @@ export default async function PlatformRouteRenderer({ slug = [] }: Props) {
       ? 'dashboard'
       : slug[0];
 
-  const route = resolveRouteByPath(module, path);
+  // const route = resolveRouteByPath(module, path);
 
-  if (!route?.component) {
-    return notFound();
-  }
+  // if (!route?.component) {
+  //   return notFound();
+  // }
 
-  const Component = (await route.component()).default;
+  // const Component = (await route.component()).default;
 
-  return <Component />;
+  // return <Component />;
+  return 'Commented out';
 }

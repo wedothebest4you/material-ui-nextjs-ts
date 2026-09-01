@@ -4,7 +4,7 @@ export const platformAdmnModule: ModuleDefinition = {
   platformadm: {
     toplevelnav: {
       description: 'Platform Admin',
-      children: ['dshbaords', 'masters'],
+      children: ['dashboards', 'masters'],
     },
     dashboards: {
       description: 'Dashboards',
