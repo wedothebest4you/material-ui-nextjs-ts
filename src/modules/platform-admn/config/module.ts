@@ -8,18 +8,18 @@ export const platformAdmnModule: ModuleDefinition = {
     },
     dashboards: {
       description: 'Dashboards',
-      children: ['erpcentralview'],
+      children: ['1'],
     },
     masters: {
       description: 'Masters',
-      children: ['tenantcreation'],
+      children: ['2'],
     },
-    erpcentralview: {
+    1: {
       description: 'ERP central-view dashboard',
       fullPath: '/',
       component: () => import('../ui/dashboard'),
     },
-    tenantcreation: {
+    2: {
       description: 'Tenant Creation',
       fullPath: '/admn/platform-admm/tenant',
       component: () => import('../features/tenant/command/page'),

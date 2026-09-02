@@ -5,7 +5,7 @@ import { ModuleDefinition } from '@/src/shared';
 const RoutesRegistry: ModuleDefinition = {
   erp: {
     toplevelnav: {
-      description: 'erp All',
+      description: 'erp all',
       children: ['finance', 'platformadm'],
     },
   },

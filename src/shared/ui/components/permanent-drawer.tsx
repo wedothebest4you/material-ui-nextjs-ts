@@ -8,13 +8,6 @@ export default function PermanentDrawer({
 }: {
   drawerContent: ReactNode;
 }) {
-  const list = (
-    <List>
-      {/* <ParentChildUnit navigation={navigation}></ParentChildUnit> */}
-      List1
-    </List>
-  );
-
   return (
     <>
       <Drawer
@@ -25,7 +18,7 @@ export default function PermanentDrawer({
         }}
       >
         <Toolbar variant="dense" />
-        {list}
+        {drawerContent}
       </Drawer>
     </>
   );

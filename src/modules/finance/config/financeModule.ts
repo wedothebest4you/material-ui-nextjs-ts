@@ -24,24 +24,40 @@ export const financeModule: ModuleDefinition = {
     },
     dashboards: {
       description: 'Dashboards',
-      children: ['overview'],
+      children: ['4'],
     },
     masters: {
       description: 'Masters',
-      children: ['acctemplate', 'createledger'],
+      children: ['acctemplate', '5'],
     },
-    overview: {
+    acctemplate: {
+      description: 'Account Template',
+      children: ['1', '2', '3'],
+    },
+    4: {
       description: 'Overview - dashboard',
       fullPath: '/finance',
       component: () => import('../ui/dashboard'),
     },
-    acctemplate: {
-      description: 'Account Template',
+    1: {
+      description: 'Account Template - Create',
       fullPath: '/finance/coa',
       component: () =>
         import('../chart-of-accounts/account-template/ui/account-template-grid'),
     },
-    createledger: {
+    2: {
+      description: 'Account Template - Edit',
+      fullPath: '/finance/coa',
+      component: () =>
+        import('../chart-of-accounts/account-template/ui/account-template-grid'),
+    },
+    3: {
+      description: 'Account Template - Delete',
+      fullPath: '/finance/coa',
+      component: () =>
+        import('../chart-of-accounts/account-template/ui/account-template-grid'),
+    },
+    5: {
       description: 'Create Ledger',
       fullPath: '/finance/ledger/new',
       component: () => import('../ui/LedgerCreateForm'),

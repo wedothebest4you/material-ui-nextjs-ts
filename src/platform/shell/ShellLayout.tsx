@@ -202,7 +202,7 @@ export default function ShellLayout({
         >
         </Toolbar> */}
       </AppBar>
-      <NavDrawerContent />
+
       <PermanentDrawer drawerContent={<NavDrawerContent />} />
       <Box>{children}</Box>
     </Box>
