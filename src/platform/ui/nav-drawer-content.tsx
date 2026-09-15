@@ -6,15 +6,14 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+import ListItemComposer from './list-item-composer';
 
 // find out the first level parent nodes
 
 // print each parent node
 export default function NavDrawerContent() {
-  const [contentOpenStates, setContentOpenStates] = useState<
-    Record<string, boolean>
-  >({});
+  console.log('NavDrawerContent');
   // Which shape data would be in the variable erpModules ?
   // the variable erpModules will be a single object as shown in the below
   // sample. furthermore, it is the root object of route registry.
@@ -56,11 +55,8 @@ export default function NavDrawerContent() {
 
   const listContent = moduleTopLvlRoutes.map(
     ({ moduleId, description, children }) => (
-      <>
-        <ListItemButton>
-          <ListItemText>{description}</ListItemText>
-        </ListItemButton>
-        <Collapse in={true}>
+      <ListItemComposer key={moduleId} description={description}>
+        <List sx={{ pl: 1 }}>
           {children.map((routeId) => (
             <RouteAndSubroutes
               key={moduleId + routeId}
@@ -68,8 +64,8 @@ export default function NavDrawerContent() {
               routeId={routeId}
             />
           ))}
-        </Collapse>
-      </>
+        </List>
+      </ListItemComposer>
     ),
   );
   return (
@@ -252,15 +248,18 @@ function RouteAndSubroutes({
  nodes are composed under a collapse here.
  */
   return (
-    <Collapse in={true}>
-      <List sx={{ pl: 1 }}>
-        <ListItemButton>
-          <ListItemText>{value.description}</ListItemText>,
-        </ListItemButton>
-        <Collapse in={true}>
-          <List sx={{ pl: 1 }}>{listContent}</List>
-        </Collapse>
-      </List>
-    </Collapse>
+    // <Collapse in={true}>
+    //   <List sx={{ pl: 1 }}>
+    //     <ListItemButton>
+    //       <ListItemText>{value.description}</ListItemText>,
+    //     </ListItemButton>
+    //     <Collapse in={true}>
+    //       <List sx={{ pl: 1 }}>{listContent}</List>
+    //     </Collapse>
+    //   </List>
+    // </Collapse>
+    <ListItemComposer description={value.description}>
+      <List sx={{ pl: 1 }}>{listContent}</List>
+    </ListItemComposer>
   );
 }

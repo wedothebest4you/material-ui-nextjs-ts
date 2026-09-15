@@ -27,6 +27,7 @@ const fontInter = Inter({
   display: 'swap',
 });
 
+console.log('component 1 : layout at the app root');
 // console.log(fontInter);
 import fluidTheme from './theme';
 

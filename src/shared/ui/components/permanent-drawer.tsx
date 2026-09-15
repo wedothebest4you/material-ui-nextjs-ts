@@ -8,6 +8,7 @@ export default function PermanentDrawer({
 }: {
   drawerContent: ReactNode;
 }) {
+  console.log('Permanent drawer');
   return (
     <>
       <Drawer
