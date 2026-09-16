@@ -17,34 +17,23 @@
 //   navigationLevel?: number;
 // };
 
-export type RouteNode =
-  | {
-      description: string;
-      children: string[];
-      fullpath?: undefined;
-      component?: undefined;
-      // parentId: string | null;
-      // lineItemId: number;
-      // segment: string;
+type RouteGroup = {
+  kind: 'group';
+  description: string;
+  children: string[];
+};
 
-      // showInNavigation: boolean;
-      // navigationLevel?: number;
-    }
-  | {
-      description: string;
-      children?: undefined;
-      fullPath: string;
-      component: () => Promise<{ default: any }>;
-      // parentId: string | null;
-      // lineItemId: number;
-      // segment: string;
+type RouteItem = {
+  kind: 'route';
+  description: string;
+  routePath: string;
+  component: () => Promise<{ default: any }>;
+};
 
-      // showInNavigation: boolean;
-      // navigationLevel?: number;
-    };
+export type RouteNode = RouteGroup | RouteItem;
 
 export type RouteDictionarybyRouteId = {
-  toplevelnav: { description: string; children: string[] };
+  toplevelnav: RouteGroup;
   [routeId: string]: RouteNode;
 };
 

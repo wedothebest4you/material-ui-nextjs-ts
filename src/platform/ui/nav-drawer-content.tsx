@@ -8,13 +8,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
 import { Fragment, useState } from 'react';
 import ListItemComposer from './list-item-composer';
+import Link from 'next/link';
 
 // find out the first level parent nodes
 
 // print each parent node
 export default function NavDrawerContent() {
   console.log('NavDrawerContent');
-  // Which shape data would be in the variable erpModules ?
+  // Which shape of data would be in the variable erpModules ?
   // the variable erpModules will be a single object as shown in the below
   // sample. furthermore, it is the root object of route registry.
   // it stores the list of all modules in the erp system.
@@ -32,7 +33,8 @@ export default function NavDrawerContent() {
   // objects of top level navigators in each module.
   // Furthermore, each module will have its own top level navigators.
   // Below is an instance of moduleTopLvlRoutes,
-  // it shows the two top level navigators for finance and platfrom admm modules.
+  // it shows the two top level navigators, one for finance and the other for
+  // platfrom admm module.
   // Sample :
   // [
   //   {
@@ -55,7 +57,7 @@ export default function NavDrawerContent() {
 
   const listContent = moduleTopLvlRoutes.map(
     ({ moduleId, description, children }) => (
-      <ListItemComposer key={moduleId} description={description}>
+      <ListItemComposer description={description} key={moduleId}>
         <List sx={{ pl: 1 }}>
           {children.map((routeId) => (
             <RouteAndSubroutes
@@ -223,24 +225,31 @@ function RouteAndSubroutes({
   // </Collapse>;
 
   const value = RoutesRegistry[moduleId][routeId];
+
   // console.log(RouteReg.getModuleRegistry()[key]);
   // console.log(value);
+  if ((value.kind = 'group')) {
+    const listContent = value.children.map((child) =>
+      Array.isArray(RoutesRegistry[moduleId][child].children) ? (
+        <RouteAndSubroutes
+          key={moduleId + child}
+          moduleId={moduleId}
+          routeId={child}
+        />
+      ) : (
+        <ListItemButton
+          key={moduleId + child}
+          LinkComponent={Link}
+          href={RoutesRegistry[moduleId][child].routePath}
+        >
+          <ListItemText>
+            {RoutesRegistry[moduleId][child].description}
+          </ListItemText>
+        </ListItemButton>
+      ),
+    );
+  }
 
-  const listContent = value.children?.map((child) =>
-    Array.isArray(RoutesRegistry[moduleId][child].children) ? (
-      <RouteAndSubroutes
-        key={moduleId + child}
-        moduleId={moduleId}
-        routeId={child}
-      />
-    ) : (
-      <ListItemButton>
-        <ListItemText>
-          {RoutesRegistry[moduleId][child].description}
-        </ListItemText>
-      </ListItemButton>
-    ),
-  );
   /*
  each node expanded here are already under the respective modules
  therefore there is an outer collapse. And each node resulted by expansion

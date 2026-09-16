@@ -5,14 +5,18 @@ import Link from 'next/link';
 
 export default function ListItemLeaf({
   description,
-  fullpath,
+  routePath,
 }: {
   description: string;
-  fullpath: string;
+  routePath: string;
 }) {
+  console.log(routePath);
   return (
-    <ListItemButton LinkComponent={Link} href={'/'}>
-      <ListItemText>{description}</ListItemText>
+    <ListItemButton LinkComponent={Link} href={routePath}>
+      <ListItemText>
+        {description}
+        {routePath}
+      </ListItemText>
     </ListItemButton>
   );
 }

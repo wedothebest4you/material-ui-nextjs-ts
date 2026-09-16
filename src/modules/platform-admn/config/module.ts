@@ -3,25 +3,30 @@ import { ModuleDefinition } from '@/shared/types/index';
 export const platformAdmnModule: ModuleDefinition = {
   platformadm: {
     toplevelnav: {
+      kind: 'group',
       description: 'Platform Admin',
       children: ['dashboards', 'masters'],
     },
     dashboards: {
+      kind: 'group',
       description: 'Dashboards',
       children: ['1'],
     },
     masters: {
+      kind: 'group',
       description: 'Masters',
       children: ['2'],
     },
     1: {
+      kind: 'route',
       description: 'ERP central-view dashboard',
-      fullPath: '/',
+      routePath: '/',
       component: () => import('../ui/dashboard'),
     },
     2: {
+      kind: 'route',
       description: 'Tenant Creation',
-      fullPath: '/admn/platform-admm/tenant',
+      routePath: '/admn/platform-admm/tenant',
       component: () => import('../features/tenant/command/page'),
     },
   },
