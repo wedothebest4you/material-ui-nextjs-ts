@@ -6,7 +6,7 @@ import { Fragment, ReactNode, useState } from 'react';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-export default function ListItemBranch({
+export default function ListContentComposer({
   description,
   children,
 }: {
@@ -14,6 +14,7 @@ export default function ListItemBranch({
   children: ReactNode;
 }) {
   const [toggle, setToggle] = useState(false);
+  // console.log('ListContentComposer', children);
   return (
     <Fragment>
       <ListItemButton onClick={() => setToggle(!toggle)}>

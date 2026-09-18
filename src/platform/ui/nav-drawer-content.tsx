@@ -6,9 +6,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
-import { Fragment, useState } from 'react';
-import ListItemComposer from './list-item-composer';
+import React, { Fragment, ReactElement, useState } from 'react';
+import ListContentComposer from './list-content-composer';
 import Link from 'next/link';
+import { error } from 'node:console';
 
 // find out the first level parent nodes
 
@@ -57,17 +58,17 @@ export default function NavDrawerContent() {
 
   const listContent = moduleTopLvlRoutes.map(
     ({ moduleId, description, children }) => (
-      <ListItemComposer description={description} key={moduleId}>
+      <ListContentComposer description={description} key={moduleId}>
         <List sx={{ pl: 1 }}>
           {children.map((routeId) => (
-            <RouteAndSubroutes
+            <GroupRouteListContent
               key={moduleId + routeId}
               moduleId={moduleId}
               routeId={routeId}
             />
           ))}
         </List>
-      </ListItemComposer>
+      </ListContentComposer>
     ),
   );
   return (
@@ -77,13 +78,15 @@ export default function NavDrawerContent() {
   );
 }
 
-function RouteAndSubroutes({
+function GroupRouteListContent({
   moduleId,
   routeId,
 }: {
   moduleId: string;
   routeId: string;
 }) {
+  let listContent: ReactElement[];
+
   // Logic : Print the given node with its childen.
   // Note : if any of the child has own children, then call this
   // code recursively treating that child as parent
@@ -225,30 +228,37 @@ function RouteAndSubroutes({
   // </Collapse>;
 
   const value = RoutesRegistry[moduleId][routeId];
-
   // console.log(RouteReg.getModuleRegistry()[key]);
   // console.log(value);
-  if ((value.kind = 'group')) {
-    const listContent = value.children.map((child) =>
-      Array.isArray(RoutesRegistry[moduleId][child].children) ? (
-        <RouteAndSubroutes
+
+  if (value.kind !== 'group') {
+    throw error(
+      `Invalid routeId : While creating navigation drawer content, the routeId ${routeId} found does not belowng to group kind.`,
+    );
+  }
+  listContent = value.children.map((child) => {
+    const value = RoutesRegistry[moduleId][child];
+    if (value.kind == 'group') {
+      return (
+        <GroupRouteListContent
           key={moduleId + child}
           moduleId={moduleId}
           routeId={child}
         />
-      ) : (
+      );
+    } else {
+      // route item
+      return (
         <ListItemButton
           key={moduleId + child}
           LinkComponent={Link}
-          href={RoutesRegistry[moduleId][child].routePath}
+          href={value.routePath}
         >
-          <ListItemText>
-            {RoutesRegistry[moduleId][child].description}
-          </ListItemText>
+          <ListItemText>{value.description}</ListItemText>
         </ListItemButton>
-      ),
-    );
-  }
+      );
+    }
+  });
 
   /*
  each node expanded here are already under the respective modules
@@ -267,8 +277,8 @@ function RouteAndSubroutes({
     //     </Collapse>
     //   </List>
     // </Collapse>
-    <ListItemComposer description={value.description}>
+    <ListContentComposer description={value.description}>
       <List sx={{ pl: 1 }}>{listContent}</List>
-    </ListItemComposer>
+    </ListContentComposer>
   );
 }

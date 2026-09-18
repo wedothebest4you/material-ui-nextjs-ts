@@ -7,10 +7,11 @@ const RoutesRegistry: ModuleDefinition = {
     toplevelnav: {
       kind: 'group',
       description: 'erp all',
-      children: ['finance', 'platformadm'],
+      // children: ['finance', 'platformadm'],
+      children: ['platformadm'],
     },
   },
-  ...financeModuleDefinition,
+  // ...financeModuleDefinition,
   ...platformAdmnModule,
 };
 
