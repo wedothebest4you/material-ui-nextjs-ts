@@ -8,8 +8,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
 import React, { Fragment, ReactElement, useState } from 'react';
 import ListContentComposer from './list-content-composer';
-import Link from 'next/link';
 import { error } from 'node:console';
+import { ErpLink } from '@/shared/client';
 
 // find out the first level parent nodes
 
@@ -86,7 +86,6 @@ function GroupRouteListContent({
   routeId: string;
 }) {
   let listContent: ReactElement[];
-
   // Logic : Print the given node with its childen.
   // Note : if any of the child has own children, then call this
   // code recursively treating that child as parent
@@ -251,7 +250,7 @@ function GroupRouteListContent({
       return (
         <ListItemButton
           key={moduleId + child}
-          LinkComponent={Link}
+          LinkComponent={ErpLink}
           href={value.routePath}
         >
           <ListItemText>{value.description}</ListItemText>
