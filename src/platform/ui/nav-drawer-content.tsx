@@ -6,7 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItemButton from '@mui/material/ListItemButton';
 import Collapse from '@mui/material/Collapse';
-import React, { Fragment, ReactElement, useState } from 'react';
+import React, { Fragment, ReactElement } from 'react';
 import ListContentComposer from './list-content-composer';
 import { error } from 'node:console';
 import { ErpLink } from '@/shared/client';
@@ -16,6 +16,16 @@ import { ErpLink } from '@/shared/client';
 // print each parent node
 export default function NavDrawerContent() {
   console.log('NavDrawerContent');
+
+  const privileged = (
+    <ListContentComposer description="Priviledged accesses">
+      <List sx={{ pl: 1 }}>
+        <ListItem>Item 1 todo</ListItem>
+        <ListItem>Item 2 todo</ListItem>
+      </List>
+    </ListContentComposer>
+  );
+
   // Which shape of data would be in the variable erpModules ?
   // the variable erpModules will be a single object as shown in the below
   // sample. furthermore, it is the root object of route registry.
@@ -56,7 +66,7 @@ export default function NavDrawerContent() {
     ...RoutesRegistry[moduleId].toplevelnav,
   }));
 
-  const listContent = moduleTopLvlRoutes.map(
+  const erpAll = moduleTopLvlRoutes.map(
     ({ moduleId, description, children }) => (
       <ListContentComposer description={description} key={moduleId}>
         <List sx={{ pl: 1 }}>
@@ -71,9 +81,13 @@ export default function NavDrawerContent() {
       </ListContentComposer>
     ),
   );
+  erpAll.unshift(
+    <ListSubheader key={'erp'}>{erpModules.description}</ListSubheader>,
+  );
   return (
-    <List subheader={erpModules.description} dense>
-      {listContent}
+    <List>
+      {privileged}
+      {erpAll}
     </List>
   );
 }

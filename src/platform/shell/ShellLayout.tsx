@@ -37,6 +37,7 @@ import TextField from '@mui/material/TextField';
 import {
   Avatar,
   AvatarGroup,
+  Button,
   Collapse,
   ListItem,
   ListItemIcon,
@@ -60,6 +61,7 @@ import { ResponsiveSearchBar } from '@/shared/client/index';
 import { ColorSchemeSwitcher } from '@/shared/client/index';
 import { PermanentDrawer } from '@/src/shared/client/index';
 import NavDrawerContent from '../ui/nav-drawer-content';
+import { relative } from 'node:path';
 
 const drawerWidth = 240;
 
@@ -125,7 +127,9 @@ export default function ShellLayout({
         >
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TemporaryDrawerButton drawerContent={<></>} />
-            <SvgTextIcon size="small" initials="erp" />
+            <IconButton href="/">
+              <SvgTextIcon size="small" initials="erp" />
+            </IconButton>
           </Box>
           <Box
             sx={{
@@ -203,7 +207,10 @@ export default function ShellLayout({
       </AppBar>
 
       <PermanentDrawer drawerContent={<NavDrawerContent />} />
-      <Box>{children}</Box>
+      <Box>
+        <Toolbar />
+        {children}
+      </Box>
     </Box>
   );
 }

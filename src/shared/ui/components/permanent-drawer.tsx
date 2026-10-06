@@ -1,7 +1,7 @@
 import { Toolbar } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import { useState, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 export default function PermanentDrawer({
   drawerContent,
@@ -14,6 +14,7 @@ export default function PermanentDrawer({
       <Drawer
         variant="permanent"
         sx={{
+          width: { md: '30%', lg: '35%' },
           display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
         }}

@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -12,28 +16,48 @@
     "moduleResolution": "bundler",
     // "resolveJsonModule": true,
     // "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "strictPropertyInitialization": true,
     "sourceMap": true,
     "target": "esnext",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@/platform/*": ["./src/platform/*"],
-      "@/finance/*": ["./src/modules/finance/*"],
-      "@/admn/*": ["./src/modules/platform-admn/*"],
-      "@/shared/*": ["./src/shared/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@/platform/*": [
+        "./src/platform/*"
+      ],
+      "@/finance/*": [
+        "./src/modules/finance/*"
+      ],
+      "@/admn/*": [
+        "./src/modules/platform-admn/*"
+      ],
+      "@/shared/*": [
+        "./src/shared/*"
+      ]
     },
     "resolveJsonModule": true,
     "isolatedModules": true
   },
   // "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["./node_modules"],
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": [
+    "./node_modules"
+  ],
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/dev/types/**/*.ts"
+  ]
 }

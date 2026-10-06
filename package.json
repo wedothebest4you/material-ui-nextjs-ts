@@ -15,25 +15,25 @@
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
-    "@mui/x-data-grid": "^8.27.4",
-    "@types/mongoose": "^5.11.96",
-    "mongo-db": "^1.0.2",
-    "mongodb": "^7.3.0",
-    "mongoose": "^9.6.3",
-    "mongoose-lean-getters": "^2.3.1",
-    "next": "^15.5.19",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "typescript": "^6.0.3",
-    "zod": "^4.3.6"
+    "@mui/x-data-grid": "latest",
+    "@types/mongoose": "latest",
+    "mongo-db": "latest",
+    "mongodb": "latest",
+    "mongoose": "latest",
+    "mongoose-lean-getters": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "typescript": "latest",
+    "zod": "latest"
   },
   "devDependencies": {
-    "@types/mongodb": "^4.0.6",
+    "@types/mongodb": "latest",
     "@types/node": "latest",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "dotenv": "^17.4.2",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "dotenv": "latest",
     "eslint": "latest",
-    "eslint-config-next": "^15.0.0"
+    "eslint-config-next": "latest"
   }
 }
