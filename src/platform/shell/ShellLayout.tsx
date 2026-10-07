@@ -207,7 +207,7 @@ export default function ShellLayout({
       </AppBar>
 
       <PermanentDrawer drawerContent={<NavDrawerContent />} />
-      <Box>
+      <Box sx={{ flexGrow: 1 }}>
         <Toolbar />
         {children}
       </Box>

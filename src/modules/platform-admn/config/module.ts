@@ -27,7 +27,7 @@ export const platformAdmnModule: ModuleDefinition = {
       kind: 'route',
       description: 'Tenant Creation',
       routePath: '/platform-admn/tenant',
-      component: () => import('../features/tenant/command/page'),
+      component: () => import('../features/masters/tenant/command/page'),
     },
   },
 };
