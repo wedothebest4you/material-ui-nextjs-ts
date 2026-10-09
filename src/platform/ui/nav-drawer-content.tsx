@@ -9,7 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import React, { Fragment, ReactElement } from 'react';
 import ListContentComposer from './list-content-composer';
 import { error } from 'node:console';
-import { ErpLink } from '@/shared/client';
+import { LinkClient } from '@/shared/client/index';
 
 // find out the first level parent nodes
 
@@ -264,7 +264,7 @@ function GroupRouteListContent({
       return (
         <ListItemButton
           key={moduleId + child}
-          LinkComponent={ErpLink}
+          LinkComponent={LinkClient}
           href={value.routePath}
         >
           <ListItemText>{value.description}</ListItemText>
