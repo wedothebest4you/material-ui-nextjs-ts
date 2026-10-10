@@ -1,1 +1,1 @@
-export { Dashboard as default } from '@/admn/index';
+export { Dashboard as default } from '@/src/modules/admn/index';

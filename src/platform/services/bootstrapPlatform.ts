@@ -15,7 +15,7 @@
 
 import ModuleRegistry from './ModuleRegistry';
 import { financeModuleDefinition } from '@/finance/index';
-import { platformAdmnModule } from '@/admn/index';
+import { platformAdmnModule } from '@/src/modules/admn/index';
 
 import { ModuleDefinition } from '@/shared/types';
 import { IUser } from '@/shared/types';
