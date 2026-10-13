@@ -5,18 +5,7 @@ import Link from 'next/link';
 import { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 
-type FabWithEntityRouteProps =
-  | {
-      action: 'add';
-      entityId?: undefined;
-      children: ReactNode;
-    }
-  | {
-      action: 'edit' | 'delete' | 'view';
-      entityId: string;
-      children: ReactNode;
-    };
-
+import FabWithEntityRouteProps from './entity-route-props';
 export default function FabWithEntityRoute({
   action,
   entityId,

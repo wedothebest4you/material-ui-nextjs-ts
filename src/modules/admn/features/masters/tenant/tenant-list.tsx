@@ -1,5 +1,10 @@
-import MastersLayout from '../masters-layout';
+import { Typography } from '@mui/material';
+import MastersWorkspace from '../masters-workspace';
 
 export default function Page() {
-  return <MastersLayout>'Tenant workspace'</MastersLayout>;
+  return (
+    <MastersWorkspace>
+      <Typography variant="h3">Tenant workspace</Typography>
+    </MastersWorkspace>
+  );
 }

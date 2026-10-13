@@ -20,7 +20,9 @@ export default function NavDrawerContent() {
   const privileged = (
     <ListContentComposer description="Priviledged accesses">
       <List sx={{ pl: 1 }}>
-        <ListItem>Item 1 todo</ListItem>
+        <ListItemButton LinkComponent={LinkClient} href="/admn/tenant">
+          <ListItem>Tenant Test</ListItem>
+        </ListItemButton>
         <ListItem>Item 2 todo</ListItem>
       </List>
     </ListContentComposer>
@@ -87,7 +89,7 @@ export default function NavDrawerContent() {
   return (
     <List>
       {privileged}
-      {erpAll}
+      {/* {erpAll} */}
     </List>
   );
 }

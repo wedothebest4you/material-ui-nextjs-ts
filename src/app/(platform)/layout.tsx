@@ -17,7 +17,7 @@
 
 import { ReactNode } from 'react';
 import { PlatformShellAdapter } from '@/platform/index';
-
 export default function RootLayout({ children }: { children: ReactNode }) {
+  console.log('Platform layout');
   return <PlatformShellAdapter>{children}</PlatformShellAdapter>;
 }

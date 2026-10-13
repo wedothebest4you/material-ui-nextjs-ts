@@ -5,9 +5,10 @@ import Visibility from '@mui/icons-material/Visibility';
 
 import Box from '@mui/material/Box';
 import { FabWithEntityRoute } from '@/shared/client';
+import { EntityContextLabel } from '@/shared/client/index';
 import { Suspense } from 'react';
 
-export default function MastersLayout({
+export default function MastersWorkspace({
   children,
 }: {
   children: React.ReactNode;
@@ -24,8 +25,9 @@ export default function MastersLayout({
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'flex-start',
           gap: 5,
+          mt: 1,
+          ml: 1,
         }}
       >
         <Suspense fallback={<div>Loading command buttons...</div>}>
@@ -43,7 +45,8 @@ export default function MastersLayout({
           </FabWithEntityRoute>
         </Suspense>
       </Box>
-      <Box sx={{ flex: 1, height: '100vh' }}>Test</Box>
+      <Suspense fallback={<div>Loading Context label...</div>}></Suspense>
+      {children}
     </Box>
   );
 }

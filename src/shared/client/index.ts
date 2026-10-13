@@ -8,3 +8,6 @@ export { default as PermanentDrawer } from '../ui/components/permanent-drawer';
 export { default as ColorSchemeSwitcher } from '../ui/components/color-switcher';
 export { LinkClient } from '../ui/client-component-wrapper';
 export { default as FabWithEntityRoute } from '../ui/components/fab-with-entity-route';
+export { default as EntityContextLabel } from '../ui/components/entity-context-label';
+export { default as EntityActionLabel } from '../ui/components/entity-action-label';
+export { default as FabBackButton } from '../ui/components/fab-backbutton';

@@ -27,11 +27,11 @@ const fontInter = Inter({
   display: 'swap',
 });
 
-console.log('component 1 : layout at the app root');
 // console.log(fontInter);
 import fluidTheme from './theme';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  console.log('component 1 : layout at the app root');
   return (
     <html lang="en" className={fontInter.variable} suppressHydrationWarning>
       <body>

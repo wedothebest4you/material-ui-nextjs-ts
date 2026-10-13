@@ -61,7 +61,6 @@ import { ResponsiveSearchBar } from '@/shared/client/index';
 import { ColorSchemeSwitcher } from '@/shared/client/index';
 import { PermanentDrawer } from '@/src/shared/client/index';
 import NavDrawerContent from '../ui/nav-drawer-content';
-import { relative } from 'node:path';
 
 const drawerWidth = 240;
 
@@ -93,7 +92,7 @@ export default function ShellLayout({
   // console.log('Item : Navigation');
   // console.log(navigation);
 
-  // console.log('Component : ShellLayout');
+  console.log('Component : ShellLayout - rendred again');
   // console.log('Item : Module List');
   // console.log(moduleList);
   // console.log('Item : Navigation');
@@ -207,7 +206,7 @@ export default function ShellLayout({
       </AppBar>
 
       <PermanentDrawer drawerContent={<NavDrawerContent />} />
-      <Box sx={{ flexGrow: 1, height: '100vh' }}>
+      <Box>
         <Toolbar />
         {children}
       </Box>

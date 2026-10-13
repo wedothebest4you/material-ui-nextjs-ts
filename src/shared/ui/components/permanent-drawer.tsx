@@ -1,6 +1,5 @@
 import { Toolbar } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
-import List from '@mui/material/List';
 import { ReactNode } from 'react';
 
 export default function PermanentDrawer({
