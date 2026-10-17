@@ -11,3 +11,4 @@ export { default as FabWithEntityRoute } from '../ui/components/fab-with-entity-
 export { default as EntityContextLabel } from '../ui/components/entity-context-label';
 export { default as EntityActionLabel } from '../ui/components/entity-action-label';
 export { default as FabBackButton } from '../ui/components/fab-backbutton';
+export { default as ServerActionSubmit } from '../ui/components/server-action-submit';

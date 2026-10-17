@@ -33,7 +33,7 @@ type TenantQueryWithHelpersFindOne = MakeQueryWithHelpersFindOne<
 
 export class TenantClass extends CommandBase {
   async saveTenant(this: TenantDocument) {
-    await this.save();
+    return await this.save();
   }
 
   async nameValidator(
@@ -105,7 +105,7 @@ export class TenantClass extends CommandBase {
   }
 
   get userLimit(): number {
-    const self = this as TenantDocument;
+    // const self = this as TenantDocument;
     return this.userLimit;
   }
 
@@ -133,7 +133,7 @@ export class TenantClass extends CommandBase {
     }
   }
 
-  static async createTenant(this: TenantModel, tenant: TenantDTO) {
+  static async createTenant(tenant: TenantDTO) {
     const doc = new Tenant(tenant);
     doc.loadDTO(tenant);
     return await doc.saveTenant();

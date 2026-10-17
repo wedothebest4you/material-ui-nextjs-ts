@@ -1,7 +1,7 @@
 import { AnyObject, Schema, SchemaDefinition } from 'mongoose';
 
 export default function createCommandSchema<
-  Definition extends SchemaDefinition = SchemaDefinition,
+  Definition extends SchemaDefinition,
 >(definition: Definition, options = {}) {
   return new Schema(
     { ...definition },

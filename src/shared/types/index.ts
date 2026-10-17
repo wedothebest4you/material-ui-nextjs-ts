@@ -100,7 +100,7 @@ export interface AppJSONSchema extends AppJSONSchemaNode {
 
 // Shape of the state managed by the hook
 export type ActionState = {
-  success: boolean;
+  success: boolean | undefined;
   message: string | undefined;
   errors?: Record<string, string>;
 };
