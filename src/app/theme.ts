@@ -25,11 +25,11 @@ const fluidTheme = createTheme({
           main: '#bf0572f5',
         },
         secondary: {
-          main: '#f899c1',
+          main: '#daa9bd',
         },
         background: {
-          paper: '#ed9dd0',
-          default: '#d933c463',
+          paper: '#c94897',
+          default: '#ecbde563',
         },
         action: {
           active: 'currentColor',

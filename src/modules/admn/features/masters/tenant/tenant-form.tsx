@@ -1,5 +1,5 @@
 'use client';
-import { Stack, Typography, TextField } from '@mui/material';
+import { Stack, Typography, TextField, standardInput } from '@mui/material';
 import MastersActionspace from '../masters-actionspace';
 import ServerActionSubmit from '../master-form-header';
 import tenatReducerAction from './command/action';
@@ -25,11 +25,11 @@ function Form() {
         <ServerActionSubmit />
       </Stack>
       <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-        <TextField required label="Name" />
-        <TextField required label="Code" />
-        <TextField required label="Plan" />
-        <TextField required label="Users" />
-        <TextField required label="Status" />
+        <TextField variant="standard" required label="Name" />
+        <TextField variant="standard" required label="Code" />
+        <TextField variant="standard" required label="Plan" />
+        <TextField variant="standard" disabled required label="Users" />
+        <TextField variant="standard" required label="Status" />
       </Stack>
     </form>
   );

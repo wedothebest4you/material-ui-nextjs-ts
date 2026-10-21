@@ -16,6 +16,7 @@ export default function PermanentDrawer({
           width: { md: '30%', lg: '35%' },
           display: { xs: 'none', md: 'block' },
           '& .MuiDrawer-paper': { width: { md: '30%', lg: '35%' } },
+          '& .MuiList-root': { color: 'common.white' },
         }}
       >
         <Toolbar variant="dense" />

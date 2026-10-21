@@ -32,7 +32,7 @@ export default function ResponsiveSearchBar() {
             fontSize: '14px',
           },
           '& ::placeholder': {
-            color: 'white !important',
+            color: 'common.white',
             opacity: 1,
           },
           // },
@@ -42,9 +42,9 @@ export default function ResponsiveSearchBar() {
           //       color: 'var(--mui-palette-text-primary)',
           //     }),
           '& .Mui-focused': {
-            bgcolor: 'background.paper',
+            bgcolor: 'common.white',
             '& ::placeholder': {
-              color: 'grey !important',
+              color: 'grey.900',
               // opacity: 0.75,
             },
           },
@@ -122,7 +122,7 @@ export default function ResponsiveSearchBar() {
           //       color: 'var(--mui-palette-text-primary)',
           //     }),
           display: mobileSearchMode ? 'flex' : 'none',
-          bgcolor: 'background.paper',
+          bgcolor: 'background.default',
           // '& ::placeholder': {
           //   opacity: 0.75,
           // },
