@@ -15,7 +15,7 @@ export default function ResponsiveSearchBar() {
   return (
     <>
       <TextField
-        variant="outlined"
+        variant="standard"
         type="search"
         size="small"
         value={searchInput}
@@ -25,16 +25,17 @@ export default function ResponsiveSearchBar() {
         sx={{
           display: { xs: 'none', md: 'inline' },
           //   //typography: 'caption',
-          '& .MuiOutlinedInput-root': {
+          '& .MuiInput-root': {
             //     color: 'var(--mui-palette-common-white)',
-            borderRadius: '20px',
-            border: '1.34px solid var(--mui-palette-common-white)',
-            fontSize: '14px',
+            // borderRadius: '20px',
+            // border: '.34px solid var(--mui-palette-common-white)',
+            // fontSize: '14px',
+            '& ::placeholder': {
+              color: 'var(--mui-palette-common-white)',
+              opacity: 0.75,
+            },
           },
-          '& ::placeholder': {
-            color: 'common.white',
-            opacity: 1,
-          },
+
           // },
           //   '& .Mui-focused': (theme) =>
           //     theme.applyStyles('light', {
@@ -42,6 +43,7 @@ export default function ResponsiveSearchBar() {
           //       color: 'var(--mui-palette-text-primary)',
           //     }),
           '& .Mui-focused': {
+            color: 'var(--mui-palette-text-primary)',
             bgcolor: 'common.white',
             '& ::placeholder': {
               color: 'grey.900',
@@ -59,7 +61,12 @@ export default function ResponsiveSearchBar() {
               //   color: 'white',
               //   opacity: 1,
               // },
+              color: 'common.white',
+              '& ::placeholder': {
+                fontStyle: 'italic',
+              },
             },
+            disableUnderline: true,
             endAdornment: <SearchIcon />,
           },
           // inputLabel: {

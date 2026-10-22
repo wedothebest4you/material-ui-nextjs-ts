@@ -25,8 +25,28 @@ function Form() {
         <ServerActionSubmit />
       </Stack>
       <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-        <TextField variant="standard" required label="Name" />
-        <TextField variant="standard" required label="Code" />
+        <TextField
+          variant="standard"
+          required
+          label="Name"
+          helperText="30 chars."
+          slotProps={{
+            htmlInput: {
+              maxLength: 30,
+            },
+          }}
+        />
+        <TextField
+          variant="standard"
+          required
+          label="Code"
+          helperText="15 chars."
+          slotProps={{
+            htmlInput: {
+              maxLength: 15,
+            },
+          }}
+        />
         <TextField variant="standard" required label="Plan" />
         <TextField variant="standard" disabled required label="Users" />
         <TextField variant="standard" required label="Status" />

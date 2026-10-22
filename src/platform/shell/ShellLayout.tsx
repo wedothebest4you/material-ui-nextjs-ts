@@ -184,7 +184,6 @@ export default function ShellLayout({
                 <SvgTextIcon size="small" initials="UR"></SvgTextIcon>
               </IconButton>
             </Box>
-
             <ColorSchemeSwitcher />
             <Tooltip title="more options">
               <IconButton>
