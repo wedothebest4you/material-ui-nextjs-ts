@@ -1,6 +1,6 @@
 import Tenant from './model';
-import { TenantDTO, tenantDTO } from './dto';
-import { TenantSchemaType } from './schema';
+import { TenantDTO, tenantDTO } from './zod_schema';
+import { TenantSchemaType } from './mg_schema';
 import ServiceBase from '@/src/shared/mongoose/service-base-class';
 
 export default class TenantService extends ServiceBase {

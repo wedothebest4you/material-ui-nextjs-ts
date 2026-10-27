@@ -1,6 +1,6 @@
 import mongoose, { HydratedDocument } from 'mongoose';
-import TENANT from '../constants';
-import tenantSchema, { TenantSchemaType } from './schema';
+import TENANT from '../schema';
+import tenantSchema, { TenantSchemaType } from './mg_schema';
 import { MakeModel, MakeHydratedDocument } from '@/shared/index';
 import { loadClassCustom } from '@/shared/index';
 import { TenantClass } from './class';

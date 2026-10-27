@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      div p {
+        color: red;
+      }
+      div > p {
+        color: cyan;
+      }
+      div ~ p {
+        color: blueviolet;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>P1</p>
+      <span>
+        <p>P1.1</p>
+      </span>
+    </div>
+    <p>P2</p>
+    <p>P3</p>
+  </body>
+</html>

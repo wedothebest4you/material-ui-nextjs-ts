@@ -10,10 +10,10 @@ import {
   CommandBase,
 } from '@/src/shared';
 
-import TENANT from '../constants';
+import TENANT from '../schema';
 import Tenant from './model';
-import { TenantSchemaType } from './schema';
-import { TenantDTO } from './dto';
+import { TenantSchemaType } from './mg_schema';
+import { TenantDTO } from './zod_schema';
 
 type TenantModel = typeof Tenant;
 
