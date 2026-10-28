@@ -22,7 +22,6 @@ export type { ModuleDefinition as ModuleDefinition } from './types/index';
 export type { RouteNode as RouteNode } from './types/index';
 
 // export { default as getDbByMongoDbClient } from './db/mongo-db-client';
-export { secureNumber, secureString } from './zod/uilts';
 export { default as RequestValidationError } from './errors/request-validation-error';
 export { default as DatabaseConnectionError } from './errors/database-connection-error';
 export { default as SchemaOperationError } from './errors/schema-operation-error';
