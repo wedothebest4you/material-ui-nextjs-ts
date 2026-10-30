@@ -1,12 +1,13 @@
 import { Controller, useFormContext } from 'react-hook-form';
-import TextField from '@mui/material/TextField';
-import { ComponentProps } from 'react';
+import TextField, {
+  type StandardTextFieldProps,
+} from '@mui/material/TextField';
 
-interface Props extends ComponentProps<typeof TextField> {
+interface Props extends StandardTextFieldProps {
   name: string;
 }
-export default function ControlledTextField(props: Props) {
-  const { name, label, helperText, ...rest } = props;
+export default function ControlledStdTextField(props: Props) {
+  const { name, label, helperText, onChange: customOnChange, ...rest } = props;
   const { control } = useFormContext();
   return (
     <Controller
@@ -19,7 +20,10 @@ export default function ControlledTextField(props: Props) {
           <TextField
             helperText={error ? error.message : helperText}
             error={!!error}
-            onChange={onChange}
+            onChange={(event) => {
+              onChange(event);
+              customOnChange?.(event);
+            }}
             value={value || ''}
             label={label}
             variant="standard"

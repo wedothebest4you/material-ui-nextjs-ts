@@ -6,10 +6,10 @@ import tenatReducerAction from './command/action';
 import { useActionState } from 'react';
 import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { TenantDTO, tenantDTO } from './command/zod_schema';
-import TENANT from './schema';
-import ControlledTextField from './controlled-text-field';
+import TENANT, { planEum } from './schema';
+import StdTextField from './controlled_std_text_field';
+import StdTextFieldSelect from './controlled_std_text_field_select';
 
 export default function TenantForm() {
   return (
@@ -22,13 +22,13 @@ export default function TenantForm() {
 function Form() {
   const methods = useForm<TenantDTO>({
     defaultValues: {
-      status: 'active',
+      status: TENANT.status.enum.value[0],
     },
     resolver: zodResolver(tenantDTO),
     mode: 'onBlur',
     shouldFocusError: true,
   });
-
+  console.log(methods);
   const [state, dispacthAction, isPending] = useActionState(
     tenatReducerAction,
     { success: undefined, message: undefined },
@@ -42,35 +42,38 @@ function Form() {
           <ServerActionSubmit />
         </Stack>
         <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-          <ControlledTextField
+          <StdTextField
             name="name"
             label="Name"
             helperText={TENANT.name.helpText}
-            required={true}
+            required
           />
-          <ControlledTextField
+          <StdTextField
             name="code"
             label="Code"
             helperText={TENANT.name.helpText}
-            required={true}
+            required
           />
-
-          {/* <TextField
-            variant="standard"
-            label="Code"
-            {...register('code')}
-            error={!!errors.code}
-            helperText={
-              errors.code ? errors.code?.message : TENANT.code.helpText
-            }
-          />
-          <TextField variant="standard" select label="Plan">
-            {TENANT.plan.enum.value.map((v) => (
-              <MenuItem>{v}</MenuItem>
-            ))}
-          </TextField>
-          <TextField variant="standard" disabled required label="Users" />
-          <TextField variant="standard" required label="Status" /> */}
+          <StdTextFieldSelect
+            name="plan"
+            label="Plan"
+            options={planEum}
+            required
+            onChange={(event) => {
+              const index = TENANT.plan.enum.value.findIndex(
+                (i) => i.description === event.target.value,
+              );
+              methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
+            }}
+          ></StdTextFieldSelect>
+          <StdTextField name="userLimit" label="Users" disabled />
+          <StdTextFieldSelect
+            name="status"
+            label="Status"
+            options={TENANT.status.enum.value}
+            required
+            defaultValue="Active"
+          ></StdTextFieldSelect>
         </Stack>
       </form>
     </FormProvider>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { secureString, secureNumber } from '@/src/shared/client';
-import TENANT from '../schema';
+import TENANT, { planEum } from '../schema';
 
 export const tenantDTO = z.object({
   // Trim and convert to uppercase immediately at the edge
@@ -8,7 +8,7 @@ export const tenantDTO = z.object({
 
   code: secureString().max(15, TENANT.code.maxLength),
 
-  plan: z.enum(TENANT.plan.enum.value, TENANT.plan.enum.message),
+  plan: z.enum(planEum, TENANT.plan.enum.message),
 
   status: z.enum(TENANT.status.enum.value, TENANT.status.enum.message),
 

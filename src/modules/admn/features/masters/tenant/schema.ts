@@ -1,12 +1,20 @@
 const planEnum = [
-  'A. basic - 25 users',
-  'B. standard - 100 users',
-  'C. enterprise - Unlimited users',
+  { description: 'A. basic - 25 users', userLimit: 25, planId: 'A' },
+  { description: 'B. standard - 100 users', userLimit: 50, planId: 'B' },
+  {
+    description: 'C. enterprise - Unlimited users',
+    userLimit: 100,
+    planId: 'C',
+  },
 ] as const;
 
-const statusEnum = ['active', 'inactive'] as const;
+export const planDescriptionEum = planEnum.map((i) => i.description) as [
+  'A. basic - 25 users',
+];
 
-export const userLimitEnum = [25, 100, 0] as const;
+export const userLimitEnum = planEnum.map((i) => i.userLimit); //[25, 50, 100] as const;
+export const planIdEnum = planEnum.map((i) => i.planId);
+const statusEnum = ['Active', 'Disabled'] as const;
 
 const arrayJoinChars = ', ';
 
@@ -30,6 +38,13 @@ const TENANT = {
       message: `incorrect. The allowed values  are  [${planEnum.join(arrayJoinChars)}]`,
     },
   },
+  planId: {
+    required: 'Plan Id is required',
+    enum: {
+      value: planIdEnum,
+      message: `incorrect. The allowed values are [${planIdEnum.join(arrayJoinChars)}]`,
+    },
+  },
   status: {
     required: 'Status is required',
     enum: {
@@ -40,7 +55,7 @@ const TENANT = {
   userLimit: {
     required: 'User Limit is required',
     enum: {
-      value: userLimitEnum,
+      value: planEnum.map((i) => i.userLimit),
       message: `incorrect. The allowed values are - [${userLimitEnum.join(arrayJoinChars)}]`,
     },
   },
