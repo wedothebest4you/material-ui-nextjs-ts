@@ -108,3 +108,18 @@ export type ActionState = {
 import { type SortOrder } from 'mongoose';
 
 type SortOrderDocument<T> = Partial<Record<keyof T, SortOrder>>;
+
+export function IsStringReadArray(val: unknown): val is readonly String[] {
+  return Array.isArray(val) && val.every((item) => typeof item === 'string');
+}
+
+export function IsObjectArrayWithId(
+  val: unknown,
+): val is (Record<'id', string> & Record<string, string | number>)[] {
+  return (
+    Array.isArray(val) &&
+    val.every(
+      (item) => typeof item === 'object' && 'id' in item && item !== null,
+    )
+  );
+}

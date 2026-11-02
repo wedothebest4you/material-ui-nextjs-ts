@@ -1,19 +1,19 @@
-const planEnum = [
-  { description: 'A. basic - 25 users', userLimit: 25, planId: 'A' },
-  { description: 'B. standard - 100 users', userLimit: 50, planId: 'B' },
+export const planEnum = [
+  { description: 'Basic', userLimit: 25, id: 'A' },
   {
-    description: 'C. enterprise - Unlimited users',
-    userLimit: 100,
-    planId: 'C',
+    description: 'Standard',
+    userLimit: 50,
+    id: 'B',
+  },
+  {
+    description: 'Enterprise',
+    userLimit: 'unlimited',
+    id: 'C',
   },
 ] as const;
 
-export const planDescriptionEum = planEnum.map((i) => i.description) as [
-  'A. basic - 25 users',
-];
-
 export const userLimitEnum = planEnum.map((i) => i.userLimit); //[25, 50, 100] as const;
-export const planIdEnum = planEnum.map((i) => i.planId);
+export const planIdEnum = planEnum.map((i) => i.id);
 const statusEnum = ['Active', 'Disabled'] as const;
 
 const arrayJoinChars = ', ';
@@ -38,13 +38,13 @@ const TENANT = {
       message: `incorrect. The allowed values  are  [${planEnum.join(arrayJoinChars)}]`,
     },
   },
-  planId: {
-    required: 'Plan Id is required',
-    enum: {
-      value: planIdEnum,
-      message: `incorrect. The allowed values are [${planIdEnum.join(arrayJoinChars)}]`,
-    },
-  },
+  // planId: {
+  //   required: 'Plan Id is required',
+  //   enum: {
+  //     value: planIdEnum,
+  //     message: `incorrect. The allowed values are [${planIdEnum.join(arrayJoinChars)}]`,
+  //   },
+  // },
   status: {
     required: 'Status is required',
     enum: {

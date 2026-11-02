@@ -7,7 +7,7 @@ import { useActionState } from 'react';
 import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TenantDTO, tenantDTO } from './command/zod_schema';
-import TENANT, { planEum } from './schema';
+import TENANT, { planEnum } from './schema';
 import StdTextField from './controlled_std_text_field';
 import StdTextFieldSelect from './controlled_std_text_field_select';
 
@@ -28,7 +28,6 @@ function Form() {
     mode: 'onBlur',
     shouldFocusError: true,
   });
-  console.log(methods);
   const [state, dispacthAction, isPending] = useActionState(
     tenatReducerAction,
     { success: undefined, message: undefined },
@@ -57,11 +56,11 @@ function Form() {
           <StdTextFieldSelect
             name="plan"
             label="Plan"
-            options={planEum}
+            options={planEnum}
             required
             onChange={(event) => {
               const index = TENANT.plan.enum.value.findIndex(
-                (i) => i.description === event.target.value,
+                (i) => i.id === event.target.value,
               );
               methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
             }}

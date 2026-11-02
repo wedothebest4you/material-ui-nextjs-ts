@@ -13,3 +13,4 @@ export { default as EntityActionLabel } from '../ui/components/entity-action-lab
 export { default as FabBackButton } from '../ui/components/fab-backbutton';
 export { default as ServerActionSubmit } from '../ui/components/server-action-submit';
 export { secureNumber, secureString } from '../zod/uilts';
+export { IsStringReadArray, IsObjectArrayWithId } from '../types/index';
