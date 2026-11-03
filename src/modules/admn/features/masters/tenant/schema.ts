@@ -12,6 +12,10 @@ export const planEnum = [
   },
 ] as const;
 
+export const planEnumLabels = [
+  { description: 'Description', userLimit: 'Users Limit', id: 'Code' },
+];
+
 export const userLimitEnum = planEnum.map((i) => i.userLimit); //[25, 50, 100] as const;
 export const planIdEnum = planEnum.map((i) => i.id);
 const statusEnum = ['Active', 'Disabled'] as const;

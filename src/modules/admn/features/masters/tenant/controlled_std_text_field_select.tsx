@@ -5,11 +5,14 @@ import React from 'react';
 import { IsStringReadArray, IsObjectArrayWithId } from '@/src/shared/client';
 import { ListSubheader, Typography } from '@mui/material';
 
+type Records = Readonly<{
+  data: Readonly<(Record<'id', string> & Record<string, string | number>)[]>;
+  labels: Record<string, string>[];
+}>;
+
 interface Props extends StandardTextFieldProps {
   name: string;
-  options:
-    | readonly string[]
-    | readonly (Record<'id', string> & Record<string, string | number>)[];
+  options: readonly string[] | Records;
 }
 
 export default function ControlledStdTextFieldSelect(props: Props) {
@@ -43,10 +46,12 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             <MenuItem
               key={item.id}
               value={item.id}
-              sx={{ display: 'flex', justifyContent: 'space-between' }}
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${3}, minmax(0, 1fr))`,
+              }}
             >
-              {/* {item.id} */}
-              {Object.entries(item).map(([key, value]) => (
+              {Object.values(item).map((value) => (
                 <Typography>{value}</Typography>
               ))}
             </MenuItem>
@@ -71,7 +76,10 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             {...rest}
           >
             <ListSubheader
-              sx={{ display: 'flex', justifyContent: 'space-between' }}
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${3}, minmax(0, 1fr))`,
+              }}
             >
               <Typography>Description</Typography>
               <Typography>User Limit</Typography>
