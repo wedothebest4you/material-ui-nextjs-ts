@@ -109,17 +109,51 @@ import { type SortOrder } from 'mongoose';
 
 type SortOrderDocument<T> = Partial<Record<keyof T, SortOrder>>;
 
-export function IsStringReadArray(val: unknown): val is readonly String[] {
+export function IsStringReadArray(val: unknown): val is ReadonlyArray<String> {
   return Array.isArray(val) && val.every((item) => typeof item === 'string');
 }
 
-export function IsObjectArrayWithId(
-  val: unknown,
-): val is (Record<'id', string> & Record<string, string | number>)[] {
-  return (
-    Array.isArray(val) &&
-    val.every(
-      (item) => typeof item === 'object' && 'id' in item && item !== null,
+export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
+  data: ReadonlyArray<Record<'id', string> & Record<string, string | number>>;
+  labels: ReadonlyArray<Record<string, string>>;
+}> {
+  if (
+    !(
+      typeof val == 'object' &&
+      val !== null &&
+      'data' in val &&
+      'labels' in val
     )
-  );
+  )
+    return false;
+
+  if (!(Array.isArray(val.data) && val.data.every((i) => 'id' in i)))
+    return false;
+
+  if (
+    val.data
+      .map((i) =>
+        Object.values(i).every(
+          (i) => typeof i === 'string' || typeof i === 'number',
+        ),
+      )
+      .filter((i) => i).length == 0
+  )
+    return false;
+
+  if (
+    !(
+      Array.isArray(val.labels) &&
+      val.labels.every((i) => typeof i == 'object' && typeof i !== null)
+    )
+  )
+    return false;
+  if (
+    val.labels
+      .map((i) => Object.values(i).every((i) => typeof i == 'string'))
+      .filter((i) => i).length == 0
+  )
+    return false;
+
+  return true;
 }

@@ -2,12 +2,12 @@ import { Controller, useFormContext } from 'react-hook-form';
 import TextField, { StandardTextFieldProps } from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
-import { IsStringReadArray, IsObjectArrayWithId } from '@/src/shared/client';
+import { IsStringReadArray, IsSelectOptionsRecord } from '@/src/shared/client';
 import { ListSubheader, Typography } from '@mui/material';
 
 type Records = Readonly<{
-  data: Readonly<(Record<'id', string> & Record<string, string | number>)[]>;
-  labels: Record<string, string>[];
+  data: ReadonlyArray<Record<'id', string> & Record<string, string | number>>;
+  labels: ReadonlyArray<Record<string, string>>;
 }>;
 
 interface Props extends StandardTextFieldProps {
@@ -33,33 +33,48 @@ export default function ControlledStdTextFieldSelect(props: Props) {
         const { error } = fieldState;
         const { value, onChange } = field;
 
-        let optionsjsx: React.JSX.Element[];
-
-        if (IsStringReadArray(options)) {
-          optionsjsx = options.map((item) => (
-            <MenuItem key={item} value={item}>
-              {item}
-            </MenuItem>
-          ));
-        } else if (IsObjectArrayWithId(options)) {
-          optionsjsx = options.map((item) => (
-            <MenuItem
-              key={item.id}
-              value={item.id}
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${3}, minmax(0, 1fr))`,
-              }}
-            >
-              {Object.values(item).map((value) => (
-                <Typography>{value}</Typography>
-              ))}
-            </MenuItem>
-          ));
-        } else {
-          throw new TypeError(
-            'The options type should be an array of strings or objects',
-          );
+        function getOptionsJSX() {
+          if (IsStringReadArray(options)) {
+            return options.map((item) => (
+              <MenuItem key={item} value={item}>
+                {item}
+              </MenuItem>
+            ));
+          }
+          if (IsSelectOptionsRecord(options)) {
+            return Array(
+              options.labels.map((item) => (
+                <ListSubheader
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: `50% 30% 10%`,
+                  }}
+                >
+                  {Object.values(item).map((value) => (
+                    <Typography>{value}</Typography>
+                  ))}
+                </ListSubheader>
+              )),
+              options.data.map((item) => (
+                <MenuItem
+                  key={item.id}
+                  value={item.id}
+                  sx={{
+                    display: 'grid',
+                    gridTemplateColumns: `50% 30% 10%`,
+                  }}
+                >
+                  {Object.values(item).map((value) => (
+                    <Typography>{value}</Typography>
+                  ))}
+                </MenuItem>
+              )),
+            );
+          } else {
+            throw new TypeError(
+              'The options type should be an array of strings or objects',
+            );
+          }
         }
         return (
           <TextField
@@ -75,17 +90,7 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             variant="standard"
             {...rest}
           >
-            <ListSubheader
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(${3}, minmax(0, 1fr))`,
-              }}
-            >
-              <Typography>Description</Typography>
-              <Typography>User Limit</Typography>
-              <Typography>Id</Typography>
-            </ListSubheader>
-            ;{optionsjsx}
+            ;{getOptionsJSX()}
           </TextField>
         );
       }}
