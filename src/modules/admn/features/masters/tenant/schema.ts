@@ -12,9 +12,20 @@ export const planEnum = [
   },
 ] as const;
 
-export const planEnumLabels = [
-  { description: 'Description', userLimit: 'Users Limit', id: 'Code' },
-];
+export const planEnumLabels = {
+  description: {
+    title: 'Description',
+    width: '50%',
+  },
+  userLimit: {
+    title: 'Users Limit',
+    width: '30%',
+  },
+  id: {
+    title: 'Code',
+    width: '10%',
+  },
+};
 
 export const userLimitEnum = planEnum.map((i) => i.userLimit); //[25, 50, 100] as const;
 export const planIdEnum = planEnum.map((i) => i.id);

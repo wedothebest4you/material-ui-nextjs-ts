@@ -8,9 +8,9 @@ export const tenantDTO = z.object({
 
   code: secureString().max(15, TENANT.code.maxLength),
 
-  plan: z.object(planEnum, TENANT.plan.enum.message),
+  // plan: z.object(planEnum, TENANT.plan.enum.message),
 
-  // planId: z.enum(planIdEnum, TENANT.plan.enum.message),
+  planId: z.enum(planIdEnum, TENANT.plan.enum.message),
 
   status: z.enum(TENANT.status.enum.value, TENANT.status.enum.message),
 

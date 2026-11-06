@@ -131,27 +131,60 @@ export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
     return false;
 
   if (
-    val.data
+    !val.data
       .map((i) =>
         Object.values(i).every(
           (i) => typeof i === 'string' || typeof i === 'number',
         ),
       )
-      .filter((i) => i).length == 0
+      .every((i) => i)
   )
     return false;
 
+  // if (
+  //   !(
+  //     Array.isArray(val.labels) &&
+  //     val.labels.every((i) => typeof i == 'object' && typeof i !== null)
+  //   )
+  // )
+  //   return false;
+
   if (
     !(
-      Array.isArray(val.labels) &&
-      val.labels.every((i) => typeof i == 'object' && typeof i !== null)
+      typeof val.labels === 'object' &&
+      val.labels !== null &&
+      Object.values(val.labels).every(
+        (i) => typeof i == 'object' && typeof i !== null,
+      )
     )
   )
     return false;
+
+  // if (
+  //   !val.labels
+  //     .map((i) =>
+  //       Object.values(i).every(
+  //         (i) =>
+  //           typeof i == 'object' &&
+  //           i !== null &&
+  //           'title' in i &&
+  //           'width' in i &&
+  //           Object.values(i).every((i) => typeof i == 'string'),
+  //       ),
+  //     )
+  //     .every((i) => i)
+  // )
+  //   return false;
+
   if (
-    val.labels
-      .map((i) => Object.values(i).every((i) => typeof i == 'string'))
-      .filter((i) => i).length == 0
+    !Object.values(val.labels).every(
+      (i) =>
+        typeof i == 'object' &&
+        i !== null &&
+        'title' in i &&
+        'width' in i &&
+        Object.values(i).every((i) => typeof i == 'string'),
+    )
   )
     return false;
 

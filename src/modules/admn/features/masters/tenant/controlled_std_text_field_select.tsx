@@ -1,13 +1,12 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import TextField, { StandardTextFieldProps } from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import React from 'react';
 import { IsStringReadArray, IsSelectOptionsRecord } from '@/src/shared/client';
-import { ListSubheader, Typography } from '@mui/material';
+import { ListItemText, ListSubheader, Typography } from '@mui/material';
 
 type Records = Readonly<{
   data: ReadonlyArray<Record<'id', string> & Record<string, string | number>>;
-  labels: ReadonlyArray<Record<string, string>>;
+  labels: Readonly<Record<string, Record<'title' | 'width', string>>>;
 }>;
 
 interface Props extends StandardTextFieldProps {
@@ -42,37 +41,46 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             ));
           }
           if (IsSelectOptionsRecord(options)) {
+            const gridColumnsWidth = Object.values(options.labels)
+              .map((i) => i.width)
+              .join(''.padStart(1));
             return Array(
-              options.labels.map((item) => (
+              [
                 <ListSubheader
+                  key={1}
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: `50% 30% 10%`,
+                    gridTemplateColumns: gridColumnsWidth,
                   }}
                 >
-                  {Object.values(item).map((value) => (
-                    <Typography>{value}</Typography>
+                  {Object.values(options.labels).map((item) => (
+                    <Typography key={item.title}>{item.title}</Typography>
                   ))}
-                </ListSubheader>
-              )),
+                </ListSubheader>,
+              ],
               options.data.map((item) => (
                 <MenuItem
                   key={item.id}
                   value={item.id}
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: `50% 30% 10%`,
+                    gridTemplateColumns: Object.keys(item)
+                      .map((i) => options.labels[i].width)
+                      .join(''.padStart(1)),
                   }}
                 >
                   {Object.values(item).map((value) => (
-                    <Typography>{value}</Typography>
+                    <>
+                      {' '}
+                      <Typography key={value}>{value}</Typography>
+                    </>
                   ))}
                 </MenuItem>
               )),
             );
           } else {
             throw new TypeError(
-              'The options type should be an array of strings or objects',
+              'The options type should be an array of strings or objects with the keys - data and labels. The values of data keys can be either string or number, and for labels, it must be an array of objects with keys title and width of string values.',
             );
           }
         }
