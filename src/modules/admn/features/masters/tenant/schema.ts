@@ -1,34 +1,28 @@
-export const planEnum = [
-  { description: 'Basic', userLimit: 25, id: 'A' },
+export const plan = [
+  { value: 'Basic', userLimit: 25 },
   {
-    description: 'Standard',
+    value: 'Standard',
     userLimit: 50,
-    id: 'B',
   },
   {
-    description: 'Enterprise',
+    value: 'Enterprise',
     userLimit: 'unlimited',
-    id: 'C',
   },
 ] as const;
 
 export const planEnumLabels = {
-  description: {
+  value: {
     title: 'Description',
-    width: '50%',
+    width: '70%',
   },
   userLimit: {
     title: 'Users Limit',
     width: '30%',
   },
-  id: {
-    title: 'Code',
-    width: '10%',
-  },
 };
 
-export const userLimitEnum = planEnum.map((i) => i.userLimit); //[25, 50, 100] as const;
-export const planIdEnum = planEnum.map((i) => i.id);
+export const userLimitEnum = plan.map((i) => i.userLimit); //[25, 50, 100] as const;
+export const planEnum = plan.map((i) => i.value);
 const statusEnum = ['Active', 'Disabled'] as const;
 
 const arrayJoinChars = ', ';
@@ -70,7 +64,7 @@ const TENANT = {
   userLimit: {
     required: 'User Limit is required',
     enum: {
-      value: planEnum.map((i) => i.userLimit),
+      value: userLimitEnum,
       message: `incorrect. The allowed values are - [${userLimitEnum.join(arrayJoinChars)}]`,
     },
   },

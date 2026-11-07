@@ -2,10 +2,13 @@ import { Controller, useFormContext } from 'react-hook-form';
 import TextField, { StandardTextFieldProps } from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { IsStringReadArray, IsSelectOptionsRecord } from '@/src/shared/client';
-import { ListItemText, ListSubheader, Typography } from '@mui/material';
+import { ListSubheader, Typography } from '@mui/material';
+import { unknown } from 'zod';
 
 type Records = Readonly<{
-  data: ReadonlyArray<Record<'id', string> & Record<string, string | number>>;
+  data: ReadonlyArray<
+    Record<'value', string> & Record<string, string | number>
+  >;
   labels: Readonly<Record<string, Record<'title' | 'width', string>>>;
 }>;
 
@@ -31,6 +34,7 @@ export default function ControlledStdTextFieldSelect(props: Props) {
       render={({ field, fieldState, formState }) => {
         const { error } = fieldState;
         const { value, onChange } = field;
+        const slotProps = null;
 
         function getOptionsJSX() {
           if (IsStringReadArray(options)) {
@@ -60,8 +64,8 @@ export default function ControlledStdTextFieldSelect(props: Props) {
               ],
               options.data.map((item) => (
                 <MenuItem
-                  key={item.id}
-                  value={item.id}
+                  key={item.value}
+                  value={item.value}
                   sx={{
                     display: 'grid',
                     gridTemplateColumns: Object.keys(item)
@@ -71,8 +75,9 @@ export default function ControlledStdTextFieldSelect(props: Props) {
                 >
                   {Object.values(item).map((value) => (
                     <>
-                      {' '}
-                      <Typography key={value}>{value}</Typography>
+                      <Typography component={'span'} key={value}>
+                        {value}
+                      </Typography>
                     </>
                   ))}
                 </MenuItem>
@@ -96,9 +101,18 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             value={value || ''}
             label={label}
             variant="standard"
+            slotProps={
+              IsSelectOptionsRecord(options)
+                ? {
+                    select: {
+                      renderValue: (v) => v as string,
+                    },
+                  }
+                : undefined
+            }
             {...rest}
           >
-            ;{getOptionsJSX()}
+            {getOptionsJSX()}
           </TextField>
         );
       }}

@@ -7,7 +7,7 @@ import { useActionState } from 'react';
 import { useForm, FormProvider, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TenantDTO, tenantDTO } from './command/zod_schema';
-import TENANT, { planEnum, planEnumLabels } from './schema';
+import TENANT, { plan, planEnumLabels } from './schema';
 import StdTextField from './controlled_std_text_field';
 import StdTextFieldSelect from './controlled_std_text_field_select';
 
@@ -32,7 +32,7 @@ function Form() {
     tenatReducerAction,
     { success: undefined, message: undefined },
   );
-  const onSubmit: SubmitHandler<TenantDTO> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<TenantDTO> = (data) => dispacthAction(data);
   return (
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)}>
@@ -57,13 +57,13 @@ function Form() {
             name="plan"
             label="Plan"
             options={{
-              data: planEnum,
+              data: plan,
               labels: planEnumLabels,
             }}
             required
             onChange={(event) => {
-              const index = TENANT.plan.enum.value.findIndex(
-                (i) => i.id === event.target.value,
+              const index = plan.findIndex(
+                (i) => i.value === event.target.value,
               );
               methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
             }}

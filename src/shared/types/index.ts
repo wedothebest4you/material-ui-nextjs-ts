@@ -114,7 +114,9 @@ export function IsStringReadArray(val: unknown): val is ReadonlyArray<String> {
 }
 
 export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
-  data: ReadonlyArray<Record<'id', string> & Record<string, string | number>>;
+  data: ReadonlyArray<
+    Record<'value', string> & Record<string, string | number>
+  >;
   labels: ReadonlyArray<Record<string, string>>;
 }> {
   if (
@@ -127,7 +129,7 @@ export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
   )
     return false;
 
-  if (!(Array.isArray(val.data) && val.data.every((i) => 'id' in i)))
+  if (!(Array.isArray(val.data) && val.data.every((i) => 'value' in i)))
     return false;
 
   if (
@@ -141,14 +143,6 @@ export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
   )
     return false;
 
-  // if (
-  //   !(
-  //     Array.isArray(val.labels) &&
-  //     val.labels.every((i) => typeof i == 'object' && typeof i !== null)
-  //   )
-  // )
-  //   return false;
-
   if (
     !(
       typeof val.labels === 'object' &&
@@ -159,22 +153,6 @@ export function IsSelectOptionsRecord(val: unknown): val is Readonly<{
     )
   )
     return false;
-
-  // if (
-  //   !val.labels
-  //     .map((i) =>
-  //       Object.values(i).every(
-  //         (i) =>
-  //           typeof i == 'object' &&
-  //           i !== null &&
-  //           'title' in i &&
-  //           'width' in i &&
-  //           Object.values(i).every((i) => typeof i == 'string'),
-  //       ),
-  //     )
-  //     .every((i) => i)
-  // )
-  //   return false;
 
   if (
     !Object.values(val.labels).every(
