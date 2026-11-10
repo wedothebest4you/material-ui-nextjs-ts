@@ -1,19 +1,17 @@
 'use server';
-import { revalidatePath } from 'next/cache';
 import { type ActionState } from '@/src/shared';
 import TenantService from './service';
-import { TenantDTO } from './zod_schema';
+import { TenantDTO, TenantKeys } from './zod_schema';
 
 export default async function tenatReducerAction(
-  prevState: ActionState,
-  tenantFormData: TenantDTO,
-): Promise<ActionState> {
+  prevState: ActionState<TenantKeys>,
+  tenantInput: TenantDTO,
+): Promise<ActionState<TenantKeys>> {
   try {
-    TenantService.createOrUpdateTenant(tenantFormData);
-    return { success: true, message: '' };
+    return TenantService.createOrUpdateTenant(tenantInput);
   } catch (error) {
     return {
-      success: false,
+      status: 'error',
       message: 'Failed to create the Tenant',
     };
   }

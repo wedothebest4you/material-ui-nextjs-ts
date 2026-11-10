@@ -74,11 +74,9 @@ export default function ControlledStdTextFieldSelect(props: Props) {
                   }}
                 >
                   {Object.values(item).map((value) => (
-                    <>
-                      <Typography component={'span'} key={value}>
-                        {value}
-                      </Typography>
-                    </>
+                    <Typography component={'span'} key={value}>
+                      {value}
+                    </Typography>
                   ))}
                 </MenuItem>
               )),
@@ -101,15 +99,11 @@ export default function ControlledStdTextFieldSelect(props: Props) {
             value={value || ''}
             label={label}
             variant="standard"
-            slotProps={
-              IsSelectOptionsRecord(options)
-                ? {
-                    select: {
-                      renderValue: (v) => v as string,
-                    },
-                  }
-                : undefined
-            }
+            slotProps={{
+              select: {
+                renderValue: (v) => v as string,
+              },
+            }}
             {...rest}
           >
             {getOptionsJSX()}

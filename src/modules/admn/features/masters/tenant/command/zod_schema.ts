@@ -22,3 +22,4 @@ export const tenantDTO = z.object({
 
 // Infer TypeScript Type for application use
 export type TenantDTO = z.infer<typeof tenantDTO>;
+export type TenantKeys = keyof TenantDTO;
