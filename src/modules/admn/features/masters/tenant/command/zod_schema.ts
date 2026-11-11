@@ -18,6 +18,7 @@ export const tenantDTO = z.object({
     TENANT.userLimit.enum.value.map((v) => z.literal(v)),
     TENANT.userLimit.enum.message,
   ),
+  id: z.string().optional(),
 });
 
 // Infer TypeScript Type for application use

@@ -84,7 +84,8 @@ function Form() {
               const index = plan.findIndex(
                 (i) => i.value === event.target.value,
               );
-              methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
+              // methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
+              methods.setValue('userLimit', plan[index].userLimit);
             }}
           ></StdTextFieldSelect>
           <StdTextField name="userLimit" label="Users" disabled />

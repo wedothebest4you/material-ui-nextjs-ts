@@ -8,6 +8,7 @@ export default async function tenatReducerAction(
   tenantInput: TenantDTO,
 ): Promise<ActionState<TenantKeys>> {
   try {
+    console.log('action composer');
     return TenantService.createOrUpdateTenant(tenantInput);
   } catch (error) {
     return {

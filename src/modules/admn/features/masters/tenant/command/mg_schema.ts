@@ -34,7 +34,7 @@ const schemaObject = {
     // default: 'active',
   },
   userLimit: {
-    type: Number,
+    type: String,
     required: true, // [true, TENANT.userLimit.required],
     enum: {
       values: TENANT.userLimit.enum.value,

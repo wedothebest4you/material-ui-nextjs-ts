@@ -9,10 +9,9 @@ type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
 
 loadClassCustom(TenantClass, tenantSchema);
 
-const Tenant = mongoose.model<any, combinedModel>(
-  TENANT.collectionName,
-  tenantSchema,
-);
+const Tenant =
+  (mongoose.models[TENANT.collectionName] as combinedModel) ||
+  mongoose.model<any, combinedModel>(TENANT.collectionName, tenantSchema);
 
 export default Tenant;
 

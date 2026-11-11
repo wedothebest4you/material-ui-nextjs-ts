@@ -8,13 +8,14 @@ type Cached = {
 
 let cached: Cached = { conn: null };
 
-export async function connectDB() {
+export default async function connectDB() {
   if (cached.conn) return cached.conn;
   // dbName key has been used to make the connection params
   // more close to the same with MongoClient
   // citation : https://mongoosejs.com/docs/connections.html#options
-  cached.conn = await mongoose.connect(env.DB_BASE_URI, {
-    dbName: env.DB_NAME,
+
+  cached.conn = await mongoose.connect(`mongodb://127.0.0.1:27017`, {
+    dbName: `erp`,
     serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS,
     socketTimeoutMS: SOCKET_TIMEOUT_MS,
   });

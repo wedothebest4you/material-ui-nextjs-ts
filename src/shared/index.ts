@@ -28,3 +28,4 @@ export { default as SchemaOperationError } from './errors/schema-operation-error
 export { default as SchemaDatabseError } from './errors/schema-database-error';
 
 export { setPrototypeFix as setPrototypeFix } from './jsquirks/subclass-built-in-class';
+export { default as connectDB } from './db/connections';

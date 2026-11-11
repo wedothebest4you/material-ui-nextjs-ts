@@ -46,11 +46,18 @@ export default function loadClassCustom(
     } else if (methodName.endsWith('Validator')) {
       const pathName = methodName.replace('Validator', '');
       if (schema.path(pathName)) {
+        // console.log(schema.path(pathName).validate);
         schema.path(pathName).validate({
           // Defer execution until runtime by using a standard function block
           validator: function (value) {
+            console.log(`prototype ${prototype}`);
+            console.log(`methodName ${methodName}`);
+            console.log(prototype[methodName].toString());
+            const customValidation = prototype[methodName];
+            console.log(customValidation.toString());
             // Dynamically bind the live document instance ('this') to the behavior method
-            const result = prototype[methodName].call(this, value) as {
+            // const result = prototype[methodName].call(this, value) as {
+            const result = customValidation.call(this, value) as {
               isValid: boolean;
               message: string;
             };
@@ -58,9 +65,10 @@ export default function loadClassCustom(
             return result.isValid;
           },
           message:
-            schema.path(pathName).options.validate.message ||
+            schema.path(pathName).options.validate?.message ||
             `Validation failed for ${pathName}.`,
         });
+        // console.log(schema.path(pathName).validate);
       }
       delete prototype[methodName];
     } else {

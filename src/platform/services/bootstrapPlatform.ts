@@ -19,10 +19,12 @@ import { platformAdmnModule } from '@/src/modules/admn/index';
 
 import { ModuleDefinition } from '@/shared/types';
 import { IUser } from '@/shared/types';
+import { connectDB } from '@/src/shared';
 
 let bootstrapped = false;
 
 export default function bootstrapPlatform(user: IUser) {
+  connectDB();
   //   const dashboard: ModuleDefinition = {
   //     dashboard: {
   //       routesbyId: {

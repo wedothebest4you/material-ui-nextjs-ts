@@ -10,7 +10,7 @@ import {
   CommandBase,
 } from '@/src/shared';
 
-import TENANT from '../schema';
+import TENANT, { plan } from '../schema';
 import Tenant from './model';
 import { TenantSchemaType } from './mg_schema';
 import { TenantDTO } from './zod_schema';
@@ -33,6 +33,7 @@ type TenantQueryWithHelpersFindOne = MakeQueryWithHelpersFindOne<
 
 export class TenantClass extends CommandBase {
   async saveTenant(this: TenantDocument) {
+    // console.log('save method');
     return await this.save();
   }
 
@@ -43,6 +44,7 @@ export class TenantClass extends CommandBase {
     isValid: boolean;
     message?: string;
   }> {
+    console.log('name validator runs.');
     // If the name hasn't been changed, skip the DB query entirely for performance
     if (!this.isNew && !this.isModified('name')) {
       return Promise.resolve({
@@ -59,7 +61,6 @@ export class TenantClass extends CommandBase {
       })
       .select('_id') // Optimize query performance by returning only the ID
       .lean(); // Skip Mongoose hydration overhead
-
     if (existingDocs.length > 1 || existingDocs[0]?._id !== this._id) {
       return Promise.resolve({
         isValid: false,
@@ -72,64 +73,59 @@ export class TenantClass extends CommandBase {
     });
   }
 
-  async codeValidator(
-    this: TenantDocument,
-    value: string,
-  ): Promise<{
-    isValid: boolean;
-    message?: string;
-  }> {
-    if (!this.isNew && !this.isModified('code')) {
-      return Promise.resolve({
-        isValid: true,
-      });
-    }
+  // async codeValidator(
+  //   this: TenantDocument,
+  //   value: string,
+  // ): Promise<{
+  //   isValid: boolean;
+  //   message?: string;
+  // }> {
+  //   if (!this.isNew && !this.isModified('code')) {
+  //     return Promise.resolve({
+  //       isValid: true,
+  //     });
+  //   }
 
-    const existingDocs = await this.model(this.constructor.name)
-      .find({
-        code: value,
-      })
-      .select('_id') // Optimize query performance by returning only the ID
-      .lean(); // Skip Mongoose hydration overhead
+  //   const existingDocs = await this.model(this.constructor.name)
+  //     .find({
+  //       code: value,
+  //     })
+  //     .select('_id') // Optimize query performance by returning only the ID
+  //     .lean(); // Skip Mongoose hydration overhead
 
-    if (existingDocs.length > 1 || existingDocs[0]?._id !== this._id) {
-      return Promise.resolve({
-        isValid: false,
-        message:
-          '{VALUE} is in use for an existing Tenant, please try another code',
-      });
-    }
-    return Promise.resolve({
-      isValid: true,
-    });
-  }
+  //   if (existingDocs.length > 1 || existingDocs[0]?._id !== this._id) {
+  //     return Promise.resolve({
+  //       isValid: false,
+  //       message:
+  //         '{VALUE} is in use for an existing Tenant, please try another code',
+  //     });
+  //   }
+  //   return Promise.resolve({
+  //     isValid: true,
+  //   });
+  // }
 
-  get userLimit(): number {
-    // const self = this as TenantDocument;
-    return this.userLimit;
-  }
+  // get userLimit(): string {
+  //   // const self = this as TenantDocument;
+  //   return this.userLimit;
+  // }
 
-  set userLimit(plan: string) {
-    //ToDo: typing issue, temporarily handling by the utility OverrideType
-    const self = this as TenantDocument;
-    self.userLimit = TENANT.plan.enum.value.findIndex((i) => i === plan);
-  }
+  // set userLimit(item: string|number) {
+  //   //ToDo: typing issue, temporarily handling by the utility OverrideType
+  //   const self = this as TenantDocument;
+  //   // self.userLimit =  plan[plan.findIndex((i) => i.value === item)].userLimit;
+  // }
 
-  async onPreValidate(this: OverrideType<TenantDocument, 'userLimit', string>) {
-    if (this.isModified('plan')) {
-      const validationError = this.validateSync('plan');
-      if (validationError && validationError.errors['plan']) {
-        throw validationError.errors['plan'];
-      }
-      this.userLimit = this.plan;
-    }
+  async onPreValidate(this: TenantDocument) {
+    this.userLimit =
+      plan[plan.findIndex((i) => i.value === this.plan)].userLimit;
   }
 
   static async createOrUpdateTenant(this: TenantModel, tenant: TenantDTO) {
     if (!tenant.id) {
-      await this.createTenant(tenant);
+      return await this.createTenant(tenant);
     } else {
-      await this.updateTenant(tenant);
+      return await this.updateTenant(tenant);
     }
   }
 
@@ -144,7 +140,7 @@ export class TenantClass extends CommandBase {
       .byTenantId(tenant.id)
       .byNotFound(`tenandtId = ${tenant.id}`);
     doc.loadDTO(tenant);
-    doc.saveTenant();
+    return await doc.saveTenant();
   }
 
   byTenantId(this: TenantQueryWithHelpersFind, id: string) {

@@ -28,5 +28,5 @@ const env = {
   DB_NAME: requireEnv('DB_NAME'),
   ENV: nodeEnv,
 };
-
+// console.log(`env ${JSON.stringify(env)}`);
 export default env;
