@@ -55,13 +55,15 @@ export class TenantClass extends CommandBase {
     const caseInsensitiveName = new RegExp(`^${value}$`, 'i');
     // Query the database looking for a duplicate name
 
-    const existingDocs = await this.model(this.constructor.name)
+    const existingDocs = await this.model(this.$model().modelName)
       .find({
         name: caseInsensitiveName,
       })
       .select('_id') // Optimize query performance by returning only the ID
       .lean(); // Skip Mongoose hydration overhead
-    if (existingDocs.length > 1 || existingDocs[0]?._id !== this._id) {
+    const duplicate = existingDocs.length > 0;
+    if (duplicate) {
+      // console.log(`existingDocs ${existingDocs.length}`);
       return Promise.resolve({
         isValid: false,
         message:

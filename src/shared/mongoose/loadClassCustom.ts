@@ -49,28 +49,51 @@ export default function loadClassCustom(
         // console.log(schema.path(pathName).validate);
         schema.path(pathName).validate({
           // Defer execution until runtime by using a standard function block
-          validator: function (value) {
-            console.log(`prototype ${prototype}`);
-            console.log(`methodName ${methodName}`);
-            console.log(prototype[methodName].toString());
+          //   validator: function (value) {
+          //     console.log(`prototype ${prototype}`);
+          //     console.log(`methodName ${methodName}`);
+          //     console.log(prototype[methodName].toString());
+          //     const customValidation = prototype[methodName];
+          //     console.log(customValidation.toString());
+          //     // Dynamically bind the live document instance ('this') to the behavior method
+          //     // const result = prototype[methodName].call(this, value) as {
+          //     const result = customValidation.call(this, value) as {
+          //       isValid: boolean;
+          //       message: string;
+          //     };
+          //     schema.path(pathName).options.validate.message = result.message;
+          //     return result.isValid;
+          //   },
+          //   message:
+          //     schema.path(pathName).options.validate?.message ||
+          //     `Validation failed for ${pathName}.`,
+          // });
+          validator: async function (value) {
+            // console.log(`prototype ${prototype}`);
+            // console.log(`methodName ${methodName}`);
+            // console.log(prototype[methodName].toString());
             const customValidation = prototype[methodName];
-            console.log(customValidation.toString());
+            // console.log(customValidation.toString());
             // Dynamically bind the live document instance ('this') to the behavior method
             // const result = prototype[methodName].call(this, value) as {
-            const result = customValidation.call(this, value) as {
+            const result = (await customValidation.call(this, value)) as {
               isValid: boolean;
               message: string;
             };
-            schema.path(pathName).options.validate.message = result.message;
+            // console.log(`result ${JSON.stringify(result)}`);
+            schema.path(pathName).validators[
+              schema.path(pathName).validators.length - 1
+            ].message = result.message;
+
             return result.isValid;
           },
           message:
-            schema.path(pathName).options.validate?.message ||
+            schema.path(pathName).options.message ||
             `Validation failed for ${pathName}.`,
         });
         // console.log(schema.path(pathName).validate);
       }
-      delete prototype[methodName];
+      // delete prototype[methodName];
     } else {
       // Standard methods are registered cleanly as native instance methods
       schema.method(methodName, prototype[methodName]);

@@ -36,10 +36,10 @@ export default class TenantService {
       const doc = await Tenant.createOrUpdateTenant(cleanData.data);
       // const doc = await new Tenant(cleanData.data).save();
 
-      console.log(`doc ${doc} ${doc.collection.name}`);
+      // console.log(`doc ${doc} ${doc.collection.name}`);
       return { status: 'success' };
     } catch (err) {
-      console.log(err);
+      console.log(`error ${JSON.stringify(err)}`);
       return { status: 'error', message: 'Some DB error' };
     }
   }
