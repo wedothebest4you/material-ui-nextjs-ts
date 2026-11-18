@@ -1,3 +1,6 @@
+import { plan } from '../schema';
+import { TenantDTO } from './zod_schema';
+
 import {
   InferSchemaType,
   SchemaDefinition,
@@ -7,96 +10,41 @@ import {
 } from 'mongoose';
 import { createCommandSchema } from '@/shared/index';
 import TENANT from '../schema';
+import { validate } from 'zod';
 
 const schemaObject = {
   name: {
     type: String,
-    // trim: true,
     required: true,
-    validate: {
-      validator: () => {},
-      message: '',
-    },
   },
   code: {
     type: String,
-    // trim: true,
-    // uppercase: true,
-    required: true, //[true, TENANT.code.required],
-    // maxLength: [15, TENANT.code.maxLength],
+    required: true,
   },
   plan: {
     type: String,
-    required: true, // [true, TENANT.plan.required],
+    required: true,
     enum: {
       values: TENANT.plan.enum.value,
-      // message: TENANT.plan.enum.message,
     },
   },
   status: {
     type: String,
-    required: true, // [true, TENANT.status.required],
+    required: true,
     enum: {
       values: TENANT.status.enum.value,
-      // message: TENANT.status.enum.message,
     },
-    // default: 'active',
   },
   userLimit: {
     type: String,
-    required: true, // [true, TENANT.userLimit.required],
+    required: true,
     enum: {
       values: TENANT.userLimit.enum.value,
-      // message: TENANT.userLimit.enum.message,
     },
   },
 };
-
-const tenantSchema = new Schema({
-  name: {
-    type: String,
-    // trim: true,
-    required: true,
-    validate: {
-      validator: () => {},
-      message: '',
-    },
-  },
-  code: {
-    type: String,
-    // trim: true,
-    // uppercase: true,
-    required: true, //[true, TENANT.code.required],
-    // maxLength: [15, TENANT.code.maxLength],
-  },
-  plan: {
-    type: String,
-    required: true, // [true, TENANT.plan.required],
-    enum: {
-      values: TENANT.plan.enum.value,
-      // message: TENANT.plan.enum.message,
-    },
-  },
-  status: {
-    type: String,
-    required: true, // [true, TENANT.status.required],
-    enum: {
-      values: TENANT.status.enum.value,
-      // message: TENANT.status.enum.message,
-    },
-    // default: 'active',
-  },
-  userLimit: {
-    type: String,
-    required: true, // [true, TENANT.userLimit.required],
-    enum: {
-      values: TENANT.userLimit.enum.value,
-      // message: TENANT.userLimit.enum.message,
-    },
-  },
-});
-
-type RawUserDocument = InferRawDocType<typeof tenantSchema>;
+console.log('7 re/creating schema object');
+const tenantSchema = createCommandSchema(schemaObject);
 
 export default tenantSchema;
 

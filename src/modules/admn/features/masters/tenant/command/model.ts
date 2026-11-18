@@ -9,10 +9,12 @@ type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
 
 loadClassCustom(TenantClass, tenantSchema);
 
-const Tenant =
-  // (mongoose.models[TENANT.collectionName] as combinedModel) ||
-  mongoose.model<any, combinedModel>(TENANT.collectionName, tenantSchema);
-
+delete mongoose.models[TENANT.collectionName];
+const Tenant = mongoose.model<any, combinedModel>(
+  TENANT.collectionName,
+  tenantSchema,
+);
+console.log('model creation runs. 2');
 export default Tenant;
 
 // const query = Tenant.find();

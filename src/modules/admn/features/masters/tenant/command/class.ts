@@ -69,53 +69,58 @@ export class TenantClass extends CommandBase {
         message:
           '{VALUE} is in use for an existing Tenant, please try another name',
       });
+
+      // throw new Error(
+      //   '{VALUE} is in use for an existing Tenant, please try another name',
+      // );
     }
     return Promise.resolve({
       isValid: true,
     });
   }
 
-  // async codeValidator(
-  //   this: TenantDocument,
-  //   value: string,
-  // ): Promise<{
-  //   isValid: boolean;
-  //   message?: string;
-  // }> {
-  //   if (!this.isNew && !this.isModified('code')) {
-  //     return Promise.resolve({
-  //       isValid: true,
-  //     });
-  //   }
+  async codeValidator(
+    this: TenantDocument,
+    value: string,
+  ): Promise<{
+    isValid: boolean;
+    message?: string;
+  }> {
+    if (!this.isNew && !this.isModified('code')) {
+      return Promise.resolve({
+        isValid: true,
+      });
+    }
 
-  //   const existingDocs = await this.model(this.constructor.name)
-  //     .find({
-  //       code: value,
-  //     })
-  //     .select('_id') // Optimize query performance by returning only the ID
-  //     .lean(); // Skip Mongoose hydration overhead
+    const existingDocs = await this.model(this.$model().modelName)
+      .find({
+        code: value,
+      })
+      .select('_id') // Optimize query performance by returning only the ID
+      .lean(); // Skip Mongoose hydration overhead
 
-  //   if (existingDocs.length > 1 || existingDocs[0]?._id !== this._id) {
-  //     return Promise.resolve({
-  //       isValid: false,
-  //       message:
-  //         '{VALUE} is in use for an existing Tenant, please try another code',
-  //     });
-  //   }
-  //   return Promise.resolve({
-  //     isValid: true,
-  //   });
-  // }
+    const duplicate = existingDocs.length > 0;
+    if (duplicate) {
+      return Promise.resolve({
+        isValid: false,
+        message:
+          '{VALUE} is in use for an existing Tenant, please try another code',
+      });
+    }
+    return Promise.resolve({
+      isValid: true,
+    });
+  }
 
-  // get userLimit(): string {
+  // get userLimit(): string | number {
   //   // const self = this as TenantDocument;
   //   return this.userLimit;
   // }
 
-  // set userLimit(item: string|number) {
+  // set userLimit(item: string | number) {
   //   //ToDo: typing issue, temporarily handling by the utility OverrideType
   //   const self = this as TenantDocument;
-  //   // self.userLimit =  plan[plan.findIndex((i) => i.value === item)].userLimit;
+  //   self.userLimit = item;
   // }
 
   async onPreValidate(this: TenantDocument) {

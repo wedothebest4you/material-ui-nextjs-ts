@@ -9,6 +9,8 @@ export default function loadClassCustom(
   SourceClass: ClassConstructorValidHooksOnly,
   schema: Schema,
 ): void {
+  //. Reset previously loaded
+
   // 1. Process Static Methods from the Source Class
   Object.getOwnPropertyNames(SourceClass).forEach((staticName) => {
     if (['length', 'prototype', 'name'].includes(staticName)) return;
@@ -42,57 +44,30 @@ export default function loadClassCustom(
       } else {
         schema.post(eventName, prototype[methodName]);
       }
-      delete prototype[methodName];
+      // delete prototype[methodName];
     } else if (methodName.endsWith('Validator')) {
       const pathName = methodName.replace('Validator', '');
       if (schema.path(pathName)) {
-        // console.log(schema.path(pathName).validate);
+        let result = { isValid: false, message: '' };
         schema.path(pathName).validate({
-          // Defer execution until runtime by using a standard function block
-          //   validator: function (value) {
-          //     console.log(`prototype ${prototype}`);
-          //     console.log(`methodName ${methodName}`);
-          //     console.log(prototype[methodName].toString());
-          //     const customValidation = prototype[methodName];
-          //     console.log(customValidation.toString());
-          //     // Dynamically bind the live document instance ('this') to the behavior method
-          //     // const result = prototype[methodName].call(this, value) as {
-          //     const result = customValidation.call(this, value) as {
-          //       isValid: boolean;
-          //       message: string;
-          //     };
-          //     schema.path(pathName).options.validate.message = result.message;
-          //     return result.isValid;
-          //   },
-          //   message:
-          //     schema.path(pathName).options.validate?.message ||
-          //     `Validation failed for ${pathName}.`,
-          // });
           validator: async function (value) {
-            // console.log(`prototype ${prototype}`);
-            // console.log(`methodName ${methodName}`);
-            // console.log(prototype[methodName].toString());
             const customValidation = prototype[methodName];
-            // console.log(customValidation.toString());
-            // Dynamically bind the live document instance ('this') to the behavior method
-            // const result = prototype[methodName].call(this, value) as {
-            const result = (await customValidation.call(this, value)) as {
-              isValid: boolean;
-              message: string;
-            };
-            // console.log(`result ${JSON.stringify(result)}`);
+            result = await customValidation.call(this, value);
             schema.path(pathName).validators[
               schema.path(pathName).validators.length - 1
-            ].message = result.message;
-
+            ]['message'] = result.message;
             return result.isValid;
           },
-          message:
-            schema.path(pathName).options.message ||
-            `Validation failed for ${pathName}.`,
+          message: result.message,
         });
-        // console.log(schema.path(pathName).validate);
+
+        //   schema.path(pathName).validate({
+        //     validator: prototype[methodName],
+        //     message: `Validation failed for the path ${pathName}`,
+        //   });
       }
+      // console.log(schema.path(pathName));
+      // console.log('load class - test 8');
       // delete prototype[methodName];
     } else {
       // Standard methods are registered cleanly as native instance methods

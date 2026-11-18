@@ -6,6 +6,10 @@
 // Therefore the root route is linked with this component.
 // When the root route is requested, this component is loaded in the UI.
 
+import { redirect } from 'next/navigation';
+
 export default function Dashboard() {
+  redirect('/admn/tenant/add');
+
   return 'Dashboard';
 }
