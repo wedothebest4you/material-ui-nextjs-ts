@@ -1,5 +1,5 @@
 import { AppJSONSchema } from '@/shared/types/index';
-import TENANT from './constants';
+import TENANT from './schema';
 
 const TENANT_JSONSCHEMA = {
   bsonType: 'object',
@@ -17,14 +17,14 @@ const TENANT_JSONSCHEMA = {
   properties: {
     name: {
       bsonType: 'string',
-      maxLength: 30,
+      maxLength: TENANT.name.length,
       description: `${TENANT.name.required}\n${TENANT.name.maxLength}`,
     },
 
     code: {
       bsonType: 'string',
       description: `${TENANT.code.required}\n${TENANT.code.maxLength}`,
-      maxLength: 15,
+      maxLength: TENANT.code.length,
     },
 
     plan: {
@@ -40,7 +40,7 @@ const TENANT_JSONSCHEMA = {
     },
 
     userLimit: {
-      bsonType: 'int',
+      bsonType: 'string',
       description: `${TENANT.userLimit.required}`,
       enum: TENANT.userLimit.enum.value,
     },

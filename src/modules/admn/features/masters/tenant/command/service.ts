@@ -3,6 +3,7 @@ import { TenantDTO, tenantDTO, TenantKeys } from './zod_schema';
 import { TenantSchemaType } from './mg_schema';
 import { type ActionState } from '@/src/shared';
 import mongoose from 'mongoose';
+import { MongoServerError } from 'mongodb';
 
 // import ServiceBase from '@/src/shared/mongoose/service-base-class';
 
@@ -62,10 +63,22 @@ export default class TenantService {
           fieldErrors: fieldErrors,
         };
       }
-      if (err instanceof Error) {
-        return { status: 'error', message: `${err.name} : ${err.message}` };
+      if (err instanceof MongoServerError) {
+        console.log(err);
+        if (err.code === 11000)
+          return {
+            status: 'error',
+            message: `Some unknown error occured : ${JSON.stringify(err)}`,
+          };
       }
-      return { status: 'error', message: `Some unkown error occured` };
+      if (err instanceof Error) {
+        return { status: 'error', message: `${err.message}` };
+        // return { status: 'error', message: `${err.message} ${err.stack} ` };
+      }
+      return {
+        status: 'error',
+        message: `Some unknown error occured : ${JSON.stringify(err)}`,
+      };
     }
   }
 }

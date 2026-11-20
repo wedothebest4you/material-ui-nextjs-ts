@@ -4,7 +4,7 @@ import TENANT, { planEnum } from '../schema';
 
 export const tenantDTO = z.object({
   // Trim and convert to uppercase immediately at the edge
-  name: secureString().max(30, TENANT.name.maxLength),
+  name: secureString().max(TENANT.name.length, TENANT.name.maxLength),
 
   code: secureString().max(15, TENANT.code.maxLength),
 

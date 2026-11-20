@@ -1,13 +1,11 @@
 const TENANT_QUERY_VALIDATION = {
-  $expr: {
-    $cond: {
-      if: {
-        $eg: ['$_v', 0],
-      },
+  $cond: {
+    if: {
+      $eq: ['$_v', 0],
     },
-    then: { $eg: [{ $type: '$updatedAt' }, 'null'] },
+    then: { $eq: [{ $type: '$updatedAt' }, 'null'] },
     else: {
-      $eg: [{ $type: '$updatedAt' }, 'date'],
+      $eq: [{ $type: '$updatedAt' }, 'date'],
     },
   },
 } as const;

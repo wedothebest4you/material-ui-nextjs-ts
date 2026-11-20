@@ -28,17 +28,20 @@ const statusEnum = ['Active', 'Disabled'] as const;
 const arrayJoinChars = ', ';
 
 const TENANT = {
-  collectionName: 'Tenant',
+  modelName: 'Tenant',
+  collectionName: 'tenants',
   viewName: 'tenantsList',
   name: {
     required: 'Tenant Name is required',
     maxLength: 'exceeds 30 characters',
     helpText: '30 chars.',
+    length: 30,
   },
   code: {
     required: 'Tenant Code is required.',
     maxLength: 'exceeds 15 characters',
     helpText: '15 chars.',
+    length: 15,
   },
   plan: {
     required: 'Plan is required',
@@ -47,13 +50,6 @@ const TENANT = {
       message: `incorrect. The allowed values  are  [${planEnum.join(arrayJoinChars)}]`,
     },
   },
-  // planId: {
-  //   required: 'Plan Id is required',
-  //   enum: {
-  //     value: planIdEnum,
-  //     message: `incorrect. The allowed values are [${planIdEnum.join(arrayJoinChars)}]`,
-  //   },
-  // },
   status: {
     required: 'Status is required',
     enum: {

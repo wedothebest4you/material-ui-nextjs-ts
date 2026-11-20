@@ -16,6 +16,8 @@ import TENANT, { plan, planEnumLabels } from './schema';
 import StdTextField from './controlled_std_text_field';
 import StdTextFieldSelect from './controlled_std_text_field_select';
 import { type ActionState } from '@/src/shared';
+import { Label } from '@mui/icons-material';
+import { error } from 'node:console';
 
 export default function TenantForm() {
   return (
@@ -33,7 +35,7 @@ function Form() {
 
   const serverErrors = useMemo(() => {
     if (state.status !== 'error' || !state.fieldErrors) return undefined;
-    const errors: FieldErrors<TenantDTO> = {};
+    const errors: FieldErrors<ActionState<TenantKeys>> = {};
     for (const [name, message] of Object.entries(state.fieldErrors)) {
       errors[name as TenantKeys] = { type: 'server', message };
     }
@@ -60,6 +62,7 @@ function Form() {
           <ServerActionSubmit />
         </Stack>
         <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
+        <Typography variant='subtitle1'>{state.status == 'error' &&}</Typography>
           <StdTextField
             name="name"
             label="Name"
