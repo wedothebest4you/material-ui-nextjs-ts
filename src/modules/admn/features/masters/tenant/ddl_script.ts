@@ -8,12 +8,13 @@ import { getDbByMongoDbClient } from '@/shared/mongodb';
   try {
     await db.createCollection(TENANT.collectionName, {
       validator: {
-        $and: [
-          { $expr: TENANT_QUERY_VALIDATION },
-          {
-            $jsonSchema: TENANT_JSONSCHEMA,
-          },
-        ],
+        $jsonSchema: TENANT_JSONSCHEMA,
+        // $and: [
+        //   { $expr: TENANT_QUERY_VALIDATION },
+        //   {
+        //     $jsonSchema: TENANT_JSONSCHEMA,
+        //   },
+        // ],
       },
     });
 

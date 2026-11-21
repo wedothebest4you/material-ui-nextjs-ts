@@ -36,14 +36,18 @@ const schemaObject = {
     },
   },
   userLimit: {
-    type: String,
+    type: Schema.Types.Union,
+    of: [
+      { type: Number, enum: [25, 50] },
+      { type: String, enum: ['unlimited'] },
+    ],
     required: true,
-    enum: {
-      values: TENANT.userLimit.enum.value,
-    },
+    // enum: {
+    //   values: TENANT.userLimit.enum.value,
+    // },
   },
 };
-console.log('7 re/creating schema object');
+console.log('1 re/creating schema object');
 const tenantSchema = createCommandSchema(schemaObject);
 
 export default tenantSchema;

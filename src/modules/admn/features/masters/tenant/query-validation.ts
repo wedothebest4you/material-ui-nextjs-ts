@@ -1,7 +1,7 @@
 const TENANT_QUERY_VALIDATION = {
   $cond: {
     if: {
-      $eq: ['$_v', 0],
+      $eq: ['$__v', 0],
     },
     then: { $eq: [{ $type: '$updatedAt' }, 'null'] },
     else: {

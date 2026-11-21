@@ -10,7 +10,7 @@ const TENANT_JSONSCHEMA = {
     'plan',
     'status',
     'userLimit',
-    '_v',
+    '__v',
     'createdAt',
     'updatedAt',
   ],
@@ -40,11 +40,11 @@ const TENANT_JSONSCHEMA = {
     },
 
     userLimit: {
-      bsonType: 'string',
+      bsonType: ['string', 'int'],
       description: `${TENANT.userLimit.required}`,
       enum: TENANT.userLimit.enum.value,
     },
-    _v: {
+    __v: {
       bsonType: 'int',
       description: `${TENANT._v.required}`,
     },

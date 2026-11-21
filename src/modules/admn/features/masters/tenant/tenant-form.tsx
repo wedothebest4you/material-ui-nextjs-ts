@@ -35,7 +35,7 @@ function Form() {
 
   const serverErrors = useMemo(() => {
     if (state.status !== 'error' || !state.fieldErrors) return undefined;
-    const errors: FieldErrors<ActionState<TenantKeys>> = {};
+    const errors: FieldErrors<TenantDTO> = {};
     for (const [name, message] of Object.entries(state.fieldErrors)) {
       errors[name as TenantKeys] = { type: 'server', message };
     }
@@ -62,7 +62,17 @@ function Form() {
           <ServerActionSubmit />
         </Stack>
         <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-        <Typography variant='subtitle1'>{state.status == 'error' &&}</Typography>
+          {state.status == 'error' && state.message && (
+            <>
+              <Typography variant="subtitle1" color="error">
+                {state.kind}
+              </Typography>
+              <Typography variant="subtitle2" color="error">
+                {state.message}
+              </Typography>
+            </>
+          )}
+
           <StdTextField
             name="name"
             label="Name"

@@ -43,6 +43,7 @@ export default class TenantService {
     } catch (err) {
       const fieldErrors: Partial<Record<TenantKeys, string>> = {};
       // console.log(`err ${JSON.stringify(err)}`);
+      console.log(`err.name ${(err as Error).name}`);
       if (err instanceof mongoose.Error.ValidationError) {
         // console.log(`instanceOf checked passed `);
         for (const [path, issue] of Object.entries(err.errors)) {
@@ -63,16 +64,32 @@ export default class TenantService {
           fieldErrors: fieldErrors,
         };
       }
-      if (err instanceof MongoServerError) {
-        console.log(err);
-        if (err.code === 11000)
+      if (err instanceof mongoose.mongo.MongoServerError) {
+        console.log(JSON.stringify(err));
+        // if (err.code === 11000) {
+        //   return {
+        //     status: 'error',
+        //     message: `y${err.name} ${err.message} : ${err.cause} : ${err.stack}`,
+        //   };
+        // }
+        if (err.code == 121) {
           return {
             status: 'error',
-            message: `Some unknown error occured : ${JSON.stringify(err)}`,
+            kind: err.errmsg,
+            message: `: ${JSON.stringify(err.errInfo?.details.clausesNotSatisfied)}`,
           };
+        }
+        return {
+          status: 'error',
+          kind: 'Database server error',
+          message: `: ${JSON.stringify(err.errInfo?.details.clausesNotSatisfied)}`,
+        };
       }
       if (err instanceof Error) {
-        return { status: 'error', message: `${err.message}` };
+        return {
+          status: 'error',
+          message: `Error : ${err.message} : ${err.cause} : ${err.stack}`,
+        };
         // return { status: 'error', message: `${err.message} ${err.stack} ` };
       }
       return {
