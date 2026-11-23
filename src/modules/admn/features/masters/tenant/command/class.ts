@@ -37,80 +37,80 @@ export class TenantClass extends CommandBase {
     return await this.save();
   }
 
-  // async nameValidator(
-  //   this: TenantDocument,
-  //   value: string,
-  // ): Promise<{
-  //   isValid: boolean;
-  //   message?: string;
-  // }> {
-  //   console.log('name validator runs.');
-  //   // If the name hasn't been changed, skip the DB query entirely for performance
-  //   if (!this.isNew && !this.isModified('name')) {
-  //     return Promise.resolve({
-  //       isValid: true,
-  //     });
-  //   }
-  //   // Use a case-insensitive regular expression for an exact match anchor
-  //   const caseInsensitiveName = new RegExp(`^${value}$`, 'i');
-  //   // Query the database looking for a duplicate name
+  async nameValidator(
+    this: TenantDocument,
+    value: string,
+  ): Promise<{
+    isValid: boolean;
+    message?: string;
+  }> {
+    console.log('name validator runs.');
+    // If the name hasn't been changed, skip the DB query entirely for performance
+    if (!this.isNew && !this.isModified('name')) {
+      return {
+        isValid: true,
+      };
+    }
+    // Use a case-insensitive regular expression for an exact match anchor
+    const caseInsensitiveName = new RegExp(`^${value}$`, 'i');
+    // Query the database looking for a duplicate name
 
-  //   const existingDocs = await this.model(this.$model().modelName)
-  //     .find({
-  //       name: caseInsensitiveName,
-  //     })
-  //     .select('_id') // Optimize query performance by returning only the ID
-  //     .lean(); // Skip Mongoose hydration overhead
-  //   const duplicate = existingDocs.length > 0;
-  //   if (duplicate) {
-  //     // console.log(`existingDocs ${existingDocs.length}`);
-  //     return Promise.resolve({
-  //       isValid: false,
-  //       message:
-  //         '{VALUE} is in use for an existing Tenant, please try another name',
-  //     });
+    const existingDocs = await this.model(this.$model().modelName)
+      .find({
+        name: caseInsensitiveName,
+      })
+      .select('_id') // Optimize query performance by returning only the ID
+      .lean(); // Skip Mongoose hydration overhead
+    const duplicate = existingDocs.length > 0;
+    if (duplicate) {
+      // console.log(`existingDocs ${existingDocs.length}`);
+      return {
+        isValid: false,
+        message:
+          '{VALUE} is in use for an existing Tenant, please try another name',
+      };
 
-  //     // throw new Error(
-  //     //   '{VALUE} is in use for an existing Tenant, please try another name',
-  //     // );
-  //   }
-  //   return Promise.resolve({
-  //     isValid: true,
-  //   });
-  // }
+      // throw new Error(
+      //   '{VALUE} is in use for an existing Tenant, please try another name',
+      // );
+    }
+    return {
+      isValid: true,
+    };
+  }
 
-  // async codeValidator(
-  //   this: TenantDocument,
-  //   value: string,
-  // ): Promise<{
-  //   isValid: boolean;
-  //   message?: string;
-  // }> {
-  //   if (!this.isNew && !this.isModified('code')) {
-  //     return Promise.resolve({
-  //       isValid: true,
-  //     });
-  //   }
+  async codeValidator(
+    this: TenantDocument,
+    value: string,
+  ): Promise<{
+    isValid: boolean;
+    message?: string;
+  }> {
+    if (!this.isNew && !this.isModified('code')) {
+      return {
+        isValid: true,
+      };
+    }
 
-  //   const existingDocs = await this.model(this.$model().modelName)
-  //     .find({
-  //       code: value,
-  //     })
-  //     .select('_id') // Optimize query performance by returning only the ID
-  //     .lean(); // Skip Mongoose hydration overhead
+    const existingDocs = await this.model(this.$model().modelName)
+      .find({
+        code: value,
+      })
+      .select('_id') // Optimize query performance by returning only the ID
+      .lean(); // Skip Mongoose hydration overhead
 
-  //   const duplicate = existingDocs.length > 0;
-  //   if (duplicate) {
-  //     return Promise.resolve({
-  //       isValid: false,
-  //       message:
-  //         '{VALUE} is in use for an existing Tenant, please try another code',
-  //     });
-  //   }
-  //   return Promise.resolve({
-  //     isValid: true,
-  //   });
-  // }
+    const duplicate = existingDocs.length > 0;
+    if (duplicate) {
+      return {
+        isValid: false,
+        message:
+          '{VALUE} is in use for an existing Tenant, please try another code',
+      };
+    }
+    return {
+      isValid: true,
+    };
+  }
 
   // get userLimit(): string | number {
   //   // const self = this as TenantDocument;

@@ -62,7 +62,13 @@ function Form() {
           <ServerActionSubmit />
         </Stack>
         <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-          {state.status == 'error' && state.message && (
+          {state.status === 'success' && (
+            <Typography variant="subtitle1" color="primary">
+              Data saved successfully.
+            </Typography>
+          )}
+
+          {state.status == 'error' && (state.message || state.kind) && (
             <>
               <Typography variant="subtitle1" color="error">
                 {state.kind}
@@ -72,22 +78,21 @@ function Form() {
               </Typography>
             </>
           )}
-
           <StdTextField
             name="name"
-            label="Name"
+            label={TENANT.name.label}
             helperText={TENANT.name.helpText}
             required
           />
           <StdTextField
             name="code"
-            label="Code"
+            label={TENANT.code.label}
             helperText={TENANT.name.helpText}
             required
           />
           <StdTextFieldSelect
             name="plan"
-            label="Plan"
+            label={TENANT.plan.label}
             options={{
               data: plan,
               labels: planEnumLabels,
@@ -101,10 +106,14 @@ function Form() {
               methods.setValue('userLimit', plan[index].userLimit);
             }}
           ></StdTextFieldSelect>
-          <StdTextField name="userLimit" label="Users" disabled />
+          <StdTextField
+            name="userLimit"
+            label={TENANT.userLimit.label}
+            disabled
+          />
           <StdTextFieldSelect
             name="status"
-            label="Status"
+            label={TENANT.status.label}
             options={TENANT.status.enum.value}
             required
             defaultValue="Active"

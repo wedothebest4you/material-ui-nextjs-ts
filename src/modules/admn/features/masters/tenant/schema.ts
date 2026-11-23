@@ -1,3 +1,6 @@
+import { Label } from '@mui/icons-material';
+import { keyof } from 'zod';
+
 export const plan = [
   { value: 'Basic', userLimit: 25 },
   {
@@ -32,18 +35,21 @@ const TENANT = {
   collectionName: 'tenants',
   viewName: 'tenantsList',
   name: {
+    label: 'Name',
     required: 'Tenant Name is required',
     maxLength: 'exceeds 30 characters',
     helpText: '30 chars.',
     length: 30,
   },
   code: {
+    label: 'Code',
     required: 'Tenant Code is required.',
     maxLength: 'exceeds 15 characters',
     helpText: '15 chars.',
     length: 15,
   },
   plan: {
+    label: 'Plan',
     required: 'Plan is required',
     enum: {
       value: planEnum,
@@ -51,6 +57,7 @@ const TENANT = {
     },
   },
   status: {
+    label: 'Status',
     required: 'Status is required',
     enum: {
       value: statusEnum,
@@ -58,6 +65,7 @@ const TENANT = {
     },
   },
   userLimit: {
+    label: 'Users',
     required: 'User Limit is required',
     enum: {
       value: userLimitEnum,
@@ -76,3 +84,4 @@ const TENANT = {
 } as const;
 
 export default TENANT;
+export type TENANTKeys = keyof typeof TENANT;
