@@ -3,7 +3,7 @@ import { Stack, Typography, TextField, MenuItem } from '@mui/material';
 import MastersActionspace from '../masters-actionspace';
 import ServerActionSubmit from '../master-form-header';
 import tenatReducerAction from './command/action';
-import { startTransition, useActionState, useMemo } from 'react';
+import { startTransition, useActionState, useEffect, useMemo } from 'react';
 import {
   useForm,
   FormProvider,
@@ -28,6 +28,9 @@ export default function TenantForm() {
 }
 
 function Form() {
+  const formDefaults = {
+    status: TENANT.status.enum.value[0],
+  };
   const [state, dispacthAction, isPending] = useActionState(
     tenatReducerAction,
     { status: 'idle' },
@@ -43,32 +46,44 @@ function Form() {
   }, [state]);
 
   const methods = useForm<TenantDTO>({
-    defaultValues: {
-      status: TENANT.status.enum.value[0],
-    },
-    // resolver: zodResolver(tenantDTO),
+    defaultValues: formDefaults,
+    resolver: zodResolver(tenantDTO),
     mode: 'onBlur',
     shouldFocusError: true,
     errors: serverErrors,
   });
+
   const onSubmit: SubmitHandler<TenantDTO> = (data) =>
     startTransition(() => dispacthAction(data));
 
+  useEffect(() => {
+    if (state.status === 'success') {
+      // if (state.status === 'success' && methods.formState.isSubmitSuccessful) {
+      methods.reset(formDefaults);
+    }
+  }, [state.status]);
+
+  const clearSavedMessage = () => {
+    if (state.status === 'success') {
+      startTransition(() => {
+        dispacthAction(null);
+      });
+    }
+  };
+
   return (
     <FormProvider {...methods}>
-      <form noValidate onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        onInput={clearSavedMessage}
+        noValidate
+        onSubmit={methods.handleSubmit(onSubmit)}
+      >
         <Stack direction="row" spacing={3} sx={{ ml: 4 }}>
           <Typography variant="h2">Tenant Creation</Typography>
           <ServerActionSubmit />
         </Stack>
         <Stack spacing={3} sx={{ mt: 3, ml: 5 }}>
-          {state.status === 'success' && (
-            <Typography variant="subtitle1" color="primary">
-              Data saved successfully.
-            </Typography>
-          )}
-
-          {state.status == 'error' && (state.message || state.kind) && (
+          {state.status === 'error' && state.kind && (
             <>
               <Typography variant="subtitle1" color="error">
                 {state.kind}
@@ -78,6 +93,12 @@ function Form() {
               </Typography>
             </>
           )}
+          {state.status !== 'error' && state.message && (
+            <Typography variant="subtitle1" color="primary">
+              {state.message}
+            </Typography>
+          )}
+
           <StdTextField
             name="name"
             label={TENANT.name.label}
@@ -103,13 +124,17 @@ function Form() {
                 (i) => i.value === event.target.value,
               );
               // methods.setValue('userLimit', TENANT.userLimit.enum.value[index]);
-              methods.setValue('userLimit', plan[index].userLimit);
+              methods.setValue('userLimit', plan[index].userLimit, {
+                shouldValidate: true,
+              });
+              // errors[name as TenantKeys] = { type: 'server', message };
             }}
           ></StdTextFieldSelect>
           <StdTextField
             name="userLimit"
             label={TENANT.userLimit.label}
             disabled
+            required
           />
           <StdTextFieldSelect
             name="status"

@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import TENANT from '../schema';
 import { MongoServerError } from 'mongodb';
 
+// console.log('mongoose version', mongoose.version);
 // import ServiceBase from '@/src/shared/mongoose/service-base-class';
 
 // export default class TenantService extends ServiceBase {
@@ -22,6 +23,9 @@ export default class TenantService {
     //   // throw Error('Invalid formData');
     // }
     // const rawData = Object.fromEntries(tenant.entries());
+    if (!tenantInput) {
+      return { status: 'idle' };
+    }
     const cleanData = tenantDTO.safeParse(tenantInput);
     // console.log(`service composer ${cleanData.success}`);
 
@@ -40,7 +44,7 @@ export default class TenantService {
       // const doc = await new Tenant(cleanData.data).save();
 
       // console.log(`doc ${doc} ${doc.collection.name}`);
-      return { status: 'success' };
+      return { status: 'success', message: 'Data Saved Successfully' };
     } catch (err) {
       const fieldErrors: Partial<Record<TenantKeys, string>> = {};
       // console.log(`err ${JSON.stringify(err)}`);
@@ -59,10 +63,10 @@ export default class TenantService {
           // }
         }
         // console.log(`fieldErrors : ${JSON.stringify(fieldErrors)}`);
-        console.log(err);
+        // console.log(err);
         return {
           status: 'error',
-          kind: err.name,
+          kind: 'Data Validation Error(s)',
           // message: err.message,
           fieldErrors: fieldErrors,
         };
@@ -74,8 +78,8 @@ export default class TenantService {
           );
           return {
             status: 'error',
-            kind: 'Duplicate document',
-            message: `${keysAndValues}`,
+            kind: 'Duplicate Document Error',
+            message: `An another document exists with the key(s):value(s) -  ${keysAndValues}`,
           };
         }
         if (err.code == 121) {
@@ -87,20 +91,20 @@ export default class TenantService {
         }
         return {
           status: 'error',
-          kind: 'Database server error',
+          kind: 'Database Server Error',
           message: `${err.message}`,
         };
       }
       if (err instanceof Error) {
         return {
           status: 'error',
-          kind: 'JavaScript error',
+          kind: 'JavaScript Error',
           message: `${err}`,
         };
       }
       return {
         status: 'error',
-        kind: 'Unknown error',
+        kind: 'Unknown Error',
         message: `Some unknown error occured : ${JSON.stringify(err)}`,
       };
     }

@@ -48,17 +48,19 @@ export default function loadClassCustom(
     } else if (methodName.endsWith('Validator')) {
       const pathName = methodName.replace('Validator', '');
       if (schema.path(pathName)) {
-        let result = { isValid: false, message: '' };
         schema.path(pathName).validate({
           validator: async function (value) {
             const customValidation = prototype[methodName];
-            result = await customValidation.call(this, value);
-            schema.path(pathName).validators[
-              schema.path(pathName).validators.length - 1
-            ]['message'] = result.message;
-            return result.isValid;
+            const result = await customValidation.call(this, value);
+            // schema.path(pathName).validators[
+            //   schema.path(pathName).validators.length - 1
+            // ]['message'] = result.message;
+            if (!result.isValid) {
+              throw new Error(result.message);
+            } else {
+              Promise.resolve(true);
+            }
           },
-          message: result.message,
         });
 
         //   schema.path(pathName).validate({

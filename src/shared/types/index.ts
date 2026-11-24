@@ -105,14 +105,38 @@ export interface AppJSONSchema extends AppJSONSchemaNode {
 //   errors?: Record<string, string>;
 // };
 
+// export interface ActionState<T extends string> {
+//   status: 'idle' | 'success' | 'error';
+//   kind?: string;
+//   message?: string;
+//   fieldErrors?: Partial<Record<T, string>>;
+// }
+
 export type ActionState<T extends string> =
-  | { status: 'idle' }
-  | { status: 'success' }
+  | { status: 'idle'; message?: string }
+  | { status: 'success'; message: string }
   | {
       status: 'error';
-      message?: string;
+      kind?: string;
+      message: string;
       fieldErrors?: Partial<Record<T, string>>;
+    }
+  | {
+      status: 'error';
+      kind?: string;
+      message?: string;
+      fieldErrors: Partial<Record<T, string>>;
     };
+
+// export type ActionState<T extends string> =
+//   | { status: 'idle' }
+//   | { status: 'success',  }
+//   | {
+//       status: 'error';
+//       kind?: string;
+//       message?: string;
+//       fieldErrors?: Partial<Record<T, string>>;
+//     };
 
 import { type SortOrder } from 'mongoose';
 

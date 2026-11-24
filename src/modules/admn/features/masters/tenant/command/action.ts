@@ -5,7 +5,7 @@ import { TenantDTO, TenantKeys } from './zod_schema';
 
 export default async function tenatReducerAction(
   prevState: ActionState<TenantKeys>,
-  tenantInput: TenantDTO,
+  tenantInput: TenantDTO | null,
 ): Promise<ActionState<TenantKeys>> {
   try {
     console.log('action composer');

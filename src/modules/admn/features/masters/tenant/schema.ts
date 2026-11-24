@@ -1,16 +1,14 @@
 import { Label } from '@mui/icons-material';
 import { keyof } from 'zod';
 
+export const userLimitEnum = [25, 50, 'unlimited'] as const;
+export const planEnum = ['Basic', 'Standard', 'Enterprise'] as const;
+const statusEnum = ['Active', 'Disabled'] as const;
+
 export const plan = [
-  { value: 'Basic', userLimit: 25 },
-  {
-    value: 'Standard',
-    userLimit: 50,
-  },
-  {
-    value: 'Enterprise',
-    userLimit: 'unlimited',
-  },
+  { value: planEnum[0], userLimit: userLimitEnum[0] },
+  { value: planEnum[1], userLimit: userLimitEnum[1] },
+  { value: planEnum[2], userLimit: userLimitEnum[2] },
 ] as const;
 
 export const planEnumLabels = {
@@ -22,11 +20,7 @@ export const planEnumLabels = {
     title: 'Users Limit',
     width: '30%',
   },
-};
-
-export const userLimitEnum = plan.map((i) => i.userLimit); //[25, 50, 100] as const;
-export const planEnum = plan.map((i) => i.value);
-const statusEnum = ['Active', 'Disabled'] as const;
+} as const;
 
 const arrayJoinChars = ', ';
 
@@ -84,4 +78,4 @@ const TENANT = {
 } as const;
 
 export default TENANT;
-export type TENANTKeys = keyof typeof TENANT;
+type TENANTLabel = typeof TENANT;
