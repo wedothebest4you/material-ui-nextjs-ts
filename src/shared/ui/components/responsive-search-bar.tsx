@@ -7,11 +7,25 @@ import { useState, useRef } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import InputAdornment from '@mui/material/InputAdornment';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 
 export default function ResponsiveSearchBar() {
   const [mobileSearchMode, setMobileSearchMode] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const pathName = usePathname();
+  const readOnlySearchParams = useSearchParams();
+  const { replace } = useRouter();
 
+  const handleSearch = () => {
+    const modifieableSearchParams = new URLSearchParams(readOnlySearchParams);
+    if (searchInput) {
+      modifieableSearchParams.set('query', searchInput);
+    } else {
+      modifieableSearchParams.delete('query');
+    }
+    replace(`${pathName}?${modifieableSearchParams}`);
+  };
   return (
     <>
       <TextField
@@ -67,7 +81,13 @@ export default function ResponsiveSearchBar() {
               },
             },
             disableUnderline: true,
-            endAdornment: <SearchIcon />,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleSearch}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
           },
           // inputLabel: {
           //   sx: {

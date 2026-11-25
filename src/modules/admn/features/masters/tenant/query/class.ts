@@ -10,9 +10,9 @@ import {
   QueryBase,
 } from '@/src/shared';
 
-import TENANT from '../constants';
+import TENANT from '../schema';
 import Tenant from './model';
-import { TenantSchemaType } from './schema';
+import { TenantSchemaType } from './mg_schema';
 
 type TenantModel = typeof Tenant;
 

@@ -10,7 +10,6 @@ import {
 } from 'mongoose';
 import { createCommandSchema } from '@/shared/index';
 import TENANT from '../schema';
-import { validate } from 'zod';
 
 const schemaObject = {
   name: {
@@ -43,7 +42,7 @@ const schemaObject = {
       values: TENANT.userLimit.enum.value,
     },
   },
-};
+} as const;
 console.log('4 re/creating schema object');
 const tenantSchema = createCommandSchema(schemaObject);
 

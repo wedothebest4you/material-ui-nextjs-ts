@@ -61,6 +61,7 @@ import { ResponsiveSearchBar } from '@/shared/client/index';
 import { ColorSchemeSwitcher } from '@/shared/client/index';
 import { PermanentDrawer } from '@/src/shared/client/index';
 import NavDrawerContent from '../ui/nav-drawer-content';
+import { Suspense } from 'react';
 
 const drawerWidth = 240;
 
@@ -137,7 +138,9 @@ export default function ShellLayout({
               flex: { xs: 0, md: 0.5 },
             }}
           >
-            <ResponsiveSearchBar />
+            <Suspense fallback={<div>Loading search bar...</div>}>
+              <ResponsiveSearchBar />
+            </Suspense>
           </Box>
           {/* <IconButton size="large">
             <Typography variant="caption">erp</Typography>

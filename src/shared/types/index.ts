@@ -112,7 +112,7 @@ export interface AppJSONSchema extends AppJSONSchemaNode {
 //   fieldErrors?: Partial<Record<T, string>>;
 // }
 
-export type ActionState<T extends string> =
+export type ActionState<T extends string = never> =
   | { status: 'idle'; message?: string }
   | { status: 'success'; message: string }
   | {
