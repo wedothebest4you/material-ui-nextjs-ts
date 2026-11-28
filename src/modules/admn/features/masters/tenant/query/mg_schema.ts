@@ -3,6 +3,7 @@ import { createQuerySchema } from '@/shared/index';
 import TENANT from '../schema';
 
 const schemaObject = {
+  id: { type: String, required: true },
   name: { type: String, required: true },
   code: { type: String, required: true },
   plan: {
@@ -34,5 +35,5 @@ export type TenantSchemaType = Exclude<
 > & {
   userLimit: (typeof TENANT.userLimit.enum.value)[number];
 };
-
+// 5
 export type tenantKeys = keyof TenantSchemaType;

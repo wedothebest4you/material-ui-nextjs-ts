@@ -33,11 +33,13 @@ import { getDbByMongoDbClient } from '@/shared/mongodb';
       },
     ]);
 
-    await db.createCollection(TENANT.viewName, {
+    await db.createCollection(TENANT.queryViewName, {
       viewOn: TENANT.collectionName, // The source collection
       pipeline: [
         {
           $project: {
+            _id: 0,
+            id: { $toString: '$_id' },
             name: 1,
             code: 1,
             plan: 1,

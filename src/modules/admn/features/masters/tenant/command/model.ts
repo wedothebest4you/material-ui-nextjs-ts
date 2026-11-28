@@ -9,11 +9,8 @@ type combinedModel = MakeModel<TenantSchemaType, typeof TenantClass>;
 
 loadClassCustom(TenantClass, tenantSchema);
 
-delete mongoose.models[TENANT.modelName];
-const Tenant = mongoose.model<any, combinedModel>(
-  TENANT.modelName,
-  tenantSchema,
-);
+delete mongoose.models['Tenant'];
+const Tenant = mongoose.model<any, combinedModel>('Tenant', tenantSchema);
 console.log('model creation runs. 2');
 export default Tenant;
 

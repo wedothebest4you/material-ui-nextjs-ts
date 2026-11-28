@@ -1,7 +1,13 @@
-import Tenant from './model';
+import { byActiveTenants } from './query';
 
 export default class TenantService {
   static async getActiveTenants() {
-    return Tenant.find().byActiveTenants();
+    try {
+      const tenants = await byActiveTenants();
+      console.log('tenants', tenants);
+      return tenants;
+    } catch (err) {
+      throw err;
+    }
   }
 }

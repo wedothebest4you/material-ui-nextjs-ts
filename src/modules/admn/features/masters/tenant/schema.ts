@@ -25,9 +25,8 @@ export const planEnumLabels = {
 const arrayJoinChars = ', ';
 
 const TENANT = {
-  modelName: 'Tenant',
   collectionName: 'tenants',
-  viewName: 'tenantsList',
+  queryViewName: 'tenantsList',
   name: {
     label: 'Name',
     required: 'Tenant Name is required',

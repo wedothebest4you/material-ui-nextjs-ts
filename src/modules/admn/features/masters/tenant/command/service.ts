@@ -5,6 +5,7 @@ import { type ActionState } from '@/src/shared';
 import mongoose from 'mongoose';
 import TENANT from '../schema';
 import { MongoServerError } from 'mongodb';
+import { updateTag } from 'next/cache';
 
 // console.log('mongoose version', mongoose.version);
 // import ServiceBase from '@/src/shared/mongoose/service-base-class';
@@ -38,12 +39,12 @@ export default class TenantService {
       // console.log(fieldErrors);
       return { status: 'error', fieldErrors };
     }
-
     try {
       const doc = await Tenant.createOrUpdateTenant(cleanData.data);
       // const doc = await new Tenant(cleanData.data).save();
 
       // console.log(`doc ${doc} ${doc.collection.name}`);
+      updateTag(TENANT.queryViewName);
       return { status: 'success', message: 'Data Saved Successfully' };
     } catch (err) {
       const fieldErrors: Partial<Record<TenantKeys, string>> = {};
@@ -95,18 +96,19 @@ export default class TenantService {
           message: `${err.message}`,
         };
       }
-      if (err instanceof Error) {
-        return {
-          status: 'error',
-          kind: 'JavaScript Error',
-          message: `${err}`,
-        };
-      }
-      return {
-        status: 'error',
-        kind: 'Unknown Error',
-        message: `Some unknown error occured : ${JSON.stringify(err)}`,
-      };
+      throw err;
+      // if (err instanceof Error) {
+      //   return {
+      //     status: 'error',
+      //     kind: 'JavaScript Error',
+      //     message: `${err}`,
+      //   };
+      // }
+      // return {
+      //   status: 'error',
+      //   kind: 'Unknown Error',
+      //   message: `Some unknown error occured : ${JSON.stringify(err)}`,
+      // };
     }
   }
 }
